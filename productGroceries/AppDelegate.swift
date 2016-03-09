@@ -13,20 +13,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-//    static private var thedelegate: AppDelegate?
-//    
-//    class var delegate : AppDelegate {
-//        return thedelegate!
-//    }
-//    
-//    static func sharedDelegate() -> AppDelegate {
-//        return UIApplication.sharedApplication().delegate as! AppDelegate
-//    }
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        
-//        AppDelegate.thedelegate = self
         
         // a window displays views and distributes events
         window              = UIWindow()
@@ -36,10 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         WINDOW.screen       = UIScreen.mainScreen()
         WINDOW.bounds       = WINDOW.screen.bounds
         WINDOW.windowLevel  = UIWindowLevelNormal
-        
-        // Override point for customization after application launch.
-//        self.viewController = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
-//        self.navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
         
         let ITEMS           = ItemsController()
         
