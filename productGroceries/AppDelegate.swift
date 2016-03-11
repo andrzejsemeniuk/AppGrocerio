@@ -17,35 +17,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // a window displays views and distributes events
-        window              = UIWindow()
+        window                      = UIWindow()
         
-        let WINDOW          = window!
+        let WINDOW                  = window!
         
-        WINDOW.screen       = UIScreen.mainScreen()
-        WINDOW.bounds       = WINDOW.screen.bounds
-        WINDOW.windowLevel  = UIWindowLevelNormal
+        WINDOW.screen               = UIScreen.mainScreen()
+        WINDOW.bounds               = WINDOW.screen.bounds
+        WINDOW.windowLevel          = UIWindowLevelNormal
         
-        let ITEMS           = ItemsController()
+        let categories              = CategoriesController()
         
-        ITEMS.tabBarItem    = UITabBarItem(title:"Items", image:nil, tag:1)
+        let CATEGORIES              = UINavigationController(rootViewController:categories)
+        
+        categories.navigator        = CATEGORIES
+        CATEGORIES.tabBarItem       = UITabBarItem(title:"Items", image:nil, tag:1)
+        
+        CATEGORIES.setNavigationBarHidden(false, animated:true)
+        CATEGORIES.navigationBar.topItem!.leftBarButtonItem = categories.editButtonItem()
+        CATEGORIES.navigationBar.topItem!.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem:.Add, target:categories, action: "add")
         
         
-        let SUMMARY         = SummaryController()
+        let SUMMARY                 = SummaryController()
 
-        SUMMARY.tabBarItem  = UITabBarItem(title:"Summary", image:nil, tag:1)
+        SUMMARY.tabBarItem          = UITabBarItem(title:"Summary", image:nil, tag:2)
 
         
-        let TABS            = TabBarController()
+        let TABS                    = TabBarController()
         
-        TABS.viewControllers = [
-            ITEMS,
-            SUMMARY
-        ]
+        TABS.setViewControllers([CATEGORIES,SUMMARY], animated:true)
         
-        TABS.selectedViewController = ITEMS
+        TABS.selectedViewController = CATEGORIES
         
         
-        WINDOW.rootViewController = TABS
+        WINDOW.rootViewController   = TABS
         
         WINDOW.makeKeyAndVisible()
         
@@ -75,5 +79,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+    
+    
+
+    
 }
 
+
+extension AppDelegate
+{
+    static var rootViewController : UIViewController {
+        return UIApplication.sharedApplication().keyWindow!.rootViewController!
+    }
+}

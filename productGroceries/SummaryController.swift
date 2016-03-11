@@ -9,12 +9,16 @@
 import Foundation
 import UIKit
 
-class SummaryController : UIViewController {
+class SummaryController : UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tabBarItem = UITabBarItem(title:"Summary", image:nil, tag:111)
+        // "every time the summary scene is displayed, rebuild/reload table
+        // "display items in sections, where a section is a category
+        // "display cells with background color per category
+        // "display cells with fancy fonts
+        // "have ability to remove items?
     }
     
     override func didReceiveMemoryWarning() {

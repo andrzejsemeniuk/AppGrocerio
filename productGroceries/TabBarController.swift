@@ -14,21 +14,7 @@ class TabBarController : UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        let tb = tabBar
-        
-        print("tab bar \(tb)")
-        
-        
-//        UITabBarItem *firstItem = [[UITabBarItem alloc] initWithTitle:@"First" image:firstImage tag:1];
-//        UITabBarItem *secondItem = [[UITabBarItem alloc] initWithTitle:@"Second" image:secondImage tag:2];
-//        
-//        NSArray *itemsArray = @[firstItem, secondItem];
-//        
-//        [myTabBar setItems:itemsArray animated:YES];
-        
-//        tb.items = [
-//        ]
+        // one should not explicitly access the tabbar view
     }
     
     override func didReceiveMemoryWarning() {

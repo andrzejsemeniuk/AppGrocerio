@@ -1,5 +1,5 @@
 //
-//  TableController.swift
+//  ItemsController.swift
 //  productGroceries
 //
 //  Created by Andrzej Semeniuk on 3/9/16.
@@ -9,16 +9,62 @@
 import Foundation
 import UIKit
 
-class ItemsController : UITabBarController {
+class ItemsController : UITableViewController
+{
+    var items:[Item] = []
     
-    override func viewDidLoad() {
+    var category:String
+    
+    
+    init(category:String)
+    {
+        super.init()
+        
+        self.category = category
+    }
+    
+    
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         
-        self.tabBarItem = UITabBarItem(title:"Items", image:nil, tag:112)
+        tableView.dataSource    = self
+        
+        tableView.delegate      = self
+        
+        items                   = ItemsDataManager.allItemsInCategory(category)
     }
     
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
     }
+    
+    
+    
+    
+    
+    override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
+    {
+        return 1
+    }
+    
+    override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return items.count
+    }
+    
+    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
+        
+        if let label = cell.textLabel {
+            label.text = items[indexPath.row].name
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyle.None;
+        
+        return cell
+    }
+
     
 }
