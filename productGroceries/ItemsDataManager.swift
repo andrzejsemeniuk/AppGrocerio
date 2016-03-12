@@ -209,35 +209,47 @@ class ItemsDataManager : NSObject
     }
 
     
-    class func reset()
+    class func reset(ifEmpty:Bool = true)
     {
-        for category in allCategories() {
-            removeCategory(category)
-        }
+        let categories = allCategories()
         
-        addCategory("Produce")
-        putItem(Item(name:"Lettuce",category:"Produce",value:.Quantity(count:0)))
-        putItem(Item(name:"Cabbage",category:"Produce",value:.Quantity(count:0)))
-        putItem(Item(name:"Tomatoes",category:"Produce",value:.Quantity(count:0)))
-        putItem(Item(name:"Potatoes",category:"Produce",value:.Quantity(count:0)))
-        putItem(Item(name:"Garlic",category:"Produce",value:.Quantity(count:0)))
-        putItem(Item(name:"Yellow Onions",category:"Produce",value:.Quantity(count:0)))
-        putItem(Item(name:"White Onions",category:"Produce",value:.Quantity(count:0)))
-        addCategory("Dairy")
-        putItem(Item(name:"Milk/2%",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Milk/Whole",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Milk/1%",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Milk/Chocolate",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Eggs",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Butter",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Sour Cream",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Yoghurt, Fat Free",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Yoghurt, Reduced Fat",category:"Dairy",value:.Quantity(count:0)))
-        putItem(Item(name:"Yoghurt, Whole",category:"Dairy",value:.Quantity(count:0)))
-        addCategory("Fish+Meats")
-        addCategory("Drink")
-        addCategory("Breakfast")
-        addCategory("Misc")
+        // empty,0 => yes
+        // empty,n => no
+        // not empty,0 => yes
+        // not empty,n => yes
+        
+        let proceed = !(ifEmpty && 0 < categories.count)
+        
+        if proceed
+        {
+            for category in categories {
+                removeCategory(category)
+            }
+            
+            addCategory("Produce")
+            putItem(Item(name:"Lettuce",category:"Produce",value:.Quantity(count:0)))
+            putItem(Item(name:"Cabbage",category:"Produce",value:.Quantity(count:0)))
+            putItem(Item(name:"Tomatoes",category:"Produce",value:.Quantity(count:0)))
+            putItem(Item(name:"Potatoes",category:"Produce",value:.Quantity(count:0)))
+            putItem(Item(name:"Garlic",category:"Produce",value:.Quantity(count:0)))
+            putItem(Item(name:"Yellow Onions",category:"Produce",value:.Quantity(count:0)))
+            putItem(Item(name:"White Onions",category:"Produce",value:.Quantity(count:0)))
+            addCategory("Dairy")
+            putItem(Item(name:"Milk, 2%",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Milk, Whole",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Milk, 1%",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Milk, Chocolate",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Eggs",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Butter",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Sour Cream",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Yoghurt, Fat Free",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Yoghurt, Reduced Fat",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item(name:"Yoghurt, Whole",category:"Dairy",value:.Quantity(count:0)))
+            addCategory("Fish+Meats")
+            addCategory("Drink")
+            addCategory("Breakfast")
+            addCategory("Misc")
+        }
     }
 
 }

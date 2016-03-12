@@ -13,8 +13,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    private static var __navigator:UINavigationController?
+    
+    private static var __instance:AppDelegate?
+    
+    class var instance:AppDelegate {
+        return __instance!
+    }
+    
+    class var navigator:UINavigationController {
+        return __navigator!
+    }
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        AppDelegate.__instance      = self
         
         // a window displays views and distributes events
         window                      = UIWindow()
@@ -25,19 +39,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         WINDOW.bounds               = WINDOW.screen.bounds
         WINDOW.windowLevel          = UIWindowLevelNormal
         
-        ItemsDataManager.reset()
+        ItemsDataManager.reset(true)
         
         let categories              = CategoriesController()
         
         let CATEGORIES              = UINavigationController(rootViewController:categories)
         
-        categories.navigator        = CATEGORIES
+        AppDelegate.__navigator     = CATEGORIES
+        
         CATEGORIES.tabBarItem       = UITabBarItem(title:"Items", image:nil, tag:1)
         
         CATEGORIES.setNavigationBarHidden(false, animated:true)
-        CATEGORIES.navigationBar.topItem!.leftBarButtonItem = categories.editButtonItem()
-        CATEGORIES.navigationBar.topItem!.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem:.Add, target:categories, action: "add")
-        
         
         let SUMMARY                 = SummaryController()
 
@@ -93,4 +105,5 @@ extension AppDelegate
     static var rootViewController : UIViewController {
         return UIApplication.sharedApplication().keyWindow!.rootViewController!
     }
+
 }

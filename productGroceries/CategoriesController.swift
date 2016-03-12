@@ -13,8 +13,6 @@ class CategoriesController : UITableViewController {
     
     var categories:[String] = []
     
-    var navigator: UINavigationController?
-    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -27,12 +25,29 @@ class CategoriesController : UITableViewController {
         
         // TODO CREATE REUSABLE CELL
         
+        var items = navigationItem.rightBarButtonItems
+        
+        if items == nil {
+            items = [UIBarButtonItem]()
+        }
+        
+        items! += [
+            UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
+            editButtonItem(),
+        ]
+        
+        navigationItem.rightBarButtonItems = items
+
+        
         categories                  = ItemsDataManager.allCategories()
     }
     
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
+        
+        // categories = []
+        // tableView.reloadData()
     }
     
     
@@ -130,17 +145,14 @@ class CategoriesController : UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
-        print("SELECTED ROW=\(indexPath.row)")
-        
         let category = categories[indexPath.row]
         
         let items = ItemsController()
         
-        items.category = category
-        items.items    = ItemsDataManager.allItemsInCategory(category)
-
+        items.category  = category
+        items.items     = ItemsDataManager.allItemsInCategory(category)
         
-        navigator!.pushViewController(items, animated:true)
+        AppDelegate.navigator.pushViewController(items, animated:true)
     }
 }
 
