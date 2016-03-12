@@ -25,6 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         WINDOW.bounds               = WINDOW.screen.bounds
         WINDOW.windowLevel          = UIWindowLevelNormal
         
+        ItemsDataManager.reset()
+        
         let categories              = CategoriesController()
         
         let CATEGORIES              = UINavigationController(rootViewController:categories)

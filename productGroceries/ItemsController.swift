@@ -13,15 +13,8 @@ class ItemsController : UITableViewController
 {
     var items:[Item] = []
     
-    var category:String
+    var category:String = ""
     
-    
-    init(category:String)
-    {
-        super.init()
-        
-        self.category = category
-    }
     
     
     override func viewDidLoad()
@@ -30,9 +23,7 @@ class ItemsController : UITableViewController
         
         tableView.dataSource    = self
         
-        tableView.delegate      = self
-        
-        items                   = ItemsDataManager.allItemsInCategory(category)
+        tableView.delegate      = self        
     }
     
     override func didReceiveMemoryWarning()
@@ -61,10 +52,17 @@ class ItemsController : UITableViewController
         if let label = cell.textLabel {
             label.text = items[indexPath.row].name
         }
-        cell.selectionStyle = UITableViewCellSelectionStyle.None;
+        cell.selectionStyle = UITableViewCellSelectionStyle.Default;
         
         return cell
     }
 
     
+    
+    
+    func reload()
+    {
+        items = ItemsDataManager.allItemsInCategory(category)
+        tableView.reloadData()
+    }
 }

@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 struct Item
 {
     enum Value
@@ -15,9 +17,9 @@ struct Item
         case Checkmark      (on:Bool)
         case Quantity       (count:Int)
         case Weight         (pounds:Double)
-        case Volume         (oz:Float)
+        case Volume         (oz:Double)
         
-        var code: Character {
+        var code: String {
                 switch self
                 {
                 case Checkmark:     return "c"
@@ -26,11 +28,44 @@ struct Item
                 case Volume:        return "v"
                 }
         }
+        
+        func reset() {
+            switch self {
+            case var Checkmark(on):         on=false
+            case var Quantity(count):       count=0
+            case var Weight(pounds):        pounds=0
+            case var Volume(oz):            oz=0
+            }
+        }
+        
+        static func deserialize(array:[AnyObject]) -> Value {
+            switch array[0] as! String {
+            case "c": return Checkmark(on:array[1] as! Bool)
+            case "q": return Quantity(count:array[1] as! Int)
+            case "w": return Weight(pounds:array[1] as! Double)
+            case "v": return Volume(oz:array[1] as! Double)
+            default: return Checkmark(on:false)
+            }
+        }
+        
+        func serialize() -> [AnyObject] {
+            switch self {
+            case let Checkmark(on):         return [code,on]
+            case let Quantity(count):       return ["q",count]
+            case let Weight(pounds):        return ["w",pounds]
+            case let Volume(oz):            return ["v",oz]
+            }
+        }
     }
     
     let name:       String
     let category:   String
     let value:      Value
+    
+    func reset()
+    {
+        value.reset()
+    }
 }
 
 
@@ -41,30 +76,66 @@ class ItemsDataManager : NSObject
         case Categories, Items
     }
     
-    class func putItem              (item:Item)
-    {
-        
+    
+    
+    private class func itemsKey(category:String) -> String {
+        return "category:"+category
     }
     
-    class func clearItem            (item:Item)
+    class func putItem              (item:Item)
     {
+        let defaults = NSUserDefaults.standardUserDefaults()
         
+        let key = itemsKey(item.category)
+        
+        var all = defaults.dictionaryForKey(key)
+        
+        if all == nil {
+            all = [String:AnyObject]()
+        }
+        
+        all![item.name] = item.value.serialize()
+        
+        defaults.setObject(all!,forKey:key)
+    }
+    
+    class func resetItem           (item:Item)
+    {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if var all = defaults.dictionaryForKey(itemsKey(item.category)) {
+            all.removeValueForKey(item.name)
+            item.reset()
+            all[item.name] = item.value.serialize()
+        }
     }
     
     class func removeItem           (item:Item)
     {
+        let defaults = NSUserDefaults.standardUserDefaults()
         
+        if var all = defaults.dictionaryForKey(itemsKey(item.category)) {
+            all.removeValueForKey(item.name)
+        }
     }
     
     class func allItemsInCategory   (category:String, sorted:Bool = true) -> [Item]
     {
-        return []
+        var result:[Item] = []
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+
+        if let all = defaults.dictionaryForKey(itemsKey(category)) {
+            for (key,value) in all {
+                if let array = value as? Array<AnyObject> {
+                    result.append(Item(name:key, category:category, value:Item.Value.deserialize(array)))
+                }
+            }
+        }
+        
+        return sorted ? result.sort { $0.name < $1.name } : result
     }
     
-    class func allItems             () -> [Item]
-    {
-        return []
-    }
     
     
     
@@ -87,9 +158,11 @@ class ItemsDataManager : NSObject
         return result
     }
     
-    class func clearCategory        (category:String)
+    class func resetCategory        (category:String)
     {
-        
+        for item in allItemsInCategory(category,sorted:false) {
+            resetItem(item)
+        }
     }
     
     class func removeCategory       (oldCategory:String) -> Bool
@@ -105,7 +178,7 @@ class ItemsDataManager : NSObject
             if categories1.count < categories0.count {
                 let defaults = NSUserDefaults.standardUserDefaults()
                 defaults.setObject(categories1, forKey:Key.Categories.rawValue)
-                // TODO REMOVE ALL ITEMS IN CATEGORY AS WELL
+                defaults.removeObjectForKey(itemsKey(category))
                 result = true
             }
         }
@@ -113,7 +186,7 @@ class ItemsDataManager : NSObject
         return result
     }
     
-    class func allCategories        (fresh:[String] = ["Produce","Meat","Drink","Sweets","Misc"]) -> [String]
+    class func allCategories        () -> [String]
     {
         let defaults = NSUserDefaults.standardUserDefaults()
         
@@ -124,10 +197,6 @@ class ItemsDataManager : NSObject
                 result.append(category as! String)
             }
         }
-        else {
-            result = fresh
-            defaults.setObject(result, forKey:Key.Categories.rawValue)
-        }
         
         return result.sort { return $0 < $1 }
     }
@@ -137,6 +206,38 @@ class ItemsDataManager : NSObject
         let defaults = NSUserDefaults.standardUserDefaults()
         
         defaults.removeObjectForKey(Key.Categories.rawValue)
+    }
+
+    
+    class func reset()
+    {
+        for category in allCategories() {
+            removeCategory(category)
+        }
+        
+        addCategory("Produce")
+        putItem(Item(name:"Lettuce",category:"Produce",value:.Quantity(count:0)))
+        putItem(Item(name:"Cabbage",category:"Produce",value:.Quantity(count:0)))
+        putItem(Item(name:"Tomatoes",category:"Produce",value:.Quantity(count:0)))
+        putItem(Item(name:"Potatoes",category:"Produce",value:.Quantity(count:0)))
+        putItem(Item(name:"Garlic",category:"Produce",value:.Quantity(count:0)))
+        putItem(Item(name:"Yellow Onions",category:"Produce",value:.Quantity(count:0)))
+        putItem(Item(name:"White Onions",category:"Produce",value:.Quantity(count:0)))
+        addCategory("Dairy")
+        putItem(Item(name:"Milk/2%",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Milk/Whole",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Milk/1%",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Milk/Chocolate",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Eggs",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Butter",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Sour Cream",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Yoghurt, Fat Free",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Yoghurt, Reduced Fat",category:"Dairy",value:.Quantity(count:0)))
+        putItem(Item(name:"Yoghurt, Whole",category:"Dairy",value:.Quantity(count:0)))
+        addCategory("Fish+Meats")
+        addCategory("Drink")
+        addCategory("Breakfast")
+        addCategory("Misc")
     }
 
 }

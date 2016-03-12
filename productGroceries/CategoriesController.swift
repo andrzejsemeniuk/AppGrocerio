@@ -132,9 +132,15 @@ class CategoriesController : UITableViewController {
     {
         print("SELECTED ROW=\(indexPath.row)")
         
-        var items = ItemsController(category)
+        let category = categories[indexPath.row]
         
-        navigator.pushViewController(items, animated:true)
+        let items = ItemsController()
+        
+        items.category = category
+        items.items    = ItemsDataManager.allItemsInCategory(category)
+
+        
+        navigator!.pushViewController(items, animated:true)
     }
 }
 
