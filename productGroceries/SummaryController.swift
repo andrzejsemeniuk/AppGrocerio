@@ -61,7 +61,7 @@ class SummaryController : UITableViewController
     
     override func tableView                     (tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
-        return 44 //self.tableView(tableView, viewForHeaderInSection:section)!.bounds.height
+        return 50 //self.tableView(tableView, viewForHeaderInSection:section)!.bounds.height
     }
     
     override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
@@ -72,6 +72,7 @@ class SummaryController : UITableViewController
         
         if let label = cell.textLabel {
             label.text = item.name
+            label.textColor = UIColor.grayColor()
         }
         
         cell.selectionStyle = .None
@@ -85,7 +86,8 @@ class SummaryController : UITableViewController
             
             let label = UILabel()
             
-            label.textColor         = UIColor.blackColor()
+            label.frame             = CGRectMake(0,0,90,45)
+            label.textColor         = UIColor.orangeColor()
             label.text              = String(count)
             label.textAlignment     = .Right
             
