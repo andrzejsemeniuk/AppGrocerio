@@ -29,12 +29,22 @@ struct Item
                 }
         }
         
-        func reset() {
+        func isModified() -> Bool {
+            switch self
+            {
+            case let Checkmark(on):         return on
+            case let Quantity(count):       return 0 < count
+            case let Weight(pounds):        return 0 < pounds
+            case let Volume(oz):            return 0 < oz
+            }
+        }
+        
+        mutating func reset() {
             switch self {
-            case var Checkmark(on):         on=false
-            case var Quantity(count):       count=0
-            case var Weight(pounds):        pounds=0
-            case var Volume(oz):            oz=0
+            case Checkmark:         self = Checkmark(on:false)
+            case Quantity:          self = Quantity(count:0)
+            case Weight:            self = Weight(pounds:0)
+            case Volume:            self = Volume(oz:0)
             }
         }
         
@@ -60,11 +70,15 @@ struct Item
     
     let name:       String
     let category:   String
-    let value:      Value
+    var value:      Value
     
-    func reset()
+    mutating func reset()
     {
         value.reset()
+    }
+    
+    func isModified() -> Bool {
+        return value.isModified()
     }
 }
 
@@ -103,10 +117,14 @@ class ItemsDataManager : NSObject
     {
         let defaults = NSUserDefaults.standardUserDefaults()
         
-        if var all = defaults.dictionaryForKey(itemsKey(item.category)) {
+        let key = itemsKey(item.category)
+        
+        if var all = defaults.dictionaryForKey(key) {
             all.removeValueForKey(item.name)
-            item.reset()
-            all[item.name] = item.value.serialize()
+            var item1 = item
+            item1.reset()
+            all[item.name] = item1.value.serialize()
+            defaults.setObject(all,forKey:key)
         }
     }
     
@@ -186,6 +204,13 @@ class ItemsDataManager : NSObject
         return result
     }
     
+    class func clearCategories      ()
+    {
+        for category in allCategories() {
+            removeCategory(category)
+        }
+    }
+    
     class func allCategories        () -> [String]
     {
         let defaults = NSUserDefaults.standardUserDefaults()
@@ -200,14 +225,25 @@ class ItemsDataManager : NSObject
         
         return result.sort { return $0 < $1 }
     }
-    
-    class func clearCategories      (categories:[String] = ["Produce","Meat","Drink","Sweets","Misc"])
-    {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        
-        defaults.removeObjectForKey(Key.Categories.rawValue)
-    }
 
+    class func summary              () -> [[Item]]
+    {
+        var result = [[Item]]()
+        
+        for category in allCategories() {
+            var add = [Item]()
+            for item in allItemsInCategory(category,sorted:true) {
+                if item.isModified() {
+                    add.append(item)
+                }
+            }
+            if 0 < add.count {
+                result.append(add)
+            }
+        }
+        
+        return result
+    }
     
     class func reset(ifEmpty:Bool = true)
     {

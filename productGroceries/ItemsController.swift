@@ -26,7 +26,7 @@ class ItemsController : UITableViewController
         
         
         var items = navigationItem.rightBarButtonItems
-            
+        
         if items == nil {
             items = [UIBarButtonItem]()
         }
@@ -60,16 +60,38 @@ class ItemsController : UITableViewController
     
     override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
+        let item = items[indexPath.row]
+        
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
         if let label = cell.textLabel {
-            label.text = items[indexPath.row].name
+            label.text = item.name
         }
         cell.selectionStyle = UITableViewCellSelectionStyle.Default;
         
+        switch item.value {
+        case .Checkmark(let on):
+            cell.accessoryType = on ? .Checkmark : .None
+        case .Quantity(let count):
+            
+            let button = UIButton(type:.ContactAdd)
+            button.tag = indexPath.row
+            button.setTitle(String(count), forState:.Normal)
+            button.addTarget(self, action:"pressedAddInCell:", forControlEvents:.TouchUpInside)
+            cell.accessoryView = button
+
+            
+        default:
+            cell.accessoryType = .None
+        }
+        
         return cell
     }
-
+    
+    
+    func pressedAddInCell(sender: UIButton!) {
+        print("pressed + on cell=\(items[sender.tag].name)")
+    }
     
     
     
@@ -121,15 +143,32 @@ class ItemsController : UITableViewController
         case .None:
             print("None")
         case .Delete:
-            print("Delete: row=\(indexPath.row)")
             let item = items[indexPath.row]
             ItemsDataManager.removeItem(item)
             items.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
         case .Insert:
-            print("Insert")
             add()
         }
     }
-
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        var item = items[indexPath.row]
+        
+        switch item.value {
+        case .Checkmark(let on):
+            item.value = .Checkmark(on:!on)
+            ItemsDataManager.putItem(item)
+            items[indexPath.row] = item
+        case .Quantity(let count):
+            item.value = .Quantity(count:1+count)
+            ItemsDataManager.putItem(item)
+            items[indexPath.row] = item
+        default:
+            ()
+        }
+    }
+    
 }

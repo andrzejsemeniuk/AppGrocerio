@@ -41,6 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         ItemsDataManager.reset(true)
         
+        
+        
         let categories              = CategoriesController()
         
         let CATEGORIES              = UINavigationController(rootViewController:categories)
@@ -51,10 +53,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         CATEGORIES.setNavigationBarHidden(false, animated:true)
         
-        let SUMMARY                 = SummaryController()
+        
+        
+        let summary                 = SummaryController()
 
+        let SUMMARY                 = UINavigationController(rootViewController:summary)
+        
         SUMMARY.tabBarItem          = UITabBarItem(title:"Summary", image:nil, tag:2)
-
+        
+        
         
         let TABS                    = TabBarController()
         

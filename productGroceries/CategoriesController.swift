@@ -131,13 +131,11 @@ class CategoriesController : UITableViewController {
         case .None:
             print("None")
         case .Delete:
-            print("Delete: row=\(indexPath.row)")
             let category = categories[indexPath.row]
             ItemsDataManager.removeCategory(category)
             categories.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
         case .Insert:
-            print("Insert")
             add()
         }
     }
