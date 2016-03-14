@@ -13,7 +13,7 @@ class SummaryController : UITableViewController
 {
     var items = [[Item]]()
     
-    var lastTap:LastTap!
+    var lastTap:UITableViewTap!
     
     override func viewDidLoad()
     {
@@ -55,7 +55,7 @@ class SummaryController : UITableViewController
         result.text                 = items[section][0].category
         result.textAlignment        = .Center
 //        result.font                 = UIFont.systemFontOfSize(12, weight:2.0)
-//        result.backgroundColor      = UIColor.blackColor()
+        result.backgroundColor      = CategoriesController.instance.colorForCategory(result.text!)
 //        result.textColor            = UIColor.whiteColor()
         
         return result
@@ -72,34 +72,24 @@ class SummaryController : UITableViewController
         
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
+        cell.backgroundColor = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
+        
         if let label = cell.textLabel {
-            label.text = item.name
+            label.text = item.presentableName()
             label.textColor = UIColor.grayColor()
         }
         
         cell.selectionStyle = .None
         
-        switch item.value {
-        case .Checkmark(let on):
+        let label = UILabel()
         
-            cell.accessoryType = on ? .Checkmark : .None
-
-        case .Quantity(let count):
-            
-            let label = UILabel()
-            
-            label.frame             = CGRectMake(0,0,90,45)
-            label.textColor         = UIColor.orangeColor()
-            label.text              = String(count)
-            label.textAlignment     = .Right
-            
-            cell.accessoryView      = label
-            cell.editingAccessoryView = label
-            
-        default:
-            
-            cell.accessoryType = .None
-        }
+        label.frame             = CGRectMake(0,0,90,45)
+//        label.textColor         = UIColor.orangeColor()
+        label.text              = String(item.quantity)
+        label.textAlignment     = .Right
+        
+        cell.accessoryView      = label
+        cell.editingAccessoryView = label
 
         return cell
     }

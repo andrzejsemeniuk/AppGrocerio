@@ -12,73 +12,38 @@ import Foundation
 
 struct Item
 {
-    enum Value
-    {
-        case Checkmark      (on:Bool)
-        case Quantity       (count:Int)
-        case Weight         (pounds:Double)
-        case Volume         (oz:Double)
-        
-        var code: String {
-                switch self
-                {
-                case Checkmark:     return "c"
-                case Quantity:      return "q"
-                case Weight:        return "w"
-                case Volume:        return "v"
-                }
-        }
-        
-        func isModified() -> Bool {
-            switch self
-            {
-            case let Checkmark(on):         return on
-            case let Quantity(count):       return 0 < count
-            case let Weight(pounds):        return 0 < pounds
-            case let Volume(oz):            return 0 < oz
-            }
-        }
-        
-        mutating func reset() {
-            switch self {
-            case Checkmark:         self = Checkmark(on:false)
-            case Quantity:          self = Quantity(count:0)
-            case Weight:            self = Weight(pounds:0)
-            case Volume:            self = Volume(oz:0)
-            }
-        }
-        
-        static func deserialize(array:[AnyObject]) -> Value {
-            switch array[0] as! String {
-            case "c": return Checkmark(on:array[1] as! Bool)
-            case "q": return Quantity(count:array[1] as! Int)
-            case "w": return Weight(pounds:array[1] as! Double)
-            case "v": return Volume(oz:array[1] as! Double)
-            default: return Checkmark(on:false)
-            }
-        }
-        
-        func serialize() -> [AnyObject] {
-            switch self {
-            case let Checkmark(on):         return [code,on]
-            case let Quantity(count):       return ["q",count]
-            case let Weight(pounds):        return ["w",pounds]
-            case let Volume(oz):            return ["v",oz]
-            }
-        }
-    }
-    
     let name:       String
     let category:   String
-    var value:      Value
+    var quantity:   Int         = 0
+    var note:       String      = ""
+    
+    static func create(name name:String, category:String, quantity:Int = 0, note:String = "") -> Item {
+        return Item(name:name,category:category,quantity:quantity,note:note)
+    }
+    
+    func presentableName() -> String {
+        if 53 < name.length {
+            return name.substring(to:50) + "..."
+        }
+        return name
+    }
     
     mutating func reset()
     {
-        value.reset()
+        quantity    = 0
+        note        = ""
     }
     
     func isModified() -> Bool {
-        return value.isModified()
+        return 0 < quantity
+    }
+    
+    func serialize() -> [AnyObject] {
+        return [quantity,note]
+    }
+    
+    static func deserialize(name:String, category:String, from:[AnyObject]) -> Item {
+        return Item(name:name,category:category,quantity:from[0] as! Int,note:from[1] as! String)
     }
 }
 
@@ -108,7 +73,7 @@ class ItemsDataManager : NSObject
             all = [String:AnyObject]()
         }
         
-        all![item.name] = item.value.serialize()
+        all![item.name] = item.serialize()
         
         defaults.setObject(all!,forKey:key)
     }
@@ -123,17 +88,20 @@ class ItemsDataManager : NSObject
             all.removeValueForKey(item.name)
             var item1 = item
             item1.reset()
-            all[item.name] = item1.value.serialize()
+            all[item.name] = item1.serialize()
             defaults.setObject(all,forKey:key)
         }
     }
     
     class func removeItem           (item:Item)
     {
+        let key = itemsKey(item.category)
+        
         let defaults = NSUserDefaults.standardUserDefaults()
         
-        if var all = defaults.dictionaryForKey(itemsKey(item.category)) {
+        if var all = defaults.dictionaryForKey(key) {
             all.removeValueForKey(item.name)
+            defaults.setObject(all,forKey:key)
         }
     }
     
@@ -146,7 +114,7 @@ class ItemsDataManager : NSObject
         if let all = defaults.dictionaryForKey(itemsKey(category)) {
             for (key,value) in all {
                 if let array = value as? Array<AnyObject> {
-                    result.append(Item(name:key, category:category, value:Item.Value.deserialize(array)))
+                    result.append(Item.deserialize(key, category:category, from:array))
                 }
             }
         }
@@ -254,7 +222,7 @@ class ItemsDataManager : NSObject
         // not empty,0 => yes
         // not empty,n => yes
         
-        let proceed = !(ifEmpty && 0 < categories.count)
+        let proceed = !ifEmpty || 0 == categories.count
         
         if proceed
         {
@@ -263,28 +231,66 @@ class ItemsDataManager : NSObject
             }
             
             addCategory("Produce")
-            putItem(Item(name:"Lettuce",category:"Produce",value:.Quantity(count:0)))
-            putItem(Item(name:"Cabbage",category:"Produce",value:.Quantity(count:0)))
-            putItem(Item(name:"Tomatoes",category:"Produce",value:.Quantity(count:0)))
-            putItem(Item(name:"Potatoes",category:"Produce",value:.Quantity(count:0)))
-            putItem(Item(name:"Garlic",category:"Produce",value:.Quantity(count:0)))
-            putItem(Item(name:"Yellow Onions",category:"Produce",value:.Quantity(count:0)))
-            putItem(Item(name:"White Onions",category:"Produce",value:.Quantity(count:0)))
+            putItem(Item.create(name:"Lettuce, Iceberg",category:"Produce"))
+            putItem(Item.create(name:"Lettuce, Romaine",category:"Produce"))
+            putItem(Item.create(name:"Cabbage",category:"Produce"))
+            putItem(Item.create(name:"Tomatoes",category:"Produce"))
+            putItem(Item.create(name:"Tomatoes, Roma",category:"Produce"))
+            putItem(Item.create(name:"Potatoes",category:"Produce"))
+            putItem(Item.create(name:"Potatoes, Russett",category:"Produce"))
+            putItem(Item.create(name:"Potatoes, Golden",category:"Produce"))
+            putItem(Item.create(name:"Garlic",category:"Produce"))
+            putItem(Item.create(name:"Onions, yellow",category:"Produce"))
+            putItem(Item.create(name:"Onions, white",category:"Produce"))
+            putItem(Item.create(name:"Lemons",category:"Produce"))
+            putItem(Item.create(name:"Oranges",category:"Produce"))
+            putItem(Item.create(name:"Apples",category:"Produce"))
+            putItem(Item.create(name:"Apples, Granny Smith",category:"Produce"))
+            putItem(Item.create(name:"Apples, Mcintosh",category:"Produce"))
+            putItem(Item.create(name:"Apples, Gala",category:"Produce"))
+            putItem(Item.create(name:"Apples, Fuji",category:"Produce"))
+            putItem(Item.create(name:"Apples, Braeburn",category:"Produce"))
             addCategory("Dairy")
-            putItem(Item(name:"Milk, 2%",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Milk, Whole",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Milk, 1%",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Milk, Chocolate",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Eggs",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Butter",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Sour Cream",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Yoghurt, Fat Free",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Yoghurt, Reduced Fat",category:"Dairy",value:.Quantity(count:0)))
-            putItem(Item(name:"Yoghurt, Whole",category:"Dairy",value:.Quantity(count:0)))
+            putItem(Item.create(name:"Milk, 2%",category:"Dairy"))
+            putItem(Item.create(name:"Milk, Whole",category:"Dairy"))
+            putItem(Item.create(name:"Milk, 1%",category:"Dairy"))
+            putItem(Item.create(name:"Milk, Chocolate",category:"Dairy"))
+            putItem(Item.create(name:"Eggs",category:"Dairy"))
+            putItem(Item.create(name:"Butter",category:"Dairy"))
+            putItem(Item.create(name:"Sour Cream",category:"Dairy"))
+            putItem(Item.create(name:"Yogurt, Fat Free",category:"Dairy"))
+            putItem(Item.create(name:"Yogurt, Reduced Fat",category:"Dairy"))
+            putItem(Item.create(name:"Yogurt, Whole",category:"Dairy"))
             addCategory("Fish+Meats")
+            putItem(Item.create(name:"Beef, angus",category:"Fish+Meats"))
+            putItem(Item.create(name:"Chicken, thighs",category:"Fish+Meats"))
+            putItem(Item.create(name:"Chicken, roasted",category:"Fish+Meats"))
+            putItem(Item.create(name:"Chicken, wings",category:"Fish+Meats"))
+            putItem(Item.create(name:"Pork, chops",category:"Fish+Meats"))
+            putItem(Item.create(name:"Tuna",category:"Fish+Meats"))
+            putItem(Item.create(name:"Salmon, pink",category:"Fish+Meats"))
+            putItem(Item.create(name:"Salmon, red sockeye",category:"Fish+Meats"))
             addCategory("Drink")
-            addCategory("Breakfast")
+            putItem(Item.create(name:"Coffee, whole beans",category:"Drink"))
+            putItem(Item.create(name:"Coffee, whole beans, dark roast",category:"Drink"))
+            putItem(Item.create(name:"Coffee, whole beans, light roast",category:"Drink"))
+            putItem(Item.create(name:"Coffee, ground, French roast",category:"Drink"))
+            putItem(Item.create(name:"Tea, green",category:"Drink"))
+            putItem(Item.create(name:"Tea, peppermint, caffeine-free",category:"Drink"))
+            putItem(Item.create(name:"Ginger beer",category:"Drink"))
+            putItem(Item.create(name:"Cola",category:"Drink"))
+            putItem(Item.create(name:"Coconut water",category:"Drink"))
+            putItem(Item.create(name:"Ginger ale",category:"Drink"))
+            putItem(Item.create(name:"Water, spring",category:"Drink"))
+            putItem(Item.create(name:"Water, mineral",category:"Drink"))
             addCategory("Misc")
+            putItem(Item.create(name:"Matches",category:"Misc"))
+            putItem(Item.create(name:"Lighter",category:"Misc"))
+            putItem(Item.create(name:"Lightbulb",category:"Misc"))
+            putItem(Item.create(name:"Nails",category:"Misc"))
+            putItem(Item.create(name:"Garbage bags",category:"Misc"))
+            putItem(Item.create(name:"Toilet paper",category:"Misc"))
+            putItem(Item.create(name:"Paper towels",category:"Misc"))
         }
     }
 

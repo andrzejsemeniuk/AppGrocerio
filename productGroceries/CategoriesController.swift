@@ -13,8 +13,14 @@ class CategoriesController : UITableViewController {
     
     var categories:[String] = []
     
+    
+    static var instance:CategoriesController! = nil
+    
+    
     override func viewDidLoad()
     {
+        CategoriesController.instance = self
+        
         super.viewDidLoad()
         
         tableView.dataSource        = self
@@ -55,6 +61,7 @@ class CategoriesController : UITableViewController {
 
     
     
+    
     func colorForCategoryIndex(index:Int) -> UIColor
     {
         if 0 <= index && index < categories.count {
@@ -73,6 +80,25 @@ class CategoriesController : UITableViewController {
         }
         else {
             return colorForCategoryIndex(-1)
+        }
+    }
+    
+    
+    func colorForItem(item:Item,onRow:Int) -> UIColor {
+        var hue:CGFloat = 0
+        var saturation:CGFloat = 0
+        var brightness:CGFloat = 0
+        var alpha:CGFloat = 1
+        
+        let categoryColor = colorForCategory(item.category)
+            
+        categoryColor.getHue(&hue,saturation:&saturation,brightness:&brightness,alpha:&alpha)
+        
+        if 1 == onRow % 2 {
+            return UIColor(hue:hue,saturation:0.1,brightness:1.0,alpha:1.0)
+        }
+        else {
+            return UIColor(hue:hue,saturation:0.15,brightness:1.0,alpha:1.0)
         }
     }
     
@@ -120,6 +146,7 @@ class CategoriesController : UITableViewController {
     func reload()
     {
         categories = ItemsDataManager.allCategories()
+        
         tableView.reloadData()
     }
     
@@ -171,6 +198,7 @@ class CategoriesController : UITableViewController {
             ItemsDataManager.removeCategory(category)
             categories.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
+            self.reload()
         case .Insert:
             add()
         }

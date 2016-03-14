@@ -11,13 +11,13 @@ import UIKit
 
 class ItemsController : UITableViewController, UIGestureRecognizerDelegate
 {
-    var items:[Item] = []
+    var items:[Item]                = []
     
-    var category:String = ""
+    var category:String             = ""
     
-    var colorOfCategory:UIColor = UIColor.whiteColor()
+    var colorOfCategory:UIColor     = UIColor.whiteColor()
     
-    var lastTap:LastTap!
+    var lastTap:UITableViewTap!
     
     
     override func viewDidLoad()
@@ -82,52 +82,24 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
-        do
-        {
-            var hue:CGFloat = 0
-            var saturation:CGFloat = 0
-            var brightness:CGFloat = 0
-            var alpha:CGFloat = 1
-            
-            colorOfCategory.getHue(&hue,saturation:&saturation,brightness:&brightness,alpha:&alpha)
-            
-            if 0 == indexPath.row % 2 {
-                cell.backgroundColor = UIColor(hue:hue,saturation:0.1,brightness:1.0,alpha:1.0)
-            }
-            else {
-                cell.backgroundColor = UIColor(hue:hue,saturation:0.15,brightness:1.0,alpha:1.0)
-            }
-        }
+        cell.backgroundColor = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
         
         if let label = cell.textLabel {
-            var text = item.name
-            if 33 < text.length {
-                text = text.substring(to:30) + "..."
-            }
-            label.text = text
+            label.text = item.presentableName()
         }
         
         cell.selectionStyle = .Default
         
-        switch item.value {
-        case .Checkmark(let on):
-            cell.accessoryType = on ? .Checkmark : .None
-        case .Quantity(let count):
+        if 0 < item.quantity {
+            let label = UILabel()
             
-            if 0 < count {
-                let label = UILabel()
-                
-                label.frame             = CGRectMake(0,0,120,45)
-                //            label.textColor         = UIColor.orangeColor()
-                label.text              = String(count)
-                label.textAlignment     = .Right
-                
-                cell.accessoryView      = label
-                cell.editingAccessoryView = label
-            }
+            label.frame             = CGRectMake(0,0,120,45)
+            //            label.textColor         = UIColor.orangeColor()
+            label.text              = String(item.quantity)
+            label.textAlignment     = .Right
             
-        default:
-            cell.accessoryType = .None
+            cell.accessoryView      = label
+            cell.editingAccessoryView = label
         }
         
         return cell
@@ -157,7 +129,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             action in
             
             if let fields = alert.textFields, text = fields[0].text {
-                ItemsDataManager.putItem(Item(name:text.trimmed(),category:self.category,value:Item.Value.Checkmark(on:false)))
+                ItemsDataManager.putItem(Item.create(name:text.trimmed(),category:self.category))
                 self.reload()
             }
         })
@@ -198,40 +170,25 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     {
         var item = items[indexPath.row]
         
-        switch item.value {
+        if lastTap.path == indexPath {
+            var update = false
             
-        case .Checkmark(let on):
-            
-            item.value = .Checkmark(on:!on)
-            ItemsDataManager.putItem(item)
-            items[indexPath.row] = item
-            self.reload()
-            
-        case .Quantity(let count):
-            
-            if lastTap.path == indexPath {
-                var update = false
-                
-                if lastTap.point.x < tableView.bounds.width/2 {
-                    if 0 < count {
-                        item.value = .Quantity(count:count-1)
-                        update = true
-                    }
-                }
-                else {
-                    item.value = .Quantity(count:1+count)
+            if lastTap.point.x < tableView.bounds.width/2 {
+                if 0 < item.quantity {
+                    item.quantity--
                     update = true
                 }
-                
-                if update {
-                    ItemsDataManager.putItem(item)
-                    items[indexPath.row] = item
-                    self.reload()
-                }
+            }
+            else {
+                item.quantity++
+                update = true
             }
             
-        default:
-            ()
+            if update {
+                ItemsDataManager.putItem(item)
+                items[indexPath.row] = item
+                self.reload()
+            }
         }
     }
 
@@ -255,7 +212,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         if let path = tableView.indexPathForRowAtPoint(point)
         {
-            lastTap = LastTap(path:path, point:point)
+            lastTap = UITableViewTap(path:path, point:point)
         }
         
         return false

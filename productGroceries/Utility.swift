@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-struct LastTap
+struct UITableViewTap
 {
     let path:NSIndexPath
     let point:CGPoint
@@ -18,18 +18,15 @@ struct LastTap
 
 extension String
 {
-    public var length: Int
-        {
+    public var length: Int {
             return characters.count
     }
     
-    public var urlEncoded: String
-        {
+    public var urlEncoded: String {
             return stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
     }
     
-    public var base64Encoded: String
-        {
+    public var base64Encoded: String {
             let step1:NSString      = self as NSString
             let step2:NSData        = step1.dataUsingEncoding(NSUTF8StringEncoding)!
             let options             = NSDataBase64EncodingOptions(rawValue: 0)
@@ -38,13 +35,11 @@ extension String
             return result
     }
     
-    public var empty: Bool
-        {
+    public var empty: Bool {
             return length < 1
     }
     
-    public func trimmed() -> String
-    {
+    public func trimmed() -> String {
         return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
     
@@ -77,8 +72,7 @@ extension Array
 
 extension UIColor
 {
-    public convenience init(red:CGFloat,green:CGFloat,blue:CGFloat)
-    {
+    public convenience init(red:CGFloat,green:CGFloat,blue:CGFloat) {
         self.init(red:red,green:green,blue:blue,alpha:1)
     }
 }

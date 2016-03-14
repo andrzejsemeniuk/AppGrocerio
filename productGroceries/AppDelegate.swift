@@ -30,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         AppDelegate.__instance      = self
         
+//        ItemsDataManager.reset(false)
+        
         // a window displays views and distributes events
         window                      = UIWindow()
         
@@ -118,8 +120,17 @@ extension AppDelegate
 
 
 
-// SUMMARY/WHEN USER LONG PRESS ON CELL DELETE IT=SET ITEM=0
+// HELP/CATEGORIES+ITEMS+SUMMARY SCREEN, ONCE, STORE IN DEFAULTS/UIALERTCONTROLLER.ALERT
+// TAB ICONS
+// NAVIGATOR TITLE
+// CHANGE TAB NAME 'ITEMS' TO 'GROCERIES'
+
 // ITEMS/ADD NOTE BASED ON UILongPressGestureRecognizer on cell
+// SETTINGS PAGE?
+// SETTINGS/ADD COLOR THEMES? APPLE,RAINBOW,GRAPE,STRAWBERRY,PLAIN
+// SETTINGS/THEMES/SATURATION?
+// SETTINGS/FONT TYPE,SIZE,BOLD/PLAIN
+// SAVE SUMMARY?
 
 
 
