@@ -9,6 +9,13 @@
 import Foundation
 import UIKit
 
+
+struct LastTap
+{
+    let path:NSIndexPath
+    let point:CGPoint
+}
+
 extension String
 {
     public var length: Int
@@ -41,6 +48,21 @@ extension String
         return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
     
+    public func substring(from:Int = 0, var to:Int = -1) -> String {
+        if to < 0 {
+            to = self.length + to
+        }
+        return self.substringWithRange(Range<String.Index>(
+            start:self.startIndex.advancedBy(from),
+            end:self.startIndex.advancedBy(to+1)))
+    }
+
+    public func substring(from:Int = 0, length:Int) -> String {
+        return self.substringWithRange(Range<String.Index>(
+            start:self.startIndex.advancedBy(from),
+            end:self.startIndex.advancedBy(from+length)))
+    }
+
 }
 
 extension Array

@@ -13,6 +13,7 @@ class SummaryController : UITableViewController
 {
     var items = [[Item]]()
     
+    var lastTap:LastTap!
     
     override func viewDidLoad()
     {
@@ -21,6 +22,7 @@ class SummaryController : UITableViewController
         tableView.delegate      = self
         
         reload(false)
+        
         
         super.viewDidLoad()
     }
@@ -92,7 +94,7 @@ class SummaryController : UITableViewController
             label.textAlignment     = .Right
             
             cell.accessoryView      = label
-//            cell.editingAccessoryView = label
+            cell.editingAccessoryView = label
             
         default:
             
@@ -115,12 +117,36 @@ class SummaryController : UITableViewController
     }
     
     
+    
     override func viewWillAppear(animated: Bool)
     {
         reload(true)
         
         super.viewWillAppear(animated)
     }
+
     
+    
+    
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            // handle delete (by removing the data from your array and updating the tableview)
+            
+            let section     = indexPath.section
+            let row         = indexPath.row
+            let item        = items[section][row]
+            ItemsDataManager.resetItem(item)
+            items[section].removeAtIndex(row)
+            if items[section].count < 1 {
+                items.removeAtIndex(section)
+            }
+            reload(true)
+
+        }
+    }
     
 }

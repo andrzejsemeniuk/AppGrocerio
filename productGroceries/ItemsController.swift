@@ -9,11 +9,15 @@
 import Foundation
 import UIKit
 
-class ItemsController : UITableViewController
+class ItemsController : UITableViewController, UIGestureRecognizerDelegate
 {
     var items:[Item] = []
     
     var category:String = ""
+    
+    var colorOfCategory:UIColor = UIColor.whiteColor()
+    
+    var lastTap:LastTap!
     
     
     override func viewDidLoad()
@@ -24,6 +28,9 @@ class ItemsController : UITableViewController
         
         tableView.delegate      = self
         
+        
+        tableView.separatorStyle = .None
+
         
         var items = navigationItem.rightBarButtonItems
         
@@ -37,12 +44,23 @@ class ItemsController : UITableViewController
         ]
         
         navigationItem.rightBarButtonItems = items
+        
+        
+        
+        // "add gesture recognizer to determine which side of cell was tapped on"
+        
+        let recognizer = UITapGestureRecognizer(target:self, action:"handleTap:")
+        
+        recognizer.delegate = self
+        
+        tableView.addGestureRecognizer(recognizer)
     }
     
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
     }
+    
     
     
     
@@ -64,22 +82,49 @@ class ItemsController : UITableViewController
         
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
-        if let label = cell.textLabel {
-            label.text = item.name
+        do
+        {
+            var hue:CGFloat = 0
+            var saturation:CGFloat = 0
+            var brightness:CGFloat = 0
+            var alpha:CGFloat = 1
+            
+            colorOfCategory.getHue(&hue,saturation:&saturation,brightness:&brightness,alpha:&alpha)
+            
+            if 0 == indexPath.row % 2 {
+                cell.backgroundColor = UIColor(hue:hue,saturation:0.1,brightness:1.0,alpha:1.0)
+            }
+            else {
+                cell.backgroundColor = UIColor(hue:hue,saturation:0.15,brightness:1.0,alpha:1.0)
+            }
         }
-        cell.selectionStyle = UITableViewCellSelectionStyle.Default;
+        
+        if let label = cell.textLabel {
+            var text = item.name
+            if 33 < text.length {
+                text = text.substring(to:30) + "..."
+            }
+            label.text = text
+        }
+        
+        cell.selectionStyle = .Default
         
         switch item.value {
         case .Checkmark(let on):
             cell.accessoryType = on ? .Checkmark : .None
         case .Quantity(let count):
             
-            let button = UIButton(type:.ContactAdd)
-            button.tag = indexPath.row
-            button.setTitle(String(count), forState:.Normal)
-            button.addTarget(self, action:"pressedAddInCell:", forControlEvents:.TouchUpInside)
-            cell.accessoryView = button
-
+            if 0 < count {
+                let label = UILabel()
+                
+                label.frame             = CGRectMake(0,0,120,45)
+                //            label.textColor         = UIColor.orangeColor()
+                label.text              = String(count)
+                label.textAlignment     = .Right
+                
+                cell.accessoryView      = label
+                cell.editingAccessoryView = label
+            }
             
         default:
             cell.accessoryType = .None
@@ -88,10 +133,6 @@ class ItemsController : UITableViewController
         return cell
     }
     
-    
-    func pressedAddInCell(sender: UIButton!) {
-        print("pressed + on cell=\(items[sender.tag].name)")
-    }
     
     
     
@@ -158,17 +199,73 @@ class ItemsController : UITableViewController
         var item = items[indexPath.row]
         
         switch item.value {
+            
         case .Checkmark(let on):
+            
             item.value = .Checkmark(on:!on)
             ItemsDataManager.putItem(item)
             items[indexPath.row] = item
+            self.reload()
+            
         case .Quantity(let count):
-            item.value = .Quantity(count:1+count)
-            ItemsDataManager.putItem(item)
-            items[indexPath.row] = item
+            
+            if lastTap.path == indexPath {
+                var update = false
+                
+                if lastTap.point.x < tableView.bounds.width/2 {
+                    if 0 < count {
+                        item.value = .Quantity(count:count-1)
+                        update = true
+                    }
+                }
+                else {
+                    item.value = .Quantity(count:1+count)
+                    update = true
+                }
+                
+                if update {
+                    ItemsDataManager.putItem(item)
+                    items[indexPath.row] = item
+                    self.reload()
+                }
+            }
+            
         default:
             ()
         }
     }
+
+    
+    
+    
+    override func viewWillAppear(animated: Bool)
+    {
+        reload()
+        
+        super.viewWillAppear(animated)
+    }
+    
+
+    
+    
+    
+    func gestureRecognizerShouldBegin(recognizer: UIGestureRecognizer) -> Bool
+    {
+        let point = recognizer.locationInView(tableView)
+        
+        if let path = tableView.indexPathForRowAtPoint(point)
+        {
+            lastTap = LastTap(path:path, point:point)
+        }
+        
+        return false
+    }
+    
+
+    func handleTap(recognizer:UIGestureRecognizer)
+    {
+        // unused - we're not interested
+    }
+    
     
 }

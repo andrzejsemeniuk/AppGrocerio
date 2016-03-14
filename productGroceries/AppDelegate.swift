@@ -114,3 +114,17 @@ extension AppDelegate
     }
 
 }
+
+
+
+
+// SUMMARY/WHEN USER LONG PRESS ON CELL DELETE IT=SET ITEM=0
+// ITEMS/ADD NOTE BASED ON UILongPressGestureRecognizer on cell
+
+
+
+
+
+
+
+

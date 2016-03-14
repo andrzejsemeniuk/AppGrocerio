@@ -23,6 +23,8 @@ class CategoriesController : UITableViewController {
         
         tableView.autoresizingMask  = [.FlexibleHeight, .FlexibleWidth]
         
+        tableView.separatorStyle = .None
+
         // TODO CREATE REUSABLE CELL
         
         var items = navigationItem.rightBarButtonItems
@@ -50,6 +52,29 @@ class CategoriesController : UITableViewController {
         // tableView.reloadData()
     }
     
+
+    
+    
+    func colorForCategoryIndex(index:Int) -> UIColor
+    {
+        if 0 <= index && index < categories.count {
+            return UIColor(hue:(CGFloat(index)/CGFloat(categories.count)), saturation:0.3, brightness:1.0, alpha:1.0)
+        }
+        else {
+            return UIColor.whiteColor()
+        }
+    }
+    
+    
+    func colorForCategory(category:String) -> UIColor
+    {
+        if let index = categories.indexOf(category) {
+            return colorForCategoryIndex(index)
+        }
+        else {
+            return colorForCategoryIndex(-1)
+        }
+    }
     
     
     
@@ -68,8 +93,19 @@ class CategoriesController : UITableViewController {
     {
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
+        // TODO PREFERENCES: SATURATION
+        cell.backgroundColor    = colorForCategoryIndex(indexPath.row)
+        
         if let label = cell.textLabel {
             label.text = categories[indexPath.row]
+            
+            var white:CGFloat = 0
+            var alpha:CGFloat = 1
+            
+            cell.backgroundColor!.getWhite(&white,alpha:&alpha)
+            
+            // TODO PREFERENCES: LIGHT/DARK COLOR
+            label.textColor = white < 0.5 ? UIColor.lightTextColor() : UIColor.darkTextColor()
         }
         
         cell.selectionStyle     = UITableViewCellSelectionStyle.Default
@@ -146,6 +182,8 @@ class CategoriesController : UITableViewController {
         let category = categories[indexPath.row]
         
         let items = ItemsController()
+        
+        items.colorOfCategory = colorForCategoryIndex(indexPath.row)
         
         items.category  = category
         items.items     = ItemsDataManager.allItemsInCategory(category)
