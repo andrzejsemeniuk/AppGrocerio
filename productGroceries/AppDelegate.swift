@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         AppDelegate.__instance      = self
         
+//        ItemsDataManager.clearHelpFlags()
 //        ItemsDataManager.reset(false)
         
         // a window displays views and distributes events
@@ -51,18 +52,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         AppDelegate.__navigator     = CATEGORIES
         
-        CATEGORIES.tabBarItem       = UITabBarItem(title:"Items", image:nil, tag:1)
+        CATEGORIES.tabBarItem       = UITabBarItem(title:"Items", image:UIImage(named:"image-icon-tabbaritem-categories-default"), tag:1)
         
         CATEGORIES.setNavigationBarHidden(false, animated:true)
         
         
         
         let summary                 = SummaryController()
+        summary.title               = "Summary"
 
         let SUMMARY                 = UINavigationController(rootViewController:summary)
         
-        SUMMARY.tabBarItem          = UITabBarItem(title:"Summary", image:nil, tag:2)
-        
+        SUMMARY.tabBarItem          = UITabBarItem(title:"Summary", image:UIImage(named:"image-icon-tabbaritem-summary-default"), tag:2)
+
         
         
         let TABS                    = TabBarController()
@@ -120,16 +122,13 @@ extension AppDelegate
 
 
 
-// HELP/CATEGORIES+ITEMS+SUMMARY SCREEN, ONCE, STORE IN DEFAULTS/UIALERTCONTROLLER.ALERT
-// TAB ICONS
-// NAVIGATOR TITLE
-// CHANGE TAB NAME 'ITEMS' TO 'GROCERIES'
-
 // ITEMS/ADD NOTE BASED ON UILongPressGestureRecognizer on cell
 // SETTINGS PAGE?
 // SETTINGS/ADD COLOR THEMES? APPLE,RAINBOW,GRAPE,STRAWBERRY,PLAIN
 // SETTINGS/THEMES/SATURATION?
 // SETTINGS/FONT TYPE,SIZE,BOLD/PLAIN
+// SETTINGS/ITEM COUNT BG-COLOR, FG-COLOR
+// SETTINGS/ITEM NAMES COLOR:GRAY/BLACK/SYSTEM
 // SAVE SUMMARY?
 
 

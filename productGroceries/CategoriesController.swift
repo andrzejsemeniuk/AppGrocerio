@@ -23,6 +23,8 @@ class CategoriesController : UITableViewController {
         
         super.viewDidLoad()
         
+        self.title                  = "Categories"
+        
         tableView.dataSource        = self
         
         tableView.delegate          = self
@@ -136,7 +138,7 @@ class CategoriesController : UITableViewController {
         
         cell.selectionStyle     = UITableViewCellSelectionStyle.Default
         
-        cell.accessoryType      = .DisclosureIndicator
+        cell.accessoryType      = .None//.DisclosureIndicator
         
         return cell
     }
@@ -213,11 +215,28 @@ class CategoriesController : UITableViewController {
         
         items.colorOfCategory = colorForCategoryIndex(indexPath.row)
         
+//        self.navigationBar.barTintColor = [UIColor blueColor];
+//        self.navigationBar.tintColor = [UIColor whiteColor];
+//        self.navigationBar.translucent = NO;
+        
         items.category  = category
         items.items     = ItemsDataManager.allItemsInCategory(category)
         
         AppDelegate.navigator.pushViewController(items, animated:true)
     }
+
+    
+    
+    override func viewWillAppear(animated: Bool)
+    {
+        ItemsDataManager.displayHelpPageForCategories(self)
+        
+        super.viewWillAppear(animated)
+    }
+    
+    
+    
+
 }
 
 

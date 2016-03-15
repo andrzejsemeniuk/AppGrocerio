@@ -85,21 +85,36 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         cell.backgroundColor = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
         
         if let label = cell.textLabel {
-            label.text = item.presentableName()
+            label.text = item.name
+            label.textColor = UIColor.grayColor()
         }
         
         cell.selectionStyle = .Default
         
         if 0 < item.quantity {
-            let label = UILabel()
+            do
+            {
+                let fill = UIView()
+                
+                fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
+                fill.frame.origin.x         = cell.bounds.width-fill.frame.size.width
+                fill.backgroundColor        = UIColor(red:0.6,green:0.6,blue:0.6,alpha:0.60)
+                
+                cell.addSubview(fill)
+            }
             
-            label.frame             = CGRectMake(0,0,120,45)
-            //            label.textColor         = UIColor.orangeColor()
-            label.text              = String(item.quantity)
-            label.textAlignment     = .Right
-            
-            cell.accessoryView      = label
-            cell.editingAccessoryView = label
+            do
+            {
+                let label = UILabel()
+                
+                label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
+                label.textColor             = UIColor.whiteColor()
+                label.text                  = String(item.quantity)
+                label.textAlignment         = .Right
+                
+                cell.accessoryView          = label
+                cell.editingAccessoryView   = label
+            }
         }
         
         return cell
@@ -111,6 +126,9 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     func reload()
     {
         items = ItemsDataManager.allItemsInCategory(category)
+        
+        self.title = category
+
         tableView.reloadData()
     }
     
@@ -199,6 +217,8 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     {
         reload()
         
+        ItemsDataManager.displayHelpPageForItems(self)
+
         super.viewWillAppear(animated)
     }
     
@@ -224,5 +244,6 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         // unused - we're not interested
     }
     
+ 
     
 }

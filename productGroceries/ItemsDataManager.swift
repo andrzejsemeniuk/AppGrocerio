@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 
 struct Item
@@ -19,13 +19,6 @@ struct Item
     
     static func create(name name:String, category:String, quantity:Int = 0, note:String = "") -> Item {
         return Item(name:name,category:category,quantity:quantity,note:note)
-    }
-    
-    func presentableName() -> String {
-        if 53 < name.length {
-            return name.substring(to:50) + "..."
-        }
-        return name
     }
     
     mutating func reset()
@@ -213,6 +206,90 @@ class ItemsDataManager : NSObject
         return result
     }
     
+    
+    class func displayHelpPageForCategories(controller:CategoriesController)
+    {
+        let key = "display-help-categories"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if !defaults.boolForKey(key) {
+            defaults.setBool(true,forKey:key)
+            
+            let alert = UIAlertController(title:"Categories", message:"Welcome!  Add new categories by tapping on the plus button "
+                + "in the top right corner.  Delete categories permanently by swiping from right to left, or by tapping the Edit button", preferredStyle:.Alert)
+            
+            let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
+                action in
+            })
+            
+            alert.addAction(actionOK)
+            
+            controller.presentViewController(alert, animated:true, completion: {
+                print("completed showing add alert")
+            })
+        }
+    }
+    
+    
+    class func displayHelpPageForItems(controller:ItemsController)
+    {
+        let key = "display-help-items"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if !defaults.boolForKey(key) {
+            defaults.setBool(true,forKey:key)
+            
+            let alert = UIAlertController(title:"Items", message:"Tap on the right side of an item to increment its count.  Tap on the left side to decrement.", preferredStyle:.Alert)
+            
+            let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
+                action in
+            })
+            
+            alert.addAction(actionOK)
+            
+            controller.presentViewController(alert, animated:true, completion: {
+                print("completed showing add alert")
+            })
+
+        }
+    }
+    
+    
+    class func displayHelpPageForSummary(controller:SummaryController)
+    {
+        let key = "display-help-summary"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if !defaults.boolForKey(key) {
+            defaults.setBool(true,forKey:key)
+            
+            let alert = UIAlertController(title:"Summary", message:"This page presents a list of items you selected in categories.  You can remove items by swiping from right to left.", preferredStyle:.Alert)
+            
+            let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
+                action in
+            })
+            
+            alert.addAction(actionOK)
+            
+            controller.presentViewController(alert, animated:true, completion: {
+                print("completed showing add alert")
+            })
+
+        }
+    }
+    
+    class func clearHelpFlags()
+    {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        defaults.removeObjectForKey("display-help-categories")
+        defaults.removeObjectForKey("display-help-items")
+        defaults.removeObjectForKey("display-help-summary")
+    }
+    
     class func reset(ifEmpty:Bool = true)
     {
         let categories = allCategories()
@@ -226,6 +303,7 @@ class ItemsDataManager : NSObject
         
         if proceed
         {
+            
             for category in categories {
                 removeCategory(category)
             }
