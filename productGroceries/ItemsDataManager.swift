@@ -46,6 +46,17 @@ class ItemsDataManager : NSObject
 {
     enum Key: String {
         case Categories, Items
+        case SettingsTabCategoriesUppercase                 = "settings-categories-uppercase"
+        case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
+        case SettingsTabCategoriesFont                      = "settings-categories-font"
+        case SettingsTabCategoriesColor                     = "settings-categories-color"
+        case SettingsTabItemsRowOddTransparency             = "settings-items-row-odd-alpha"
+        case SettingsTabItemsRowEvenTransparency            = "settings-items-row-even-alpha"
+        case SettingsTabItemsQuantityColorBackground        = "settings-items-quantity-color-bg"
+        case SettingsTabItemsQuantityColorText              = "settings-items-quantity-color-text"
+        case SettingsTabSummaryQuantityColorBackground      = "settings-summary-quantity-color-bg"
+        case SettingsTabSummaryQuantityColorText            = "settings-summary-quantity-color-text"
+        case SettingsTabSummaryQuantityUseItems             = "settings-summary-quantity-use-items"
     }
     
     
@@ -103,7 +114,7 @@ class ItemsDataManager : NSObject
         var result:[Item] = []
         
         let defaults = NSUserDefaults.standardUserDefaults()
-
+        
         if let all = defaults.dictionaryForKey(itemsKey(category)) {
             for (key,value) in all {
                 if let array = value as? Array<AnyObject> {
@@ -186,7 +197,7 @@ class ItemsDataManager : NSObject
         
         return result.sort { return $0 < $1 }
     }
-
+    
     class func summary              () -> [[Item]]
     {
         var result = [[Item]]()
@@ -207,6 +218,31 @@ class ItemsDataManager : NSObject
     }
     
     
+    
+    
+    class func settingsGetBoolForKey(key:Key, defaultValue:Bool = false) -> Bool
+    {
+        return NSUserDefaults.standardUserDefaults().boolForKey(key.rawValue)
+    }
+    
+    class func settingsSetBool(value:Bool, forKey:Key)
+    {
+        NSUserDefaults.standardUserDefaults().setBool(value,forKey:forKey.rawValue)
+    }
+    
+    class func settingsGetFloatForKey(key:Key, defaultValue:Float = 0) -> Float
+    {
+        return NSUserDefaults.standardUserDefaults().floatForKey(key.rawValue)
+    }
+    
+    class func settingsSetFloat(value:Float, forKey:Key)
+    {
+        NSUserDefaults.standardUserDefaults().setFloat(value,forKey:forKey.rawValue)
+    }
+    
+    
+    
+    
     class func displayHelpPageForCategories(controller:CategoriesController)
     {
         let key = "display-help-categories"
@@ -217,7 +253,7 @@ class ItemsDataManager : NSObject
             defaults.setBool(true,forKey:key)
             
             let alert = UIAlertController(title:"Categories", message:"Welcome!  Add new categories by tapping on the plus button "
-                + "in the top right corner.  Delete categories permanently by swiping from right to left, or by tapping the Edit button", preferredStyle:.Alert)
+                + "in the top right corner.  Remove categories permanently by swiping from right to left.", preferredStyle:.Alert)
             
             let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
                 action in
@@ -241,7 +277,7 @@ class ItemsDataManager : NSObject
         if !defaults.boolForKey(key) {
             defaults.setBool(true,forKey:key)
             
-            let alert = UIAlertController(title:"Items", message:"Tap on the right side of an item to increment its count.  Tap on the left side to decrement.", preferredStyle:.Alert)
+            let alert = UIAlertController(title:"Items", message:"Tap on the right side of an item to increase its quantity.  Tap on the left side to decrease its quantity.", preferredStyle:.Alert)
             
             let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
                 action in
@@ -252,7 +288,7 @@ class ItemsDataManager : NSObject
             controller.presentViewController(alert, animated:true, completion: {
                 print("completed showing add alert")
             })
-
+            
         }
     }
     
@@ -266,7 +302,7 @@ class ItemsDataManager : NSObject
         if !defaults.boolForKey(key) {
             defaults.setBool(true,forKey:key)
             
-            let alert = UIAlertController(title:"Summary", message:"This page presents a list of items you selected in categories.  You can remove items by swiping from right to left.", preferredStyle:.Alert)
+            let alert = UIAlertController(title:"Summary", message:"This page presents a list of items you selected in categories.  Remove an item by swiping from right to left.", preferredStyle:.Alert)
             
             let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
                 action in
@@ -277,7 +313,7 @@ class ItemsDataManager : NSObject
             controller.presentViewController(alert, animated:true, completion: {
                 print("completed showing add alert")
             })
-
+            
         }
     }
     
@@ -290,7 +326,16 @@ class ItemsDataManager : NSObject
         defaults.removeObjectForKey("display-help-summary")
     }
     
-    class func reset(ifEmpty:Bool = true)
+    class func resetIfEmpty()
+    {
+        let categories = allCategories()
+        
+        if categories.count < 1 {
+            reset()
+        }
+    }
+    
+    class func reset()
     {
         let categories = allCategories()
         
@@ -299,78 +344,74 @@ class ItemsDataManager : NSObject
         // not empty,0 => yes
         // not empty,n => yes
         
-        let proceed = !ifEmpty || 0 == categories.count
         
-        if proceed
-        {
-            
-            for category in categories {
-                removeCategory(category)
-            }
-            
-            addCategory("Produce")
-            putItem(Item.create(name:"Lettuce, Iceberg",category:"Produce"))
-            putItem(Item.create(name:"Lettuce, Romaine",category:"Produce"))
-            putItem(Item.create(name:"Cabbage",category:"Produce"))
-            putItem(Item.create(name:"Tomatoes",category:"Produce"))
-            putItem(Item.create(name:"Tomatoes, Roma",category:"Produce"))
-            putItem(Item.create(name:"Potatoes",category:"Produce"))
-            putItem(Item.create(name:"Potatoes, Russett",category:"Produce"))
-            putItem(Item.create(name:"Potatoes, Golden",category:"Produce"))
-            putItem(Item.create(name:"Garlic",category:"Produce"))
-            putItem(Item.create(name:"Onions, yellow",category:"Produce"))
-            putItem(Item.create(name:"Onions, white",category:"Produce"))
-            putItem(Item.create(name:"Lemons",category:"Produce"))
-            putItem(Item.create(name:"Oranges",category:"Produce"))
-            putItem(Item.create(name:"Apples",category:"Produce"))
-            putItem(Item.create(name:"Apples, Granny Smith",category:"Produce"))
-            putItem(Item.create(name:"Apples, Mcintosh",category:"Produce"))
-            putItem(Item.create(name:"Apples, Gala",category:"Produce"))
-            putItem(Item.create(name:"Apples, Fuji",category:"Produce"))
-            putItem(Item.create(name:"Apples, Braeburn",category:"Produce"))
-            addCategory("Dairy")
-            putItem(Item.create(name:"Milk, 2%",category:"Dairy"))
-            putItem(Item.create(name:"Milk, Whole",category:"Dairy"))
-            putItem(Item.create(name:"Milk, 1%",category:"Dairy"))
-            putItem(Item.create(name:"Milk, Chocolate",category:"Dairy"))
-            putItem(Item.create(name:"Eggs",category:"Dairy"))
-            putItem(Item.create(name:"Butter",category:"Dairy"))
-            putItem(Item.create(name:"Sour Cream",category:"Dairy"))
-            putItem(Item.create(name:"Yogurt, Fat Free",category:"Dairy"))
-            putItem(Item.create(name:"Yogurt, Reduced Fat",category:"Dairy"))
-            putItem(Item.create(name:"Yogurt, Whole",category:"Dairy"))
-            addCategory("Fish+Meats")
-            putItem(Item.create(name:"Beef, angus",category:"Fish+Meats"))
-            putItem(Item.create(name:"Chicken, thighs",category:"Fish+Meats"))
-            putItem(Item.create(name:"Chicken, roasted",category:"Fish+Meats"))
-            putItem(Item.create(name:"Chicken, wings",category:"Fish+Meats"))
-            putItem(Item.create(name:"Pork, chops",category:"Fish+Meats"))
-            putItem(Item.create(name:"Tuna",category:"Fish+Meats"))
-            putItem(Item.create(name:"Salmon, pink",category:"Fish+Meats"))
-            putItem(Item.create(name:"Salmon, red sockeye",category:"Fish+Meats"))
-            addCategory("Drink")
-            putItem(Item.create(name:"Coffee, whole beans",category:"Drink"))
-            putItem(Item.create(name:"Coffee, whole beans, dark roast",category:"Drink"))
-            putItem(Item.create(name:"Coffee, whole beans, light roast",category:"Drink"))
-            putItem(Item.create(name:"Coffee, ground, French roast",category:"Drink"))
-            putItem(Item.create(name:"Tea, green",category:"Drink"))
-            putItem(Item.create(name:"Tea, peppermint, caffeine-free",category:"Drink"))
-            putItem(Item.create(name:"Ginger beer",category:"Drink"))
-            putItem(Item.create(name:"Cola",category:"Drink"))
-            putItem(Item.create(name:"Coconut water",category:"Drink"))
-            putItem(Item.create(name:"Ginger ale",category:"Drink"))
-            putItem(Item.create(name:"Water, spring",category:"Drink"))
-            putItem(Item.create(name:"Water, mineral",category:"Drink"))
-            addCategory("Misc")
-            putItem(Item.create(name:"Matches",category:"Misc"))
-            putItem(Item.create(name:"Lighter",category:"Misc"))
-            putItem(Item.create(name:"Lightbulb",category:"Misc"))
-            putItem(Item.create(name:"Nails",category:"Misc"))
-            putItem(Item.create(name:"Garbage bags",category:"Misc"))
-            putItem(Item.create(name:"Toilet paper",category:"Misc"))
-            putItem(Item.create(name:"Paper towels",category:"Misc"))
+        
+        for category in categories {
+            removeCategory(category)
         }
+        
+        addCategory("Produce")
+        putItem(Item.create(name:"Lettuce, Iceberg",category:"Produce"))
+        putItem(Item.create(name:"Lettuce, Romaine",category:"Produce"))
+        putItem(Item.create(name:"Cabbage",category:"Produce"))
+        putItem(Item.create(name:"Tomatoes",category:"Produce"))
+        putItem(Item.create(name:"Tomatoes, Roma",category:"Produce"))
+        putItem(Item.create(name:"Potatoes",category:"Produce"))
+        putItem(Item.create(name:"Potatoes, Russett",category:"Produce"))
+        putItem(Item.create(name:"Potatoes, Golden",category:"Produce"))
+        putItem(Item.create(name:"Garlic",category:"Produce"))
+        putItem(Item.create(name:"Onions, yellow",category:"Produce"))
+        putItem(Item.create(name:"Onions, white",category:"Produce"))
+        putItem(Item.create(name:"Lemons",category:"Produce"))
+        putItem(Item.create(name:"Oranges",category:"Produce"))
+        putItem(Item.create(name:"Apples",category:"Produce"))
+        putItem(Item.create(name:"Apples, Granny Smith",category:"Produce"))
+        putItem(Item.create(name:"Apples, Mcintosh",category:"Produce"))
+        putItem(Item.create(name:"Apples, Gala",category:"Produce"))
+        putItem(Item.create(name:"Apples, Fuji",category:"Produce"))
+        putItem(Item.create(name:"Apples, Braeburn",category:"Produce"))
+        addCategory("Dairy")
+        putItem(Item.create(name:"Milk, 2%",category:"Dairy"))
+        putItem(Item.create(name:"Milk, Whole",category:"Dairy"))
+        putItem(Item.create(name:"Milk, 1%",category:"Dairy"))
+        putItem(Item.create(name:"Milk, Chocolate",category:"Dairy"))
+        putItem(Item.create(name:"Eggs",category:"Dairy"))
+        putItem(Item.create(name:"Butter",category:"Dairy"))
+        putItem(Item.create(name:"Sour Cream",category:"Dairy"))
+        putItem(Item.create(name:"Yogurt, Fat Free",category:"Dairy"))
+        putItem(Item.create(name:"Yogurt, Reduced Fat",category:"Dairy"))
+        putItem(Item.create(name:"Yogurt, Whole",category:"Dairy"))
+        addCategory("Fish+Meats")
+        putItem(Item.create(name:"Beef, angus",category:"Fish+Meats"))
+        putItem(Item.create(name:"Chicken, thighs",category:"Fish+Meats"))
+        putItem(Item.create(name:"Chicken, roasted",category:"Fish+Meats"))
+        putItem(Item.create(name:"Chicken, wings",category:"Fish+Meats"))
+        putItem(Item.create(name:"Pork, chops",category:"Fish+Meats"))
+        putItem(Item.create(name:"Tuna",category:"Fish+Meats"))
+        putItem(Item.create(name:"Salmon, pink",category:"Fish+Meats"))
+        putItem(Item.create(name:"Salmon, red sockeye",category:"Fish+Meats"))
+        addCategory("Drink")
+        putItem(Item.create(name:"Coffee, whole beans",category:"Drink"))
+        putItem(Item.create(name:"Coffee, whole beans, dark roast",category:"Drink"))
+        putItem(Item.create(name:"Coffee, whole beans, light roast",category:"Drink"))
+        putItem(Item.create(name:"Coffee, ground, French roast",category:"Drink"))
+        putItem(Item.create(name:"Tea, green",category:"Drink"))
+        putItem(Item.create(name:"Tea, peppermint, caffeine-free",category:"Drink"))
+        putItem(Item.create(name:"Ginger beer",category:"Drink"))
+        putItem(Item.create(name:"Cola",category:"Drink"))
+        putItem(Item.create(name:"Coconut water",category:"Drink"))
+        putItem(Item.create(name:"Ginger ale",category:"Drink"))
+        putItem(Item.create(name:"Water, spring",category:"Drink"))
+        putItem(Item.create(name:"Water, mineral",category:"Drink"))
+        addCategory("Misc")
+        putItem(Item.create(name:"Matches",category:"Misc"))
+        putItem(Item.create(name:"Lighter",category:"Misc"))
+        putItem(Item.create(name:"Lightbulb",category:"Misc"))
+        putItem(Item.create(name:"Nails",category:"Misc"))
+        putItem(Item.create(name:"Garbage bags",category:"Misc"))
+        putItem(Item.create(name:"Toilet paper",category:"Misc"))
+        putItem(Item.create(name:"Paper towels",category:"Misc"))
     }
-
+    
 }
 

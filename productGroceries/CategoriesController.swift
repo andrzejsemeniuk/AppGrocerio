@@ -43,7 +43,7 @@ class CategoriesController : UITableViewController {
         
         items! += [
             UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
-            editButtonItem(),
+//            editButtonItem(),
         ]
         
         navigationItem.rightBarButtonItems = items
@@ -125,7 +125,13 @@ class CategoriesController : UITableViewController {
         cell.backgroundColor    = colorForCategoryIndex(indexPath.row)
         
         if let label = cell.textLabel {
-            label.text = categories[indexPath.row]
+            
+            if ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
+                label.text = categories[indexPath.row].uppercaseString
+            }
+            else {
+                label.text = categories[indexPath.row]
+            }
             
             var white:CGFloat = 0
             var alpha:CGFloat = 1
@@ -229,6 +235,8 @@ class CategoriesController : UITableViewController {
     
     override func viewWillAppear(animated: Bool)
     {
+        tableView.reloadData()
+        
         ItemsDataManager.displayHelpPageForCategories(self)
         
         super.viewWillAppear(animated)

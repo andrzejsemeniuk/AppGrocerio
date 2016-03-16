@@ -31,7 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppDelegate.__instance      = self
         
 //        ItemsDataManager.clearHelpFlags()
-//        ItemsDataManager.reset(false)
+//        ItemsDataManager.reset()
+        ItemsDataManager.resetIfEmpty()
         
         // a window displays views and distributes events
         window                      = UIWindow()
@@ -41,8 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         WINDOW.screen               = UIScreen.mainScreen()
         WINDOW.bounds               = WINDOW.screen.bounds
         WINDOW.windowLevel          = UIWindowLevelNormal
-        
-        ItemsDataManager.reset(true)
         
         
         
@@ -67,9 +66,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         
+        let settings                = SettingsController()
+        settings.title              = "Settings"
+        
+        let SETTINGS                = UINavigationController(rootViewController:settings)
+        
+        SETTINGS.tabBarItem         = UITabBarItem(title:"Settings", image:UIImage(named:"image-icon-tabbaritem-summary-default"), tag:3)
+        
+        
+        
         let TABS                    = TabBarController()
         
-        TABS.setViewControllers([CATEGORIES,SUMMARY], animated:true)
+        TABS.setViewControllers([CATEGORIES,SUMMARY,SETTINGS], animated:true)
         
         TABS.selectedViewController = CATEGORIES
         

@@ -40,7 +40,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         items! += [
             UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
-            editButtonItem(),
+//            editButtonItem(),
         ]
         
         navigationItem.rightBarButtonItems = items
@@ -82,7 +82,20 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
-        cell.backgroundColor = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
+        do
+        {
+            let isEven = indexPath.row % 2 == 0
+            
+            var color = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
+            
+            let rgba  = color.rgba()
+            
+            let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenTransparency : .SettingsTabItemsRowOddTransparency, defaultValue:rgba.alpha)
+            
+            color = color.colorWithAlphaComponent(CGFloat(alpha))
+                
+            cell.backgroundColor = color
+        }
         
         if let label = cell.textLabel {
             label.text = item.name

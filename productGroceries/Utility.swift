@@ -19,24 +19,24 @@ struct UITableViewTap
 extension String
 {
     public var length: Int {
-            return characters.count
+        return characters.count
     }
     
     public var urlEncoded: String {
-            return stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
+        return stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
     }
     
     public var base64Encoded: String {
-            let step1:NSString      = self as NSString
-            let step2:NSData        = step1.dataUsingEncoding(NSUTF8StringEncoding)!
-            let options             = NSDataBase64EncodingOptions(rawValue: 0)
-            let result:String       = step2.base64EncodedStringWithOptions(options)
-            
-            return result
+        let step1:NSString      = self as NSString
+        let step2:NSData        = step1.dataUsingEncoding(NSUTF8StringEncoding)!
+        let options             = NSDataBase64EncodingOptions(rawValue: 0)
+        let result:String       = step2.base64EncodedStringWithOptions(options)
+        
+        return result
     }
     
     public var empty: Bool {
-            return length < 1
+        return length < 1
     }
     
     public func trimmed() -> String {
@@ -51,13 +51,13 @@ extension String
             start:self.startIndex.advancedBy(from),
             end:self.startIndex.advancedBy(to+1)))
     }
-
+    
     public func substring(from:Int = 0, length:Int) -> String {
         return self.substringWithRange(Range<String.Index>(
             start:self.startIndex.advancedBy(from),
             end:self.startIndex.advancedBy(from+length)))
     }
-
+    
 }
 
 extension Array
@@ -74,6 +74,32 @@ extension UIColor
 {
     public convenience init(red:CGFloat,green:CGFloat,blue:CGFloat) {
         self.init(red:red,green:green,blue:blue,alpha:1)
+    }
+    
+    public func rgba() -> (red:Float,green:Float,blue:Float,alpha:Float) {
+        var r:CGFloat = 0
+        var g:CGFloat = 0
+        var b:CGFloat = 0
+        var a:CGFloat = 1
+        
+        self.getRed(&r,green:&g,blue:&b,alpha:&a)
+        
+        return (Float(r),Float(g),Float(b),Float(a))
+    }
+    
+    public func hsba() -> (hue:Float,saturation:Float,brightness:Float,alpha:Float) {
+        var h:CGFloat = 0
+        var s:CGFloat = 0
+        var b:CGFloat = 0
+        var a:CGFloat = 1
+        
+        self.getHue(&h,saturation:&s,brightness:&b,alpha:&a)
+        
+        return (Float(h),Float(s),Float(b),Float(a))
+    }
+    
+    public func alpha() -> Float {
+        return rgba().alpha
     }
 }
 
