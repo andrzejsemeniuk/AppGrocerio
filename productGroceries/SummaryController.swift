@@ -66,6 +66,8 @@ class SummaryController : UITableViewController
             result.text                 = text
         }
 
+        result.font                 = ItemsDataManager.settingsGetCategoriesFont()
+
         result.textAlignment        = .Center
 //        result.font                 = UIFont.systemFontOfSize(12, weight:2.0)
         result.backgroundColor      = CategoriesController.instance.colorForCategory(text)
@@ -101,8 +103,9 @@ class SummaryController : UITableViewController
         }
         
         if let label = cell.textLabel {
-            label.text = item.name
+            label.text      = item.name
             label.textColor = UIColor.grayColor()
+            label.font      = ItemsDataManager.settingsGetItemsFont()
         }
         
         cell.selectionStyle = .None

@@ -98,8 +98,9 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         }
         
         if let label = cell.textLabel {
-            label.text = item.name
+            label.text      = item.name
             label.textColor = UIColor.grayColor()
+            label.font      = ItemsDataManager.settingsGetItemsFont()
         }
         
         cell.selectionStyle = .Default

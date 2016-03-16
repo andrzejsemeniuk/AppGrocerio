@@ -133,6 +133,8 @@ class CategoriesController : UITableViewController {
                 label.text = categories[indexPath.row]
             }
             
+            label.font = ItemsDataManager.settingsGetCategoriesFont()
+            
             var white:CGFloat = 0
             var alpha:CGFloat = 1
             
@@ -228,7 +230,7 @@ class CategoriesController : UITableViewController {
         items.category  = category
         items.items     = ItemsDataManager.allItemsInCategory(category)
         
-        AppDelegate.navigator.pushViewController(items, animated:true)
+        AppDelegate.navigatorForCategories.pushViewController(items, animated:true)
     }
 
     

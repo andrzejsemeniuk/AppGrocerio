@@ -50,6 +50,7 @@ class ItemsDataManager : NSObject
         case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
         case SettingsTabCategoriesFont                      = "settings-categories-font"
         case SettingsTabCategoriesColor                     = "settings-categories-color"
+        case SettingsTabItemsFont                           = "settings-items-font"
         case SettingsTabItemsRowOddTransparency             = "settings-items-row-odd-alpha"
         case SettingsTabItemsRowEvenTransparency            = "settings-items-row-even-alpha"
         case SettingsTabItemsQuantityColorBackground        = "settings-items-quantity-color-bg"
@@ -238,6 +239,46 @@ class ItemsDataManager : NSObject
     class func settingsSetFloat(value:Float, forKey:Key)
     {
         NSUserDefaults.standardUserDefaults().setFloat(value,forKey:forKey.rawValue)
+    }
+    
+    class func settingsGetStringForKey(key:Key, defaultValue:String = "") -> String
+    {
+        if let result = NSUserDefaults.standardUserDefaults().stringForKey(key.rawValue) {
+            return result
+        }
+        return defaultValue
+    }
+    
+    class func settingsSetString(value:String, forKey:Key)
+    {
+        NSUserDefaults.standardUserDefaults().setObject(value,forKey:forKey.rawValue)
+    }
+    
+    
+    
+    
+    
+    
+    class func settingsGetItemsFont() -> UIFont
+    {
+        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
+
+        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:font0.familyName), size:font0.pointSize) {
+            return result
+        }
+        
+        return UIFont.systemFontOfSize(UIFont.labelFontSize())
+    }
+    
+    class func settingsGetCategoriesFont() -> UIFont
+    {
+        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
+        
+        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:font0.familyName), size:font0.pointSize) {
+            return result
+        }
+        
+        return UIFont.systemFontOfSize(UIFont.labelFontSize())
     }
     
     

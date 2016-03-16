@@ -13,7 +13,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private static var __navigator:UINavigationController?
+    private static var __navigatorForCategories:UINavigationController?
+    private static var __navigatorForSettings:UINavigationController?
     
     private static var __instance:AppDelegate?
     
@@ -21,8 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return __instance!
     }
     
-    class var navigator:UINavigationController {
-        return __navigator!
+    class var navigatorForCategories:UINavigationController {
+        return __navigatorForCategories!
+    }
+    
+    class var navigatorForSettings:UINavigationController {
+        return __navigatorForSettings!
     }
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -49,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let CATEGORIES              = UINavigationController(rootViewController:categories)
         
-        AppDelegate.__navigator     = CATEGORIES
+        AppDelegate.__navigatorForCategories     = CATEGORIES
         
         CATEGORIES.tabBarItem       = UITabBarItem(title:"Items", image:UIImage(named:"image-icon-tabbaritem-categories-default"), tag:1)
         
@@ -73,6 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         SETTINGS.tabBarItem         = UITabBarItem(title:"Settings", image:UIImage(named:"image-icon-tabbaritem-summary-default"), tag:3)
         
+        AppDelegate.__navigatorForSettings     = SETTINGS
         
         
         let TABS                    = TabBarController()

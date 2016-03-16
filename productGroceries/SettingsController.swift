@@ -74,16 +74,26 @@ class SettingsController : UITableViewController
     //    match items?
     
     
+    typealias Action = () -> ()
     
-    private var updates:[() -> ()] = []
+    private var actions:[NSIndexPath : Action] = [:]
     
-    func addUpdate(f:()->()) {
-        updates.append(f)
+    func addAction(indexPath:NSIndexPath, action:Action) {
+        actions[indexPath] = action
+    }
+
+    
+    typealias Update = Action
+    
+    private var updates:[Update] = []
+    
+    func addUpdate(update:Update) {
+        updates.append(update)
     }
     
     
     
-    typealias FunctionOnCell = (cell:UITableViewCell) -> ()
+    typealias FunctionOnCell = (cell:UITableViewCell, indexPath:NSIndexPath) -> ()
     
     var rows:[[Any]] = []
     
@@ -126,12 +136,12 @@ class SettingsController : UITableViewController
     
     override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
+        let cell = UITableViewCell(style:.Value1,reuseIdentifier:nil)
         
         cell.selectionStyle = .None
         
         if let f = rows[indexPath.section][indexPath.row+1] as? FunctionOnCell {
-            f(cell:cell)
+            f(cell:cell,indexPath:indexPath)
         }
         
         return cell
@@ -152,124 +162,161 @@ class SettingsController : UITableViewController
     
     
     
+    
+    
+    func createCellForFont(font0:UIFont, title:String, key:ItemsDataManager.Key) -> FunctionOnCell
+    {
+        return
+            { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                if let label = cell.textLabel {
+                    
+//                    let font0       = ItemsDataManager.settingsGetCategoriesFont()
+                    
+                    label.text          = "Font"
+                    if let detail = cell.detailTextLabel {
+                        detail.text = font0.familyName
+                    }
+                    cell.selectionStyle = .Default
+                    cell.accessoryType  = .DisclosureIndicator
+                    self.addAction(indexPath) {
+                        
+                        let fonts       = FontNamePicker()
+                        
+                        fonts.title     = title
+                        
+                        fonts.names     = UIFont.familyNames()
+                        
+                        fonts.selected  = font0.familyName
+                        
+                        fonts.update    = {
+                            ItemsDataManager.settingsSetString(fonts.selected, forKey:key)
+                        }
+                        
+                        AppDelegate.navigatorForSettings.pushViewController(fonts, animated:true)
+                    }
+                }
+        }
+    }
+    
+    
     override func viewWillAppear(animated: Bool)
     {
-        rows =
+        for update in updates {
+            update()
+        }
+        
+        updates = []
+        
+        actions = [:]
+        
+        rows    = [
             [
-                [
-                    "SETTINGS",
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            label.text          = "Save"
-                            cell.selectionStyle = .Default
+                "SETTINGS",
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Save"
+                        cell.selectionStyle = .Default
+                    }
+                },
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Load"
+                        cell.selectionStyle = .Default
+                        cell.accessoryType  = .DisclosureIndicator
+                    }
+                },
+                
+                "Save current settings, or load previously saved settings"
+            ],
+            [
+                "CATEGORIES",
+                
+                createCellForFont(ItemsDataManager.settingsGetCategoriesFont(),title:"Categories",key:.SettingsTabCategoriesFont),
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        cell.selectionStyle = .Default
+                        label.text          = "Uppercase"
+                        if true
+                        {
+                            let view = UISwitch()
+                            view.setOn(ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase), animated:true)
+                            self.addUpdate({
+                                ItemsDataManager.settingsSetBool(view.on, forKey:.SettingsTabCategoriesUppercase)
+                            })
+                            cell.accessoryView = view
                         }
-                    },
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            label.text          = "Load"
-                            cell.selectionStyle = .Default
-                            cell.accessoryType  = .DisclosureIndicator
+                    }
+                },
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Colors"
+                        cell.accessoryType  = .DisclosureIndicator
+                        cell.selectionStyle = .Default
+                    }
+                },
+                
+                ""
+            ],
+            [
+                "ITEMS",
+
+                createCellForFont(ItemsDataManager.settingsGetItemsFont(),title:"Items",key:.SettingsTabItemsFont),
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Odd rows"
+                        if false
+                        {
+                            let view = UISlider()
+                            view.setValue(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowOddTransparency), animated:true)
+                            self.addUpdate({
+                                ItemsDataManager.settingsSetFloat(view.value, forKey:.SettingsTabItemsRowOddTransparency)
+                            })
+                            cell.accessoryView = view
                         }
-                    },
-                    "Save current settings, or load previously saved settings"
-                ],
-                [
-                    "CATEGORIES",
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            label.text          = "Font"
-                            cell.selectionStyle = .Default
-                            cell.accessoryType  = .DisclosureIndicator
+                        cell.accessoryType  = .DisclosureIndicator
+                        cell.selectionStyle = .Default
+                    }
+                },
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Even rows"
+                        if false
+                        {
+                            let view = UISlider()
+                            view.setValue(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowEvenTransparency), animated:true)
+                            self.addUpdate({
+                                ItemsDataManager.settingsSetFloat(view.value, forKey:.SettingsTabItemsRowEvenTransparency)
+                            })
+                            cell.accessoryView = view
                         }
-                    },
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            cell.selectionStyle = .Default
-                            label.text          = "Uppercase"
-                            if true
-                            {
-                                let view = UISwitch()
-                                view.setOn(ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase), animated:true)
-                                self.addUpdate({
-                                    ItemsDataManager.settingsSetBool(view.on, forKey:.SettingsTabCategoriesUppercase)
-                                })
-                                cell.accessoryView = view
-                            }
-                        }
-                    },
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            cell.selectionStyle = .Default
-                            label.text          = "Emphasize"
-                            if true
-                            {
-                                let view = UISwitch()
-                                view.setOn(ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize), animated:true)
-                                self.addUpdate({
-                                    ItemsDataManager.settingsSetBool(view.on, forKey:.SettingsTabCategoriesEmphasize)
-                                })
-                                cell.accessoryView = view
-                            }
-                        }
-                    },
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            label.text          = "Colors"
-                            cell.accessoryType  = .DisclosureIndicator
-                            cell.selectionStyle = .Default
-                        }
-                    },
-                    ""
-                ],
-                [
-                    "ITEMS",
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            label.text          = "Odd rows"
-                            if false
-                            {
-                                let view = UISlider()
-                                view.setValue(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowOddTransparency), animated:true)
-                                self.addUpdate({
-                                    ItemsDataManager.settingsSetFloat(view.value, forKey:.SettingsTabItemsRowOddTransparency)
-                                })
-                                cell.accessoryView = view
-                            }
-                            cell.accessoryType  = .DisclosureIndicator
-                            cell.selectionStyle = .Default
-                        }
-                    },
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            label.text          = "Even rows"
-                            if false
-                            {
-                                let view = UISlider()
-                                view.setValue(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowEvenTransparency), animated:true)
-                                self.addUpdate({
-                                    ItemsDataManager.settingsSetFloat(view.value, forKey:.SettingsTabItemsRowEvenTransparency)
-                                })
-                                cell.accessoryView = view
-                            }
-                            cell.accessoryType  = .DisclosureIndicator
-                            cell.selectionStyle = .Default
-                        }
-                    },
-                    { (cell:UITableViewCell) in
-                        if let label = cell.textLabel {
-                            label.text          = "Quantity"
-                            cell.selectionStyle = .Default
-                            cell.accessoryType  = .DisclosureIndicator
-                        }
-                    },
-                    ""
-                ],
+                        cell.accessoryType  = .DisclosureIndicator
+                        cell.selectionStyle = .Default
+                    }
+                },
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Quantity"
+                        cell.selectionStyle = .Default
+                        cell.accessoryType  = .DisclosureIndicator
+                    }
+                },
+                
+                ""
+            ],
         ]
         
         reload()
         
         super.viewWillAppear(animated)
     }
+    
     
     
     
@@ -281,12 +328,24 @@ class SettingsController : UITableViewController
         
         updates = []
         
-        rows = []
+        rows    = []
+        
+        actions = [:]
         
         super.viewWillDisappear(animated)
     }
     
     
+    
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        if let action = actions[indexPath]
+        {
+            action()
+        }
+    }
     
     
 }
