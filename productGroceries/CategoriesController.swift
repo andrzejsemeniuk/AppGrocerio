@@ -133,7 +133,8 @@ class CategoriesController : UITableViewController {
                 label.text = categories[indexPath.row]
             }
             
-            label.font = ItemsDataManager.settingsGetCategoriesFont()
+            label.textColor = ItemsDataManager.settingsGetCategoriesTextColor()
+            label.font      = ItemsDataManager.settingsGetCategoriesFont()
             
             var white:CGFloat = 0
             var alpha:CGFloat = 1
@@ -141,7 +142,7 @@ class CategoriesController : UITableViewController {
             cell.backgroundColor!.getWhite(&white,alpha:&alpha)
             
             // TODO PREFERENCES: LIGHT/DARK COLOR
-            label.textColor = white < 0.5 ? UIColor.lightTextColor() : UIColor.darkTextColor()
+//            label.textColor = white < 0.5 ? UIColor.lightTextColor() : UIColor.darkTextColor()
         }
         
         cell.selectionStyle     = UITableViewCellSelectionStyle.Default

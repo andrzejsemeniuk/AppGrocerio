@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 
-class FontNamePicker : UITableViewController
+class ColorPicker : UITableViewController
 {
-    var names:[String]  = []
+    var colors:[UIColor]  = []
     
-    var selected:String = ""
+    var selected:UIColor = UIColor.blackColor()
     
     
     
@@ -25,7 +25,22 @@ class FontNamePicker : UITableViewController
         
         tableView.separatorStyle = .None
 
-        names = UIFont.familyNames()
+        colors = [
+            UIColor.GRAY(0.75,1),
+            UIColor.GRAY(0.50,1),
+            UIColor.GRAY(0.25,1),
+        ]
+        
+        let values:[Float] = [0,0.6,0.8,1]
+        
+        for g in values {
+            for r in values {
+                for b in values {
+                    colors.append(UIColor.RGBA(r,g,b,1))
+                }
+            }
+        }
+        
         
         reload()
         
@@ -50,24 +65,25 @@ class FontNamePicker : UITableViewController
     
     override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return names.count
+        return colors.count
     }
     
     override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let name = names[indexPath.row]
+        let color = colors[indexPath.row]
         
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
-        if let label = cell.textLabel {
-            label.text          = name
-//            label.textColor = UIColor.grayColor()
-            label.font          = UIFont(name:name,size:UIFont.labelFontSize())
-            label.textAlignment = .Left
-        }
+        cell.backgroundColor = color
         
         cell.selectionStyle = .Default
-        cell.accessoryType  = name == selected ? .Checkmark : .None
+        
+        if color == selected {
+            cell.accessoryType = .Checkmark
+        }
+        else {
+            cell.accessoryType = .None
+        }
         
         return cell
     }
@@ -77,8 +93,6 @@ class FontNamePicker : UITableViewController
     
     func reload()
     {
-        names = names.sort()
-        
         tableView.reloadData()
     }
     
@@ -88,7 +102,7 @@ class FontNamePicker : UITableViewController
     {
         reload()
         
-        if let row = names.indexOf(selected) {
+        if let row = colors.indexOf(selected) {
             let path = NSIndexPath(forRow:row,inSection:0)
             tableView.scrollToRowAtIndexPath(path,atScrollPosition:.Middle,animated:true)
         }
@@ -102,7 +116,7 @@ class FontNamePicker : UITableViewController
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
-        selected = names[indexPath.row]
+        selected = colors[indexPath.row]
         
         reload()
         

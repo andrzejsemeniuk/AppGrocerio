@@ -49,8 +49,10 @@ class ItemsDataManager : NSObject
         case SettingsTabCategoriesUppercase                 = "settings-categories-uppercase"
         case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
         case SettingsTabCategoriesFont                      = "settings-categories-font"
-        case SettingsTabCategoriesColor                     = "settings-categories-color"
+        case SettingsTabCategoriesTheme                     = "settings-categories-theme"
+        case SettingsTabCategoriesTextColor                 = "settings-categories-text-color"
         case SettingsTabItemsFont                           = "settings-items-font"
+        case SettingsTabItemsTextColor                      = "settings-items-text-color"
         case SettingsTabItemsRowOddTransparency             = "settings-items-row-odd-alpha"
         case SettingsTabItemsRowEvenTransparency            = "settings-items-row-even-alpha"
         case SettingsTabItemsQuantityColorBackground        = "settings-items-quantity-color-bg"
@@ -254,6 +256,27 @@ class ItemsDataManager : NSObject
         NSUserDefaults.standardUserDefaults().setObject(value,forKey:forKey.rawValue)
     }
     
+    class func settingsGetColorForKey(key:Key, defaultValue:UIColor = UIColor.blackColor()) -> UIColor
+    {
+        if let result = NSUserDefaults.standardUserDefaults().objectForKey(key.rawValue) as? [Float] {
+            return UIColor.RGBA(result[0],result[1],result[2],result[3])
+        }
+        return defaultValue
+    }
+    
+    class func settingsSetColor(value:UIColor, forKey:Key)
+    {
+        let rgba = value.RGBA()
+        
+        let RGBA:[Float] = [
+            rgba.red,
+            rgba.green,
+            rgba.blue,
+            rgba.alpha
+        ]
+        NSUserDefaults.standardUserDefaults().setObject(RGBA,forKey:forKey.rawValue)
+    }
+    
     
     
     
@@ -282,6 +305,25 @@ class ItemsDataManager : NSObject
     }
     
     
+
+    
+    class func settingsGetCategoriesTextColor() -> UIColor
+    {
+        let color0 = UIColor.grayColor()
+        
+        return settingsGetColorForKey(.SettingsTabCategoriesTextColor,defaultValue:color0)
+    }
+    
+    class func settingsGetItemsTextColor() -> UIColor
+    {
+        let color0 = UIColor.grayColor()
+        
+        return settingsGetColorForKey(.SettingsTabItemsTextColor,defaultValue:color0)
+    }
+    
+    
+    
+
     
     
     class func displayHelpPageForCategories(controller:CategoriesController)

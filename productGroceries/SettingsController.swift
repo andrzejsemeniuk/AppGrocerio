@@ -170,8 +170,6 @@ class SettingsController : UITableViewController
             { (cell:UITableViewCell, indexPath:NSIndexPath) in
                 if let label = cell.textLabel {
                     
-//                    let font0       = ItemsDataManager.settingsGetCategoriesFont()
-                    
                     label.text          = "Font"
                     if let detail = cell.detailTextLabel {
                         detail.text = font0.familyName
@@ -182,7 +180,7 @@ class SettingsController : UITableViewController
                         
                         let fonts       = FontNamePicker()
                         
-                        fonts.title     = title
+                        fonts.title     = title+" Font"
                         
                         fonts.names     = UIFont.familyNames()
                         
@@ -193,6 +191,43 @@ class SettingsController : UITableViewController
                         }
                         
                         AppDelegate.navigatorForSettings.pushViewController(fonts, animated:true)
+                    }
+                }
+        }
+    }
+    
+    
+    func createCellForColor(color0:UIColor, title:String, key:ItemsDataManager.Key) -> FunctionOnCell
+    {
+        return
+            { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                if let label = cell.textLabel {
+                    
+                    label.text          = "Color"
+                    if let detail = cell.detailTextLabel {
+                        detail.text = "  "
+                        let view = UIView()
+                        
+                        view.frame              = CGRectMake(-16,-2,24,24)
+                        view.backgroundColor    = color0
+                        
+                        detail.addSubview(view)
+                    }
+                    cell.selectionStyle = .Default
+                    cell.accessoryType  = .DisclosureIndicator
+                    self.addAction(indexPath) {
+                        
+                        let colors      = ColorPicker()
+                        
+                        colors.title    = title+" Color"
+                        
+                        colors.selected = color0
+                        
+                        colors.update   = {
+                            ItemsDataManager.settingsSetColor(colors.selected, forKey:key)
+                        }
+                        
+                        AppDelegate.navigatorForSettings.pushViewController(colors, animated:true)
                     }
                 }
         }
@@ -235,6 +270,8 @@ class SettingsController : UITableViewController
                 
                 createCellForFont(ItemsDataManager.settingsGetCategoriesFont(),title:"Categories",key:.SettingsTabCategoriesFont),
                 
+                createCellForColor(ItemsDataManager.settingsGetCategoriesTextColor(),title:"Categories",key:.SettingsTabCategoriesTextColor),
+                
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {
                         cell.selectionStyle = .Default
@@ -253,7 +290,7 @@ class SettingsController : UITableViewController
                 
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {
-                        label.text          = "Colors"
+                        label.text          = "Themes"
                         cell.accessoryType  = .DisclosureIndicator
                         cell.selectionStyle = .Default
                     }
@@ -265,6 +302,8 @@ class SettingsController : UITableViewController
                 "ITEMS",
 
                 createCellForFont(ItemsDataManager.settingsGetItemsFont(),title:"Items",key:.SettingsTabItemsFont),
+                
+                createCellForColor(ItemsDataManager.settingsGetItemsTextColor(),title:"Items",key:.SettingsTabItemsTextColor),
                 
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {

@@ -88,7 +88,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             
             var color = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
             
-            let rgba  = color.rgba()
+            let rgba  = color.RGBA()
             
             let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenTransparency : .SettingsTabItemsRowOddTransparency, defaultValue:rgba.alpha)
             
@@ -99,7 +99,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         if let label = cell.textLabel {
             label.text      = item.name
-            label.textColor = UIColor.grayColor()
+            label.textColor = ItemsDataManager.settingsGetItemsTextColor()
             label.font      = ItemsDataManager.settingsGetItemsFont()
         }
         

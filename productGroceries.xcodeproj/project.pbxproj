@@ -32,6 +32,7 @@
 		57A159C41C90F4CE0031036F /* ItemsDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159C31C90F4CE0031036F /* ItemsDataManager.swift */; };
 		57A159C51C90F4CE0031036F /* ItemsDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159C31C90F4CE0031036F /* ItemsDataManager.swift */; };
 		57A87B2E1C9A073000E496C7 /* FontNamePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A87B2D1C9A073000E496C7 /* FontNamePicker.swift */; settings = {ASSET_TAGS = (); }; };
+		57A87B301C9A40F800E496C7 /* ColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A87B2F1C9A40F800E496C7 /* ColorPicker.swift */; settings = {ASSET_TAGS = (); }; };
 		57B215B21C91FB2C004B86A2 /* CategoriesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B215B11C91FB2C004B86A2 /* CategoriesController.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 		57A159BF1C90B1C90031036F /* SummaryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SummaryController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		57A159C31C90F4CE0031036F /* ItemsDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ItemsDataManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		57A87B2D1C9A073000E496C7 /* FontNamePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontNamePicker.swift; sourceTree = "<group>"; };
+		57A87B2F1C9A40F800E496C7 /* ColorPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPicker.swift; sourceTree = "<group>"; };
 		57B215B11C91FB2C004B86A2 /* CategoriesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CategoriesController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
@@ -163,6 +165,7 @@
 				5759A10F1C98BEC200C788A3 /* SettingsController.swift */,
 				57A159BF1C90B1C90031036F /* SummaryController.swift */,
 				57A87B2D1C9A073000E496C7 /* FontNamePicker.swift */,
+				57A87B2F1C9A40F800E496C7 /* ColorPicker.swift */,
 				57A159B21C90974D0031036F /* TabBarController.swift */,
 			);
 			name = Controllers;
@@ -304,6 +307,7 @@
 				57A159C41C90F4CE0031036F /* ItemsDataManager.swift in Sources */,
 				57A87B2E1C9A073000E496C7 /* FontNamePicker.swift in Sources */,
 				57A159BC1C90981C0031036F /* ItemsController.swift in Sources */,
+				57A87B301C9A40F800E496C7 /* ColorPicker.swift in Sources */,
 				574880F31C89EEF100A3806F /* AppDelegate.swift in Sources */,
 				57A159B71C9097E90031036F /* NavigationController.swift in Sources */,
 				5792CE841C933E390001B192 /* Utility.swift in Sources */,

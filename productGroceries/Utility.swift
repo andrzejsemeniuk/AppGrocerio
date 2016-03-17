@@ -76,7 +76,7 @@ extension UIColor
         self.init(red:red,green:green,blue:blue,alpha:1)
     }
     
-    public func rgba() -> (red:Float,green:Float,blue:Float,alpha:Float) {
+    public func RGBA() -> (red:Float,green:Float,blue:Float,alpha:Float) {
         var r:CGFloat = 0
         var g:CGFloat = 0
         var b:CGFloat = 0
@@ -87,7 +87,7 @@ extension UIColor
         return (Float(r),Float(g),Float(b),Float(a))
     }
     
-    public func hsba() -> (hue:Float,saturation:Float,brightness:Float,alpha:Float) {
+    public func HSBA() -> (hue:Float,saturation:Float,brightness:Float,alpha:Float) {
         var h:CGFloat = 0
         var s:CGFloat = 0
         var b:CGFloat = 0
@@ -99,8 +99,24 @@ extension UIColor
     }
     
     public func alpha() -> Float {
-        return rgba().alpha
+        return RGBA().alpha
     }
+    
+    public class func GRAY(v:Float, _ a:Float = 1.0) -> UIColor
+    {
+        return UIColor(white:CGFloat(v),alpha:CGFloat(a))
+    }
+    
+    public class func RGBA(r:Float, _ g:Float, _ b:Float, _ a:Float = 1.0) -> UIColor
+    {
+        return UIColor(red:CGFloat(r),green:CGFloat(g),blue:CGFloat(b),alpha:CGFloat(a))
+    }
+    
+    public class func HSBA(h:Float, _ s:Float, _ b:Float, _ a:Float = 1.0) -> UIColor
+    {
+        return UIColor(hue:CGFloat(h),saturation:CGFloat(s),brightness:CGFloat(b),alpha:CGFloat(a))
+    }
+
 }
 
 
