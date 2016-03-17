@@ -52,14 +52,18 @@ class ItemsDataManager : NSObject
         case SettingsTabCategoriesTheme                     = "settings-categories-theme"
         case SettingsTabCategoriesTextColor                 = "settings-categories-text-color"
         case SettingsTabItemsFont                           = "settings-items-font"
+        case SettingsTabItemsFontSameAsCategories           = "settings-items-font-as-categories"
         case SettingsTabItemsTextColor                      = "settings-items-text-color"
-        case SettingsTabItemsRowOddTransparency             = "settings-items-row-odd-alpha"
-        case SettingsTabItemsRowEvenTransparency            = "settings-items-row-even-alpha"
+        case SettingsTabItemsTextColorSameAsCategories      = "settings-items-text-color-as-categories"
+        case SettingsTabItemsRowOddOpacity                  = "settings-items-row-odd-alpha"
+        case SettingsTabItemsRowEvenOpacity                 = "settings-items-row-even-alpha"
         case SettingsTabItemsQuantityColorBackground        = "settings-items-quantity-color-bg"
+        case SettingsTabItemsQuantityColorBackgroundOpacity = "settings-items-quantity-color-bg-opacity"
         case SettingsTabItemsQuantityColorText              = "settings-items-quantity-color-text"
-        case SettingsTabSummaryQuantityColorBackground      = "settings-summary-quantity-color-bg"
-        case SettingsTabSummaryQuantityColorText            = "settings-summary-quantity-color-text"
-        case SettingsTabSummaryQuantityUseItems             = "settings-summary-quantity-use-items"
+        case SettingsTabItemsQuantityColorTextSameAsItems   = "settings-items-quantity-color-text-as-items"
+        case SettingsTabItemsQuantityFont                   = "settings-items-quantity-font"
+        case SettingsTabItemsQuantityFontSameAsItems        = "settings-items-quantity-font-as-items"
+        
     }
     
     
@@ -282,17 +286,6 @@ class ItemsDataManager : NSObject
     
     
     
-    class func settingsGetItemsFont() -> UIFont
-    {
-        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
-
-        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:font0.familyName), size:font0.pointSize) {
-            return result
-        }
-        
-        return UIFont.systemFontOfSize(UIFont.labelFontSize())
-    }
-    
     class func settingsGetCategoriesFont() -> UIFont
     {
         let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
@@ -304,8 +297,40 @@ class ItemsDataManager : NSObject
         return UIFont.systemFontOfSize(UIFont.labelFontSize())
     }
     
+    class func settingsGetItemsFont() -> UIFont
+    {
+        if settingsGetBoolForKey(.SettingsTabItemsFontSameAsCategories) {
+            return settingsGetCategoriesFont()
+        }
+        
+        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
+
+        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:font0.familyName), size:font0.pointSize) {
+            return result
+        }
+        
+        return UIFont.systemFontOfSize(UIFont.labelFontSize())
+    }
+    
+    class func settingsGetItemsQuantityFont() -> UIFont
+    {
+        if settingsGetBoolForKey(.SettingsTabItemsQuantityFontSameAsItems) {
+            return settingsGetItemsFont()
+        }
+        
+        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
+        
+        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:font0.familyName), size:font0.pointSize) {
+            return result
+        }
+        
+        return UIFont.systemFontOfSize(UIFont.labelFontSize())
+    }
+    
     
 
+    
+    
     
     class func settingsGetCategoriesTextColor() -> UIColor
     {
@@ -316,13 +341,46 @@ class ItemsDataManager : NSObject
     
     class func settingsGetItemsTextColor() -> UIColor
     {
+        if settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories) {
+            return settingsGetCategoriesTextColor()
+        }
+        
         let color0 = UIColor.grayColor()
         
         return settingsGetColorForKey(.SettingsTabItemsTextColor,defaultValue:color0)
     }
     
+    class func settingsGetItemsQuantityBackgroundColorWithOpacity(opacityOn:Bool) -> UIColor
+    {
+        let color0  = UIColor.grayColor()
+        
+        let color1  = settingsGetColorForKey(.SettingsTabItemsQuantityColorBackground,defaultValue:color0)
+        
+        let alpha   = opacityOn ? settingsGetFloatForKey(.SettingsTabItemsQuantityColorBackgroundOpacity,defaultValue:1.0) : 1.0
+        
+        return color1.colorWithAlphaComponent(CGFloat(alpha))
+    }
+    
+    class func settingsGetItemsQuantityTextColor() -> UIColor
+    {
+        if settingsGetBoolForKey(.SettingsTabItemsQuantityColorTextSameAsItems) {
+            return settingsGetItemsTextColor()
+        }
+        
+        let color0 = UIColor.grayColor()
+        
+        return settingsGetColorForKey(.SettingsTabItemsQuantityColorText,defaultValue:color0)
+    }
+    
+
     
     
+    
+    
+    
+    
+    
+
 
     
     

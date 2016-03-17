@@ -96,7 +96,7 @@ class SummaryController : UITableViewController
             
             let rgba  = color.RGBA()
             
-            let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenTransparency : .SettingsTabItemsRowOddTransparency, defaultValue:rgba.alpha)
+            let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:rgba.alpha)
             
             color = color.colorWithAlphaComponent(CGFloat(alpha))
             
@@ -117,7 +117,7 @@ class SummaryController : UITableViewController
             
             fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
             fill.frame.origin.x         = cell.bounds.width-fill.frame.size.width
-            fill.backgroundColor        = UIColor(red:0.6,green:0.6,blue:0.6,alpha:0.60)
+            fill.backgroundColor        = ItemsDataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
             
             cell.addSubview(fill)
         }
@@ -127,7 +127,8 @@ class SummaryController : UITableViewController
             let label = UILabel()
             
             label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
-            label.textColor             = UIColor.whiteColor()
+            label.font                  = ItemsDataManager.settingsGetItemsQuantityFont()
+            label.textColor             = ItemsDataManager.settingsGetItemsQuantityTextColor()
             label.text                  = String(item.quantity)
             label.textAlignment         = .Right
             
