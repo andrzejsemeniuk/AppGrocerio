@@ -553,6 +553,12 @@ class ItemsDataManager : NSObject
         putItem(Item.create(name:"Toilet paper",category:"Misc"))
         putItem(Item.create(name:"Paper towels",category:"Misc"))
     }
-    
+
+    class func synchronize()
+    {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        defaults.synchronize()
+    }
 }
 

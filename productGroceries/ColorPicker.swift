@@ -25,18 +25,44 @@ class ColorPicker : UITableViewController
         
         tableView.separatorStyle = .None
 
-        colors = [
-            UIColor.GRAY(0.75,1),
-            UIColor.GRAY(0.50,1),
-            UIColor.GRAY(0.25,1),
-        ]
+        if false
+        {
+            colors = [
+                UIColor.GRAY(0.75,1),
+                UIColor.GRAY(0.50,1),
+                UIColor.GRAY(0.25,1),
+            ]
+            
+            let values:[Float] = [0,0.6,0.8,1]
+            
+            for g in values {
+                for r in values {
+                    for b in values {
+                        colors.append(UIColor.RGBA(r,g,b,1))
+                    }
+                }
+            }
+        }
         
-        let values:[Float] = [0,0.6,0.8,1]
-        
-        for g in values {
-            for r in values {
-                for b in values {
-                    colors.append(UIColor.RGBA(r,g,b,1))
+        if true
+        {
+            colors = [
+                UIColor.GRAY(1.00,1),
+                UIColor.GRAY(0.75,1),
+                UIColor.GRAY(0.50,1),
+                UIColor.GRAY(0.25,1),
+                UIColor.GRAY(0.00,1),
+            ]
+            
+            let hues:[Float]        = [0,0.06,0.1,0.14,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+            let saturations:[Float] = [0.4,0.6,0.8,1]
+            let values:[Float]      = [1]
+            
+            for h in hues {
+                for v in values {
+                    for s in saturations {
+                        colors.append(UIColor.HSBA(h,s,v,1))
+                    }
                 }
             }
         }
@@ -78,7 +104,7 @@ class ColorPicker : UITableViewController
         
         cell.selectionStyle = .Default
         
-        if color == selected {
+        if color.components_RGBA_UInt8_equals(selected) {
             cell.accessoryType = .Checkmark
         }
         else {
@@ -102,9 +128,16 @@ class ColorPicker : UITableViewController
     {
         reload()
         
-        if let row = colors.indexOf(selected) {
-            let path = NSIndexPath(forRow:row,inSection:0)
-            tableView.scrollToRowAtIndexPath(path,atScrollPosition:.Middle,animated:true)
+        for var row=0; row<colors.count; row++ {
+            
+            if colors[row].components_RGBA_UInt8_equals(selected) {
+                
+                let path = NSIndexPath(forRow:row,inSection:0)
+                
+                tableView.scrollToRowAtIndexPath(path,atScrollPosition:.Middle,animated:true)
+                
+                break
+            }
         }
         
         super.viewWillAppear(animated)

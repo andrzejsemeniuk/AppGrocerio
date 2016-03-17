@@ -70,10 +70,56 @@ extension Array
     }
 }
 
+extension Float
+{
+    public func clamp(minimum:Float,_ maximum:Float) -> Float {
+        return self < maximum ? (minimum < self ? self : minimum) : maximum
+    }
+    public func clamp01() -> Float {
+        return clamp(0,1)
+    }
+    public func clamp0255() -> Float {
+        return clamp(0,255)
+    }
+}
+
 extension UIColor
 {
     public convenience init(red:CGFloat,green:CGFloat,blue:CGFloat) {
         self.init(red:red,green:green,blue:blue,alpha:1)
+    }
+    
+    public func components_RGBA_UInt8() -> (red:UInt8,green:UInt8,blue:UInt8,alpha:UInt8) {
+        let components      = RGBA()
+        let maximum:Float   = 256
+        
+        let r = components.red*maximum
+        let g = components.green*maximum
+        let b = components.blue*maximum
+        let a = components.alpha*maximum
+        
+        let result = (
+            UInt8(r.clamp0255()),
+            UInt8(g.clamp0255()),
+            UInt8(b.clamp0255()),
+            UInt8(a.clamp0255())
+        )
+        
+        return result
+    }
+    
+    public func components_RGBA_UInt8_equals(another:UIColor) -> Bool {
+        let a = components_RGBA_UInt8()
+        let b = another.components_RGBA_UInt8()
+        
+        return a.red==b.red && a.green==b.green && a.blue==b.blue && a.alpha==b.alpha
+    }
+    
+    public func components_RGB_UInt8_equals(another:UIColor) -> Bool {
+        let a = components_RGBA_UInt8()
+        let b = another.components_RGBA_UInt8()
+        
+        return a.red==b.red && a.green==b.green && a.blue==b.blue
     }
     
     public func RGBA() -> (red:Float,green:Float,blue:Float,alpha:Float) {
@@ -117,6 +163,21 @@ extension UIColor
         return UIColor(hue:CGFloat(h),saturation:CGFloat(s),brightness:CGFloat(b),alpha:CGFloat(a))
     }
 
+}
+
+
+extension NSUserDefaults
+{
+    public class func clear()
+    {
+        let domain      = NSBundle.mainBundle().bundleIdentifier
+        
+        let defaults    = NSUserDefaults.standardUserDefaults()
+        
+        if let name = domain {
+            defaults.removePersistentDomainForName(name)
+        }
+    }
 }
 
 

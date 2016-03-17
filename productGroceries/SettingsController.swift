@@ -352,31 +352,31 @@ class SettingsController : UITableViewController
 
                 createCellForFont(ItemsDataManager.settingsGetItemsFont(),title:"Items",key:.SettingsTabItemsFont),
                 
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "  Same as Categories"
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-                        
-                        cell.accessoryView  = self.registerSwitch(ItemsDataManager.settingsGetBoolForKey(.SettingsTabItemsFontSameAsCategories), update: { (myswitch:UISwitch) in
-                            ItemsDataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsFontSameAsCategories)
-                        })
-                    }
-                },
+//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+//                    if let label = cell.textLabel {
+//                        label.text          = "  Same as Categories"
+//                        cell.accessoryType  = .None
+//                        cell.selectionStyle = .Default
+//                        
+//                        cell.accessoryView  = self.registerSwitch(ItemsDataManager.settingsGetBoolForKey(.SettingsTabItemsFontSameAsCategories), update: { (myswitch:UISwitch) in
+//                            ItemsDataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsFontSameAsCategories)
+//                        })
+//                    }
+//                },
                 
                 createCellForColor(ItemsDataManager.settingsGetItemsTextColor(),title:"Items Text",key:.SettingsTabItemsTextColor),
                 
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "  Same as Categories"
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-                        
-                        cell.accessoryView  = self.registerSwitch(ItemsDataManager.settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories), update: { (myswitch:UISwitch) in
-                            ItemsDataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsTextColorSameAsCategories)
-                        })
-                    }
-                },
+//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+//                    if let label = cell.textLabel {
+//                        label.text          = "  Same as Categories"
+//                        cell.accessoryType  = .None
+//                        cell.selectionStyle = .Default
+//                        
+//                        cell.accessoryView  = self.registerSwitch(ItemsDataManager.settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories), update: { (myswitch:UISwitch) in
+//                            ItemsDataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsTextColorSameAsCategories)
+//                        })
+//                    }
+//                },
                 
                 ""
             ],
@@ -415,17 +415,17 @@ class SettingsController : UITableViewController
                 
                 createCellForFont(ItemsDataManager.settingsGetItemsQuantityFont(),title:"Quantity",key:.SettingsTabItemsQuantityFont),
                 
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "  Same as Items"
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-
-                        cell.accessoryView  = self.registerSwitch(ItemsDataManager.settingsGetBoolForKey(.SettingsTabItemsQuantityFontSameAsItems), update: { (myswitch:UISwitch) in
-                            ItemsDataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsQuantityFontSameAsItems)
-                        })
-                    }
-                },
+//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+//                    if let label = cell.textLabel {
+//                        label.text          = "  Same as Items"
+//                        cell.accessoryType  = .None
+//                        cell.selectionStyle = .Default
+//
+//                        cell.accessoryView  = self.registerSwitch(ItemsDataManager.settingsGetBoolForKey(.SettingsTabItemsQuantityFontSameAsItems), update: { (myswitch:UISwitch) in
+//                            ItemsDataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsQuantityFontSameAsItems)
+//                        })
+//                    }
+//                },
                 
                 createCellForColor(ItemsDataManager.settingsGetItemsQuantityTextColor(),title:"Quantity Text",key:.SettingsTabItemsQuantityColorText),
                 
@@ -469,6 +469,8 @@ class SettingsController : UITableViewController
         rows    = []
         
         actions = [:]
+        
+        ItemsDataManager.synchronize()
         
         super.viewWillDisappear(animated)
     }
