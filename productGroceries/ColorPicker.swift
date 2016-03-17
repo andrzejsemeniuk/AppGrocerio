@@ -25,25 +25,6 @@ class ColorPicker : UITableViewController
         
         tableView.separatorStyle = .None
 
-        if false
-        {
-            colors = [
-                UIColor.GRAY(0.75,1),
-                UIColor.GRAY(0.50,1),
-                UIColor.GRAY(0.25,1),
-            ]
-            
-            let values:[Float] = [0,0.6,0.8,1]
-            
-            for g in values {
-                for r in values {
-                    for b in values {
-                        colors.append(UIColor.RGBA(r,g,b,1))
-                    }
-                }
-            }
-        }
-        
         if true
         {
             colors = [

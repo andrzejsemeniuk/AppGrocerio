@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "productGroceries/CategoriesController.swift"
-            timestampString = "479873949.657275"
+            timestampString = "479935436.233052"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
             landmarkName = "add()"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "productGroceries/CategoriesController.swift"
-            timestampString = "479873949.657275"
+            timestampString = "479935436.233052"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "185"
+            endingLineNumber = "185"
             landmarkName = "add()"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "productGroceries/CategoriesController.swift"
-            timestampString = "479873949.657275"
+            timestampString = "479935436.233052"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "232"
-            endingLineNumber = "232"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
             landmarkName = "tableView(_:didSelectRowAtIndexPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "productGroceries/ItemsController.swift"
-            timestampString = "479923634.029009"
+            timestampString = "479934638.781016"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
             landmarkName = "tableView(_:didSelectRowAtIndexPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "productGroceries/ItemsController.swift"
-            timestampString = "479923634.029009"
+            timestampString = "479934638.781016"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
             landmarkName = "gestureRecognizerShouldBegin(_:)"
             landmarkType = "5">
          </BreakpointContent>

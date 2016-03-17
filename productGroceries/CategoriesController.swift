@@ -136,6 +136,10 @@ class CategoriesController : UITableViewController {
             label.textColor = ItemsDataManager.settingsGetCategoriesTextColor()
             label.font      = ItemsDataManager.settingsGetCategoriesFont()
             
+            if ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
+                label.font = label.font.fontWithSize(label.font.pointSize+2)
+            }
+            
             var white:CGFloat = 0
             var alpha:CGFloat = 1
             

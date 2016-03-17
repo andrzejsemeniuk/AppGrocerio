@@ -67,6 +67,7 @@ class ItemsDataManager : NSObject
     }
     
     
+    private static let defaultFont:UIFont = UIFont(name:"Helvetica",size:UIFont.labelFontSize())!
     
     private class func itemsKey(category:String) -> String {
         return "category:"+category
@@ -229,27 +230,37 @@ class ItemsDataManager : NSObject
     
     class func settingsGetBoolForKey(key:Key, defaultValue:Bool = false) -> Bool
     {
-        return NSUserDefaults.standardUserDefaults().boolForKey(key.rawValue)
+//        return NSUserDefaults.standardUserDefaults().boolForKey(key.rawValue)
+        if let result = NSUserDefaults.standardUserDefaults().objectForKey("bool:"+key.rawValue) {
+            return result as! Bool
+        }
+        return defaultValue
     }
     
     class func settingsSetBool(value:Bool, forKey:Key)
     {
-        NSUserDefaults.standardUserDefaults().setBool(value,forKey:forKey.rawValue)
+//        NSUserDefaults.standardUserDefaults().setBool(value,forKey:forKey.rawValue)
+        NSUserDefaults.standardUserDefaults().setObject(value,forKey:"bool:"+forKey.rawValue)
     }
     
     class func settingsGetFloatForKey(key:Key, defaultValue:Float = 0) -> Float
     {
-        return NSUserDefaults.standardUserDefaults().floatForKey(key.rawValue)
+//        return NSUserDefaults.standardUserDefaults().floatForKey(key.rawValue)
+        if let result = NSUserDefaults.standardUserDefaults().objectForKey("float:"+key.rawValue) {
+            return result as! Float
+        }
+        return defaultValue
     }
     
     class func settingsSetFloat(value:Float, forKey:Key)
     {
-        NSUserDefaults.standardUserDefaults().setFloat(value,forKey:forKey.rawValue)
+//        NSUserDefaults.standardUserDefaults().setFloat(value,forKey:forKey.rawValue)
+        NSUserDefaults.standardUserDefaults().setObject(value,forKey:"float:"+forKey.rawValue)
     }
     
     class func settingsGetStringForKey(key:Key, defaultValue:String = "") -> String
     {
-        if let result = NSUserDefaults.standardUserDefaults().stringForKey(key.rawValue) {
+        if let result = NSUserDefaults.standardUserDefaults().stringForKey("string:"+key.rawValue) {
             return result
         }
         return defaultValue
@@ -257,12 +268,12 @@ class ItemsDataManager : NSObject
     
     class func settingsSetString(value:String, forKey:Key)
     {
-        NSUserDefaults.standardUserDefaults().setObject(value,forKey:forKey.rawValue)
+        NSUserDefaults.standardUserDefaults().setObject(value,forKey:"string:"+forKey.rawValue)
     }
     
     class func settingsGetColorForKey(key:Key, defaultValue:UIColor = UIColor.blackColor()) -> UIColor
     {
-        if let result = NSUserDefaults.standardUserDefaults().objectForKey(key.rawValue) as? [Float] {
+        if let result = NSUserDefaults.standardUserDefaults().objectForKey("color:"+key.rawValue) as? [Float] {
             return UIColor.RGBA(result[0],result[1],result[2],result[3])
         }
         return defaultValue
@@ -278,7 +289,7 @@ class ItemsDataManager : NSObject
             rgba.blue,
             rgba.alpha
         ]
-        NSUserDefaults.standardUserDefaults().setObject(RGBA,forKey:forKey.rawValue)
+        NSUserDefaults.standardUserDefaults().setObject(RGBA,forKey:"color:"+forKey.rawValue)
     }
     
     
@@ -288,7 +299,7 @@ class ItemsDataManager : NSObject
     
     class func settingsGetCategoriesFont() -> UIFont
     {
-        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
+        let font0 = ItemsDataManager.defaultFont
         
         if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:font0.familyName), size:font0.pointSize) {
             return result
@@ -303,13 +314,13 @@ class ItemsDataManager : NSObject
             return settingsGetCategoriesFont()
         }
         
-        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
-
+        let font0 = ItemsDataManager.defaultFont
+        
         if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:font0.familyName), size:font0.pointSize) {
             return result
         }
         
-        return UIFont.systemFontOfSize(UIFont.labelFontSize())
+        return font0
     }
     
     class func settingsGetItemsQuantityFont() -> UIFont
@@ -318,13 +329,13 @@ class ItemsDataManager : NSObject
             return settingsGetItemsFont()
         }
         
-        let font0 = UIFont.systemFontOfSize(UIFont.labelFontSize())
+        let font0 = ItemsDataManager.defaultFont
         
         if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:font0.familyName), size:font0.pointSize) {
             return result
         }
         
-        return UIFont.systemFontOfSize(UIFont.labelFontSize())
+        return font0
     }
     
     
@@ -332,9 +343,10 @@ class ItemsDataManager : NSObject
     
     
     
+    
     class func settingsGetCategoriesTextColor() -> UIColor
     {
-        let color0 = UIColor.grayColor()
+        let color0 = UIColor.blackColor()
         
         return settingsGetColorForKey(.SettingsTabCategoriesTextColor,defaultValue:color0)
     }
@@ -345,14 +357,14 @@ class ItemsDataManager : NSObject
             return settingsGetCategoriesTextColor()
         }
         
-        let color0 = UIColor.grayColor()
+        let color0 = UIColor.blackColor()
         
         return settingsGetColorForKey(.SettingsTabItemsTextColor,defaultValue:color0)
     }
     
     class func settingsGetItemsQuantityBackgroundColorWithOpacity(opacityOn:Bool) -> UIColor
     {
-        let color0  = UIColor.grayColor()
+        let color0  = UIColor(hue:0,saturation:0.4,brightness:1,alpha:1)
         
         let color1  = settingsGetColorForKey(.SettingsTabItemsQuantityColorBackground,defaultValue:color0)
         
@@ -367,7 +379,7 @@ class ItemsDataManager : NSObject
             return settingsGetItemsTextColor()
         }
         
-        let color0 = UIColor.grayColor()
+        let color0 = UIColor.whiteColor()
         
         return settingsGetColorForKey(.SettingsTabItemsQuantityColorText,defaultValue:color0)
     }

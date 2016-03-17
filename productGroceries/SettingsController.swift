@@ -338,6 +338,16 @@ class SettingsController : UITableViewController
                 
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {
+                        cell.selectionStyle = .Default
+                        label.text          = "Emphasize"
+                        cell.accessoryView  = self.registerSwitch(ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize), update: { (myswitch:UISwitch) in
+                            ItemsDataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabCategoriesEmphasize)
+                        })
+                    }
+                },
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
                         label.text          = "Theme"
                         cell.accessoryType  = .DisclosureIndicator
                         cell.selectionStyle = .Default
@@ -387,7 +397,7 @@ class SettingsController : UITableViewController
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {
                         label.text          = "Even"
-                        cell.accessoryView  = self.registerSlider(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowEvenOpacity), update: { (myslider:UISlider) in
+                        cell.accessoryView  = self.registerSlider(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowEvenOpacity, defaultValue:1), update: { (myslider:UISlider) in
                             ItemsDataManager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsRowEvenOpacity)
                         })
                         cell.accessoryType  = .DisclosureIndicator
@@ -398,7 +408,7 @@ class SettingsController : UITableViewController
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {
                         label.text          = "Odd"
-                        cell.accessoryView  = self.registerSlider(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowOddOpacity), update: { (myslider:UISlider) in
+                        cell.accessoryView  = self.registerSlider(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsRowOddOpacity, defaultValue:1), update: { (myslider:UISlider) in
                             ItemsDataManager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsRowOddOpacity)
                         })
                         cell.accessoryType  = .DisclosureIndicator
@@ -434,7 +444,7 @@ class SettingsController : UITableViewController
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {
                         label.text          = "  Opacity"
-                        cell.accessoryView  = self.registerSlider(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsQuantityColorBackgroundOpacity), update: { (myslider:UISlider) in
+                        cell.accessoryView  = self.registerSlider(ItemsDataManager.settingsGetFloatForKey(.SettingsTabItemsQuantityColorBackgroundOpacity, defaultValue:1), update: { (myslider:UISlider) in
                             ItemsDataManager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
                         })
                         cell.accessoryType  = .DisclosureIndicator

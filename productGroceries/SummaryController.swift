@@ -69,6 +69,11 @@ class SummaryController : UITableViewController
         result.textColor            = ItemsDataManager.settingsGetCategoriesTextColor()
         result.font                 = ItemsDataManager.settingsGetCategoriesFont()
 
+        if ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
+            result.font = result.font.fontWithSize(result.font.pointSize+2)
+        }
+        
+
         result.textAlignment        = .Center
 //        result.font                 = UIFont.systemFontOfSize(12, weight:2.0)
         result.backgroundColor      = CategoriesController.instance.colorForCategory(text)
@@ -94,9 +99,9 @@ class SummaryController : UITableViewController
             
             var color = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
             
-            let rgba  = color.RGBA()
+//            let rgba  = color.RGBA()
             
-            let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:rgba.alpha)
+            let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:1)
             
             color = color.colorWithAlphaComponent(CGFloat(alpha))
             
@@ -110,31 +115,27 @@ class SummaryController : UITableViewController
         }
         
         cell.selectionStyle = .None
+
         
-        do
-        {
-            let fill = UIView()
-            
-            fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
-            fill.frame.origin.x         = cell.bounds.width-fill.frame.size.width
-            fill.backgroundColor        = ItemsDataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
-            
-            cell.addSubview(fill)
-        }
+        let fill = UIView()
         
-        do
-        {
-            let label = UILabel()
-            
-            label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
-            label.font                  = ItemsDataManager.settingsGetItemsQuantityFont()
-            label.textColor             = ItemsDataManager.settingsGetItemsQuantityTextColor()
-            label.text                  = String(item.quantity)
-            label.textAlignment         = .Right
-            
-            cell.accessoryView          = label
-            cell.editingAccessoryView   = label
-        }
+        fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
+        fill.frame.origin.x         = tableView.bounds.width-fill.frame.size.width
+        fill.backgroundColor        = ItemsDataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
+        
+        cell.addSubview(fill)
+        
+
+        let label = UILabel()
+        
+        label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
+        label.font                  = ItemsDataManager.settingsGetItemsQuantityFont()
+        label.textColor             = ItemsDataManager.settingsGetItemsQuantityTextColor()
+        label.text                  = String(item.quantity)
+        label.textAlignment         = .Right
+        
+        cell.accessoryView          = label
+        cell.editingAccessoryView   = label
 
         
         return cell
