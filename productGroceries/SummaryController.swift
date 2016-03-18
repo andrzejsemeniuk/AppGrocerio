@@ -26,6 +26,45 @@ class SummaryController : UITableViewController
         tableView.separatorStyle = .None
 
         
+        
+        
+        do
+        {
+            var items = navigationItem.leftBarButtonItems
+            
+            if items == nil {
+                items = [UIBarButtonItem]()
+            }
+            
+            items! += [
+                UIBarButtonItem(barButtonSystemItem:.Bookmarks, target:self, action: "load"),
+            ]
+            
+            navigationItem.leftBarButtonItems = items
+        }
+
+        
+        
+        
+        do
+        {
+            var items = navigationItem.rightBarButtonItems
+            
+            if items == nil {
+                items = [UIBarButtonItem]()
+            }
+            
+            items! += [
+                UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
+            ]
+            
+            navigationItem.rightBarButtonItems = items
+        }
+
+        
+        
+        
+        
         reload(false)
         
         
@@ -38,6 +77,57 @@ class SummaryController : UITableViewController
         
         // TODO clear data and reload table
     }
+    
+    
+    
+    
+    var lastGroceryListName:String?
+    
+    
+    
+    func add()
+    {
+        let alert = UIAlertController(title:"Save Grocery List", message:"Specify name of grocery list:", preferredStyle:.Alert)
+        
+        alert.addTextFieldWithConfigurationHandler() {
+            field in
+            // called to configure text field before displayed
+            if self.lastGroceryListName != nil {
+                field.text = self.lastGroceryListName!
+            }
+            else {
+                field.text = ""
+            }
+        }
+        
+        let actionSave = UIAlertAction(title:"Save", style:.Destructive, handler: {
+            action in
+            
+            if let fields = alert.textFields, text = fields[0].text {
+                if DataManager.summarySave(text.trimmed()) {
+                    self.lastGroceryListName = text.trimmed()
+                }
+            }
+        })
+        
+        let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
+            action in
+        })
+        
+        alert.addAction(actionSave)
+        alert.addAction(actionCancel)
+        
+        AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
+            print("completed showing add alert")
+        })
+    }
+
+    
+    func load()
+    {
+        
+    }
+    
     
     
     
