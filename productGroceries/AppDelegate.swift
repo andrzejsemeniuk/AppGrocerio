@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        DataManager.clearHelpFlags()
 //        DataManager.reset()
-//        NSUserDefaults.clear()
+        NSUserDefaults.clear()
         DataManager.resetIfEmpty()
         
         // a window displays views and distributes events

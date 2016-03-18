@@ -441,12 +441,12 @@ class DataManager : NSObject
     }
     
 
-    class func settingsGetCategoriesTextColor(defaultValue:UIColor = UIColor.blackColor()) -> UIColor
+    class func settingsGetCategoriesTextColor(defaultValue:UIColor = UIColor(hue:0.87)) -> UIColor
     {
         return settingsGetColorForKey(.SettingsTabCategoriesTextColor,defaultValue:defaultValue)
     }
     
-    class func settingsGetItemsTextColor(defaultValue:UIColor = UIColor(hue:0.7)) -> UIColor
+    class func settingsGetItemsTextColor(defaultValue:UIColor = UIColor(hue:0.08)) -> UIColor
     {
         if settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories) {
             return settingsGetCategoriesTextColor()
@@ -457,7 +457,7 @@ class DataManager : NSObject
     
     class func settingsGetItemsQuantityBackgroundColorWithOpacity(opacityOn:Bool) -> UIColor
     {
-        let color0  = UIColor(hue:0,saturation:0.4,brightness:1,alpha:1)
+        let color0  = UIColor(hue:0,saturation:0.4)
         
         let color1  = settingsGetColorForKey(.SettingsTabItemsQuantityColorBackground,defaultValue:color0)
         
@@ -667,67 +667,10 @@ class DataManager : NSObject
             removeCategory(category)
         }
         
-        addCategory("Produce")
-        putItem(Item.create(name:"Lettuce, Iceberg",category:"Produce"))
-        putItem(Item.create(name:"Lettuce, Romaine",category:"Produce"))
-        putItem(Item.create(name:"Cabbage",category:"Produce"))
-        putItem(Item.create(name:"Tomatoes",category:"Produce"))
-        putItem(Item.create(name:"Tomatoes, Roma",category:"Produce"))
-        putItem(Item.create(name:"Potatoes",category:"Produce"))
-        putItem(Item.create(name:"Potatoes, Russett",category:"Produce"))
-        putItem(Item.create(name:"Potatoes, Golden",category:"Produce"))
-        putItem(Item.create(name:"Garlic",category:"Produce"))
-        putItem(Item.create(name:"Onions, yellow",category:"Produce"))
-        putItem(Item.create(name:"Onions, white",category:"Produce"))
-        putItem(Item.create(name:"Lemons",category:"Produce"))
-        putItem(Item.create(name:"Oranges",category:"Produce"))
-        putItem(Item.create(name:"Apples",category:"Produce"))
-        putItem(Item.create(name:"Apples, Granny Smith",category:"Produce"))
-        putItem(Item.create(name:"Apples, Mcintosh",category:"Produce"))
-        putItem(Item.create(name:"Apples, Gala",category:"Produce"))
-        putItem(Item.create(name:"Apples, Fuji",category:"Produce"))
-        putItem(Item.create(name:"Apples, Braeburn",category:"Produce"))
-        addCategory("Dairy")
-        putItem(Item.create(name:"Milk, 2%",category:"Dairy"))
-        putItem(Item.create(name:"Milk, Whole",category:"Dairy"))
-        putItem(Item.create(name:"Milk, 1%",category:"Dairy"))
-        putItem(Item.create(name:"Milk, Chocolate",category:"Dairy"))
-        putItem(Item.create(name:"Eggs",category:"Dairy"))
-        putItem(Item.create(name:"Butter",category:"Dairy"))
-        putItem(Item.create(name:"Sour Cream",category:"Dairy"))
-        putItem(Item.create(name:"Yogurt, Fat Free",category:"Dairy"))
-        putItem(Item.create(name:"Yogurt, Reduced Fat",category:"Dairy"))
-        putItem(Item.create(name:"Yogurt, Whole",category:"Dairy"))
-        addCategory("Fish+Meats")
-        putItem(Item.create(name:"Beef, angus",category:"Fish+Meats"))
-        putItem(Item.create(name:"Chicken, thighs",category:"Fish+Meats"))
-        putItem(Item.create(name:"Chicken, roasted",category:"Fish+Meats"))
-        putItem(Item.create(name:"Chicken, wings",category:"Fish+Meats"))
-        putItem(Item.create(name:"Pork, chops",category:"Fish+Meats"))
-        putItem(Item.create(name:"Tuna",category:"Fish+Meats"))
-        putItem(Item.create(name:"Salmon, pink",category:"Fish+Meats"))
-        putItem(Item.create(name:"Salmon, red sockeye",category:"Fish+Meats"))
-        addCategory("Drink")
-        putItem(Item.create(name:"Coffee, whole beans",category:"Drink"))
-        putItem(Item.create(name:"Coffee, whole beans, dark roast",category:"Drink"))
-        putItem(Item.create(name:"Coffee, whole beans, light roast",category:"Drink"))
-        putItem(Item.create(name:"Coffee, ground, French roast",category:"Drink"))
-        putItem(Item.create(name:"Tea, green",category:"Drink"))
-        putItem(Item.create(name:"Tea, peppermint, caffeine-free",category:"Drink"))
-        putItem(Item.create(name:"Ginger beer",category:"Drink"))
-        putItem(Item.create(name:"Cola",category:"Drink"))
-        putItem(Item.create(name:"Coconut water",category:"Drink"))
-        putItem(Item.create(name:"Ginger ale",category:"Drink"))
-        putItem(Item.create(name:"Water, spring",category:"Drink"))
-        putItem(Item.create(name:"Water, mineral",category:"Drink"))
-        addCategory("Misc")
-        putItem(Item.create(name:"Matches",category:"Misc"))
-        putItem(Item.create(name:"Lighter",category:"Misc"))
-        putItem(Item.create(name:"Lightbulb",category:"Misc"))
-        putItem(Item.create(name:"Nails",category:"Misc"))
-        putItem(Item.create(name:"Garbage bags",category:"Misc"))
-        putItem(Item.create(name:"Toilet paper",category:"Misc"))
-        putItem(Item.create(name:"Paper towels",category:"Misc"))
+        createCategories()
+        
+        settingsSetBool(true,forKey:.SettingsTabCategoriesEmphasize)
+//        settingsSetBool(true,forKey:.SettingsTabCategoriesUppercase)
     }
 
     class func synchronize()
@@ -968,7 +911,396 @@ class DataManager : NSObject
 
     
     
+
     
+    class func createCategories ()
+    {
+        let createCategory = { (name:String, items:[String]) in
+            let category = name.trimmed()
+            if 0 < category.length {
+                addCategory(category)
+                for item in items {
+                    putItem(Item.create(name:item.trimmed(),category:category))
+                }
+            }
+        }
+        
+        createCategory("Baby",[
+            "Food",
+            "Formula",
+            "Lotion",
+            "Wash",
+            "Wipes",
+            "Diapers",
+            ])
+        createCategory("Bakery",[
+            "Croissants",
+            "Croissants, Plain",
+            "Croissants, Butter",
+            "Croissants, Chocolate",
+            "Croissants, Almond",
+            "Bread",
+            "Bread, Wholegrain",
+            "Bread, Rye",
+            "Bread, French",
+            "Bread, Sourdough",
+            "Break, Pita",
+            "Muffins",
+            "Muffins, Blueberry",
+            "Muffins, Chocolate",
+            "Buns, Hot Dog",
+            "Buns, Plain",
+            "Buns, Cheese",
+            "Rolls",
+            "Baguette",
+            "Baguette, French",
+            "Bagels",
+            "Cake",
+            "Cake, Birthday",
+            "Cake, Anniversary",
+
+            "Pie",
+            
+            "Donuts",
+            "Donuts, Glazed",
+            "Donuts, Cream Cheese",
+            "Donuts, Rasberry",
+            "Donuts, Chocolate",
+            ])
+        createCategory("Baking",[
+            "Baking Powder",
+            "Bread Crumbs",
+            "Mix",
+            "Mix, Cake",
+            "Mix, Brownie",
+            "Cake, Icing",
+            "Cocoa",
+            "Chocolate",
+            "Chocolate, Chips",
+            "Chocolate, Semi-Sweet",
+            "Shortening",
+            "Honey",
+            "Oil",
+            "Oil, Canola",
+            "Oil, Coconut",
+            "Oil, Olive",
+            "Oil, Safflower",
+            "Vinegar",
+            "Sugar",
+            "Salt",
+            ])
+        createCategory("Beverages",[
+            "Coffee",
+            "Coffee, Whole Bean",
+            "Coffee, Whole Bean, Dark Roast",
+            "Coffee, Whole Bean, Light Roast",
+            "Coffee, Whole Bean, French Roast",
+            "Coffee, Ground",
+            "Coffee, Ground, Dark Roast",
+            "Coffee, Ground, Light Roast",
+            "Coffee, Ground, French Roast",
+            "Tea","Tea, Herbal","Tea, Green",
+            "Fruit Punch",
+            "Ginger Ale",
+            "Juice, Apple",
+            "Juice, Papaya",
+            "Juice, Cranberry",
+            "Juice, Tropical",
+            "Juice, Orange",
+            "Juice, Lemon",
+            "Soda",
+            "Water","Water, Mineral","Water, Coconut"
+            ])
+        createCategory("Beverages / Alcohol",[
+            "Beer",
+            "Wine, Cabernet Sauvignon",
+            "Wine, Chardonnay",
+            "Wine, Merlot",
+            "Wine, Malbec"
+            ])
+        createCategory("Candy + Snacks",[
+            "Chips, Potato",
+            "Chips, Corn",
+            "Salsa",
+            "Dip",
+            "Chocolate, Dark",
+            "Chocolate, White",
+            "Chocolate, Milk",
+            "Candy",
+            "Cookies",
+            
+            "Crackers",
+            "Dried Fruit",
+            "Nuts",
+            "Popcorn",
+            "Pretzels"
+            ])
+        createCategory("Canned",[
+            "Asparagus",
+            "Beans, Pinto",
+            "Beans, Navy",
+            "Beans, Black",
+            "Beans, Kidney",
+            "Beans, Cannellini",
+            "Beans, White",
+            "Chick Peas",
+            "Chili",
+            "Corn",
+            "Olives, Green",
+            "Olives, Black",
+            "Tomatoes",
+            "Tomatoes, Crushed",
+            "Tomatoes, Diced",
+            "Tomato Sauce",
+            "Peas, Green",
+            ])
+        createCategory("Dairy",[
+            "Cheese",
+            "Cheese, Bleu",
+            "Cheese, Feta",
+            "Cheese, Goat",
+            "Cheese, Cottage",
+            "Cheese, Slices",
+            "Cheese, Colby",
+            "Cheese, Mozzarella",
+            "Cheese, Munster",
+            "Cheese, Jack Pepper",
+            "Cheese, Cheddar",
+            "Cheese, Camembert",
+            "Cheese, Provolone",
+            "Cheese, Ricotta",
+            "Cheese, Swiss",
+            "Cheese, Emmental",
+            "Milk",
+            "Milk, 2%", "Milk, Whole", "Milk, 1%", "Milk, Chocolate",
+            "Eggs",
+            "Butter",
+            "Half & Half",
+            "Cream",
+            "Cream, Whipped",
+            "Cream, Sour",
+            "Yogurt",
+            "Yogurt, Fat Free", "Yogurt, Reducted Fat", "Yogurt, Whole", "Yogurt, Vanilla"
+            ])
+        createCategory("Frozen",[
+            "Ice Cream",
+            "Ice Cream, Vanilla",
+            "Ice Cream, Strawberry",
+            "Ice Cream, Butter Pecan",
+            "Ice Cream, Almong Chocolate",
+            "Ice Cream, Chocolate",
+            "Yogurt",
+            "Peas, Green",
+            "Carrots",
+            "Peaches",
+            "Pizza",
+            "Pizza, Small",
+            "Pizza, Large",
+            "TV Dinner",
+            "Blueberries",
+            "Rasberries",
+            "Strawberries",
+            ])
+        createCategory("Meat",[
+            "Bacon",
+            "Beef",
+            "Beef, Angus","Beef, Sausage",
+            "Chicken", "Chicken, Thighs", "Chicken, Wings", "Chicken, Legs",
+            "Pork", "Pork, Minced", "Pork, Chops", "Pork, Sausage",
+            "Turkey",
+            "Hot Dogs",
+            ])
+        createCategory("Meat / Canned",[
+            "Beef",
+            "Beef, Angus",
+            "Chicken", "Chicken, Thighs", "Chicken, Wings", "Chicken, Legs",
+            "Pork", "Pork, Minced", "Pork, Chops",
+            ])
+        createCategory("Non-Food",[
+            "Foil, Aluminum",
+            "Wrap, Plastic",
+            
+            "Paper, Toilet",
+            "Paper, Napkins",
+            "Paper, Towels",
+            "Paper, Wax",
+            
+            "Matches",
+            "Lightbulb",
+            "Garbage Bags",
+            
+            "Laundry, Detergent",
+            "Laundry, Fabric Softener"
+            ])
+        createCategory("Other",[
+            "Rice",
+            "Rice, White",
+            "Rice, Brown",
+            "Cereal",
+            "Pasta",
+            "Pasta, Spaghetti",
+            "Pasta, Fettucine",
+            "Pasta, Vermicelli",
+            ])
+        createCategory("Personal",[
+            "Deodorant",
+            "Soap, Bath",
+            "Soap, Hand",
+            "Soap, Sanitizing",
+            "Wipes, Sanitizing",
+            "Cosmetics, Lipstick",
+            "Cotton, Swabs",
+            "Cotton, Balls",
+            "Cleanser, Facial",
+            "Tissue, Facial",
+            "Lip Balm",
+            "Lotion, Moisturizing",
+            "Mouthwash",
+            "Toothpaste",
+            "Toothbrush",
+            "Floss",
+            "Hair, Shampoo",
+            "Hair, Conditioner",
+            "Shaver",
+            "Shaving Cream",
+            ])
+        createCategory("Pet",[
+            "Food",
+            "Litter",
+            "Treatment",
+            "Shampoo",
+            ])
+        createCategory("Produce / Fruit",[
+            "Apples",
+            "Apples, Granny Smith",
+            "Apples, McIntosh",
+            "Apples, Gala",
+            "Apples, Fuji",
+            "Apples, Braeburn",
+            "Coconut",
+            "Lemons",
+            "Oranges",
+            "Pears",
+            "Pears, Anjou",
+            "Pears, Bartlett",
+            "Peaches",
+            "Bananas",
+            "Blueberries",
+            "Cranberries",
+            "Cherries",
+            "Grapefruit", "Grapefruit, Pink",
+            "Grapes","Grapes, White", "Grapes, Red",
+            "Melon",
+            "Nectarines",
+            "Plums",
+            "Rasberries",
+            "Strawberries",
+            "Watermelon",
+            ])
+        createCategory("Produce / Herbs",[
+            "Garlic",
+            "Ginger Root",
+            "Cilantro",
+            "Parsley","Parsley, Italian",
+            "Turmeric",
+            "Turnip",
+            "Rutabaga",
+            "Ginseng Root",
+            ])
+        createCategory("Produce / Vegetables",[
+            "Asparagus",
+            "Avocado",
+            "Beets",
+            "Broccoli",
+            "Cabbage",
+            "Carrots",
+            "Celery",
+            "Cilantro",
+            "Cauliflower",
+            "Cucumber",
+            "Cucumber, English",
+            "Fennel",
+            "Garlic","Ginger",
+            "Lettuce", "Lettuce, Iceberg", "Lettuce, Romaine",
+            "Onions", "Onions, Yellow", "Onions, White",
+            "Mushrooms",
+            "Peppers",
+            "Peppers, Green",
+            "Peppers, Red",
+            "Peppers, Orange",
+            "Peppers, Yellow",
+            "Potatoes", "Potatoes, Russett", "Potatoes, Golden",
+            "Radishes, Red", "Radish, Daikon",
+            "Spinach",
+            "Squash",
+            "Tomatoes", "Tomatoes, Roma", "Tomatoes, Vine",
+            "Zucchini",
+            ])
+        createCategory("Seafood",[
+            "Tuna",
+            "Salmon", "Salmon, Pink", "Salmon, Red Sockeye",
+            "Crab",
+            "Lobster",
+            "Mussels",
+            "Oysters",
+            "Shrimp",
+            "Tilapia",
+            "Cod",
+            "Calamari",
+            ])
+        createCategory("Seafood / Canned",[
+            "Tuna",
+            "Salmon", "Salmon, Pink", "Salmon, Red Sockeye"
+            ])
+        createCategory("Spreads + Condiments",[
+            "Ketchup",
+            "Mayonnaise",
+            "Relish",
+            "Sauce, BBQ",
+            "Sauce, Pasta",
+            "Sauce, Soy",
+            "Sauce, Steak",
+            "Sauce, Hot",
+            "Mustard",
+            "Mustard, Dijon",
+            "Mustard, Yellow",
+            "Salad Dressing",
+            "Salad Dressing, Italian",
+            "Salad Dressing, Ranch",
+            "Salad Dressing, Thousand Island",
+            
+            "Butter",
+            "Sour Cream",
+            "Hummus",
+            "Hummus, Olive",
+            "Peanut Butter",
+            "Peanut Butter, Crunchy",
+            "Almond Butter",
+            "Almond Butter, Crunchy",
+            "Jam, Apricot",
+            "Jam, Rasberry",
+            "Jam, Strawberry",
+            "Jam, Blueberry",
+            "Jam, Blackberry",
+            ])
+        createCategory("Spices",[
+            "Coconut, Flakes",
+            "Basil",
+            "Cinnamon",
+            "Ginger",
+            "Oregano",
+            "Chilli Powder",
+            "Coriander",
+            "Mint",
+            "Paprika",
+            "Star Anise",
+            "Vanilla",
+            "Pepper",
+            "Sugar",
+            "Salt", "Salt, Sea", "Salt, Sea + Iodine",
+            ])
+    }
+
     
 }
 
