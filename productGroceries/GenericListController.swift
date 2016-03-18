@@ -32,7 +32,6 @@ class GenericListController : UITableViewController
         tableView.delegate          = self
         
 //        tableView.separatorStyle    = .None
-        
     }
     
     override func didReceiveMemoryWarning()

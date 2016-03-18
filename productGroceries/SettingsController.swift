@@ -160,6 +160,9 @@ class SettingsController : GenericSettingsController
                 },
                 
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.detailTextLabel {
+                        label.text = DataManager.settingsGetThemeName()
+                    }
                     if let label = cell.textLabel {
                         label.text          = "Theme"
                         cell.accessoryType  = .DisclosureIndicator

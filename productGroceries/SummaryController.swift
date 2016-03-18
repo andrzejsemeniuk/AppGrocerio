@@ -133,8 +133,10 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
         
         let list = GenericListController()
         
-        list.items                      = ["Clear"] + DataManager.summaryList().sort()
-        list.tableView.separatorStyle   = .None
+        list.items                      = ["Clear"] + DataManager.summaryList()
+        list.items = list.items.sort()
+        
+//        list.tableView.separatorStyle   = .SingleLineEtched
 
         list.handlerForDidSelectRowAtIndexPath = { (controller:GenericListController,indexPath:NSIndexPath) -> Void in
             let row         = indexPath.row

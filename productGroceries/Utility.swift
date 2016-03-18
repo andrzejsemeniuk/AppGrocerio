@@ -138,6 +138,10 @@ extension UIColor
         self.init(red:red,green:green,blue:blue,alpha:1)
     }
     
+    public convenience init(hue:CGFloat,saturation:CGFloat = 1,brightness:CGFloat = 1) {
+        self.init(hue:hue,saturation:saturation,brightness:brightness,alpha:1)
+    }
+    
     public func components_RGBA_UInt8() -> (red:UInt8,green:UInt8,blue:UInt8,alpha:UInt8) {
         let components      = RGBA()
         let maximum:CGFloat   = 256

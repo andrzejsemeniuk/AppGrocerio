@@ -396,75 +396,63 @@ class DataManager : NSObject
     
     
     
-    class func settingsGetCategoriesFont() -> UIFont
+    class func settingsGetCategoriesFont(defaultValue:UIFont = DataManager.defaultFont) -> UIFont
     {
-        let font0 = DataManager.defaultFont
-        
-        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:font0.familyName), size:font0.pointSize) {
+        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:defaultValue.familyName), size:defaultValue.pointSize) {
             return result
         }
         
-        return UIFont.systemFontOfSize(UIFont.labelFontSize())
+        return defaultValue.fontWithSize(UIFont.labelFontSize())
     }
     
-    class func settingsGetItemsFont() -> UIFont
+    class func settingsGetItemsFont(defaultValue:UIFont = DataManager.defaultFont) -> UIFont
     {
         if settingsGetBoolForKey(.SettingsTabItemsFontSameAsCategories) {
             return settingsGetCategoriesFont()
         }
         
-        let font0 = DataManager.defaultFont
-        
-        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:font0.familyName), size:font0.pointSize) {
+        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:defaultValue.familyName), size:defaultValue.pointSize) {
             return result
         }
         
-        return font0
+        return defaultValue
     }
     
-    class func settingsGetItemsQuantityFont() -> UIFont
+    class func settingsGetItemsQuantityFont(defaultValue:UIFont = DataManager.defaultFont) -> UIFont
     {
         if settingsGetBoolForKey(.SettingsTabItemsQuantityFontSameAsItems) {
             return settingsGetItemsFont()
         }
         
-        let font0 = DataManager.defaultFont
-        
-        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:font0.familyName), size:font0.pointSize) {
+        if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:defaultValue.familyName), size:defaultValue.pointSize) {
             return result
         }
         
-        return font0
+        return defaultValue
     }
     
     
 
     
     
-    class func settingsGetBackgroundColor() -> UIColor
+    class func settingsGetBackgroundColor(defaultValue:UIColor = UIColor(hue:0.9)) -> UIColor
     {
-        let color0 = UIColor.whiteColor()
-        
-        return settingsGetColorForKey(.SettingsBackgroundColor,defaultValue:color0)
+        return settingsGetColorForKey(.SettingsBackgroundColor,defaultValue:defaultValue)
     }
     
 
-    class func settingsGetCategoriesTextColor() -> UIColor
+    class func settingsGetCategoriesTextColor(defaultValue:UIColor = UIColor.blackColor()) -> UIColor
     {
-        let color0 = UIColor.blackColor()
-        
-        return settingsGetColorForKey(.SettingsTabCategoriesTextColor,defaultValue:color0)
+        return settingsGetColorForKey(.SettingsTabCategoriesTextColor,defaultValue:defaultValue)
     }
     
-    class func settingsGetItemsTextColor() -> UIColor
+    class func settingsGetItemsTextColor(defaultValue:UIColor = UIColor(hue:0.7)) -> UIColor
     {
         if settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories) {
             return settingsGetCategoriesTextColor()
         }
         
-        let color0 = UIColor.blackColor()
-        
-        return settingsGetColorForKey(.SettingsTabItemsTextColor,defaultValue:color0)
+        return settingsGetColorForKey(.SettingsTabItemsTextColor,defaultValue:defaultValue)
     }
     
     class func settingsGetItemsQuantityBackgroundColorWithOpacity(opacityOn:Bool) -> UIColor
@@ -478,15 +466,13 @@ class DataManager : NSObject
         return color1.colorWithAlphaComponent(CGFloat(alpha))
     }
     
-    class func settingsGetItemsQuantityTextColor() -> UIColor
+    class func settingsGetItemsQuantityTextColor(defaultValue:UIColor = UIColor.redColor()) -> UIColor
     {
         if settingsGetBoolForKey(.SettingsTabItemsQuantityColorTextSameAsItems) {
             return settingsGetItemsTextColor()
         }
         
-        let color0 = UIColor.whiteColor()
-        
-        return settingsGetColorForKey(.SettingsTabItemsQuantityColorText,defaultValue:color0)
+        return settingsGetColorForKey(.SettingsTabItemsQuantityColorText,defaultValue:defaultValue)
     }
     
 
@@ -506,9 +492,9 @@ class DataManager : NSObject
     
     
     
-    class func settingsGetThemeName() -> String
+    class func settingsGetThemeName(defaultValue:String = "Rainbow") -> String
     {
-        return settingsGetStringForKey(Key.SettingsTabThemesName,defaultValue:"Rainbow")
+        return settingsGetStringForKey(Key.SettingsTabThemesName,defaultValue:defaultValue)
     }
     
     

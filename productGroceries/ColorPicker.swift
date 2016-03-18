@@ -35,7 +35,7 @@ class ColorPicker : UITableViewController
                 UIColor.GRAY(0.00,1),
             ]
             
-            let hues:[Float]        = [0,0.06,0.1,0.14,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+            let hues:[Float]        = [0,0.06,0.1,0.14,0.2,0.3,0.4,0.53,0.6,0.7,0.8,0.9]
             let saturations:[Float] = [0.4,0.6,0.8,1]
             let values:[Float]      = [1]
             
