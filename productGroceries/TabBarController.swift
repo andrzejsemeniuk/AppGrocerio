@@ -12,6 +12,9 @@ import UIKit
 class TabBarController : UITabBarController {
     
     override func viewDidLoad() {
+        
+        tabBar.translucent = true
+        
         super.viewDidLoad()
         
         // one should not explicitly access the tabbar view

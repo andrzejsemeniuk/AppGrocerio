@@ -63,15 +63,61 @@ class CategoriesController : UITableViewController {
 
     
     
-    
+    class func settingsGetThemeColorForRow(row:Int,count:Int,defaultColor:UIColor) -> UIColor
+    {
+        //        switch settingsGetThemeType()
+        //        {
+        //        case .SettingsTabThemesTypeName:
+        //            switch settingsGetThemeName()
+        //            {
+        //                case "Apple": return UIColor.lerp(UIColor.yellowColor(),UIColor.greenColor(),Float(row)/Float(count-1))
+        //            case "Apple": return UIColor.lerp(UIColor.yellowColor(),UIColor.greenColor(),Float(row)/Float(count-1))
+        //            case "Apple": return UIColor.lerp(UIColor.yellowColor(),UIColor.greenColor(),Float(row)/Float(count-1))
+        //            case "Strawberry": return UIColor.lerp(UIColor.yellowColor(),UIColor.greenColor(),Float(row)/Float(count-1))
+        //            }
+        //        case .SettingsTabThemesTypeSolid:
+        //        case .SettingsTabThemesTypeRange:
+        //        default:
+        //            return defaultColor
+        //        }
+        return defaultColor
+    }
+
     func colorForCategoryIndex(index:Int) -> UIColor
     {
-        if 0 <= index && index < categories.count {
-            return UIColor(hue:(CGFloat(index)/CGFloat(categories.count)), saturation:0.3, brightness:1.0, alpha:1.0)
-        }
-        else {
+        let saturation = CGFloat(DataManager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4))
+        
+        let mark:CGFloat = CGFloat(Float(index)/Float(categories.count)).clamp01()
+        
+        switch DataManager.settingsGetThemeName()
+        {
+        case "Apple":
+            return UIColor(hue:mark.lerp01(0.15,0.35), saturation:saturation, brightness:1.0, alpha:1.0)
+        case "Charcoal":
+            return index.isEven ? UIColor(white:0.2,alpha:1.0) : UIColor(white:0.17,alpha:1.0)
+        case "Grape":
+            return UIColor(hue:mark.lerp01(0.75,0.90), saturation:saturation, brightness:mark.lerp01(0.65,0.80), alpha:1.0)
+        case "Gray":
+            return UIColor(white:0.4,alpha:1.0)
+        case "Orange":
+            return UIColor(hue:mark.lerp01(0.04,0.1), saturation:saturation, brightness:1.0, alpha:1.0)
+        case "Plain":
             return UIColor.whiteColor()
+        case "Rainbow":
+            return UIColor(hue:mark.lerp01(0.0,0.9), saturation:saturation, brightness:1.0, alpha:1.0)
+        case "Range":
+            let hue0 = DataManager.settingsGetColorForKey(.SettingsTabThemesRangeFromColor).HSBA().hue
+            let hue1 = DataManager.settingsGetColorForKey(.SettingsTabThemesRangeToColor).HSBA().hue
+            return UIColor(hue:mark.lerp01(hue0,hue1), saturation:saturation, brightness:1.0, alpha:1.0)
+        case "Strawberry":
+            return UIColor(hue:mark.lerp01(0.89,0.99), saturation:saturation, brightness:1.0, alpha:1.0)
+        case "Solid":
+            let HSBA = DataManager.settingsGetColorForKey(.SettingsTabThemesSolidColor).HSBA()
+            return UIColor(hue:CGFloat(HSBA.hue), saturation:saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
+        default:
+            break
         }
+        return UIColor.whiteColor()
     }
     
     
@@ -87,43 +133,35 @@ class CategoriesController : UITableViewController {
     
     
     func colorForItem(item:Item,onRow:Int) -> UIColor {
-        var hue:CGFloat = 0
-        var saturation:CGFloat = 0
-        var brightness:CGFloat = 0
-        var alpha:CGFloat = 1
-        
         let categoryColor = colorForCategory(item.category)
             
-        categoryColor.getHue(&hue,saturation:&saturation,brightness:&brightness,alpha:&alpha)
+        let HSBA = categoryColor.HSBA()
         
-        if 1 == onRow % 2 {
-            return UIColor(hue:hue,saturation:0.1,brightness:1.0,alpha:1.0)
+        if 0 < HSBA.saturation {
+            if onRow.isOdd {
+                return UIColor(hue:HSBA.hue,saturation:0.10,brightness:1.0,alpha:1.0)
+            }
+            else {
+                return UIColor(hue:HSBA.hue,saturation:0.15,brightness:1.0,alpha:1.0)
+            }
+        }
+        
+        if onRow.isOdd {
+            return UIColor(hue:HSBA.hue,saturation:0.0,brightness:HSBA.brightness,alpha:1.0)
         }
         else {
-            return UIColor(hue:hue,saturation:0.15,brightness:1.0,alpha:1.0)
+            let brightness1 = HSBA.brightness < 1.0 ? (HSBA.brightness+0.05).clamp01() : (HSBA.brightness-0.05).clamp01()
+            return UIColor(hue:HSBA.hue,saturation:0.0,brightness:brightness1,alpha:1.0)
         }
+
     }
     
-    
-    
-    
-    override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
+    func styleCell(cell:UITableViewCell,indexPath:NSIndexPath)
     {
-        return 1
-    }
-    
-    override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
-        return categories.count
-    }
-    
-    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-    {
-        let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
-        
         // TODO PREFERENCES: SATURATION
         cell.backgroundColor    = colorForCategoryIndex(indexPath.row)
         
+        print("styleCell: indexPath.row=\(indexPath.row), section=\(indexPath.section)")
         if let label = cell.textLabel {
             
             if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
@@ -146,16 +184,36 @@ class CategoriesController : UITableViewController {
             cell.backgroundColor!.getWhite(&white,alpha:&alpha)
             
             // TODO PREFERENCES: LIGHT/DARK COLOR
-//            label.textColor = white < 0.5 ? UIColor.lightTextColor() : UIColor.darkTextColor()
+            //            label.textColor = white < 0.5 ? UIColor.lightTextColor() : UIColor.darkTextColor()
         }
         
         cell.selectionStyle     = UITableViewCellSelectionStyle.Default
         
-        cell.accessoryType      = .None//.DisclosureIndicator
+        cell.accessoryType      = .None//.DisclosureIndicator        
+    }
+    
+    
+    override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
+    {
+        return 1
+    }
+    
+    override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return categories.count
+    }
+    
+    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
+        
+        styleCell(cell,indexPath:indexPath)
         
         return cell
     }
 
+    
+    
     
     
     func reload()
@@ -243,6 +301,10 @@ class CategoriesController : UITableViewController {
     override func viewWillAppear(animated: Bool)
     {
         tableView.reloadData()
+
+        
+        tableView.backgroundColor = DataManager.settingsGetBackgroundColor()
+
         
         DataManager.displayHelpPageForCategories(self)
         

@@ -229,7 +229,11 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     override func viewWillAppear(animated: Bool)
     {
         reload()
+
         
+        tableView.backgroundColor = DataManager.settingsGetBackgroundColor()
+        
+
         DataManager.displayHelpPageForItems(self)
 
         super.viewWillAppear(animated)

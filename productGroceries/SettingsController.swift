@@ -35,137 +35,13 @@ class SettingsController : GenericSettingsController
     
     
     
-    // data
-    //  reset [confirm]
-    //  clear [confirm] // also, have clear in summary?
-    //  save [alert]
-    //  load >
-    
-    // settings
-    //  save [alert]
-    //  load >
-    
-    // categories
-    //   sample
-    //  font? // tap prev/next
-    //  Uppercase?
-    //  bold?
-    //  colors >
-    //   custom
-    //   solid
-    //   plain
-    //   gray
-    //   strawberry
-    //   saturation [----]
-    
-    // items
-    //  odd alpha <-> // slider
-    //  even alpha <-> // slider
-    //  quantity
-    //   bg-color // sliders
-    //   font-color //
-    //   font?
-    
-    // summary
-    //  quantity
-    //   bg-color
-    //    match items?
-    //   font-color
-    //    match items?
     
     
     
     
-    
-    
-    
-    
-    
-    
-    var rows:[[Any]] = []
-    
-    
-    
-    
-    override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
+    override func createRows() -> [[Any]]
     {
-        return rows.count
-    }
-    
-    override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
-        return rows[section].count-2
-    }
-    
-    override func tableView                     (tableView: UITableView, titleForHeaderInSection section: Int) -> String?
-    {
-        if let text = rows[section].first as? String {
-            return 0 < text.length ? text : nil
-        }
-        return nil
-    }
-    
-    override func tableView                     (tableView: UITableView, titleForFooterInSection section: Int) -> String?
-    {
-        if let text = rows[section].last as? String {
-            return 0 < text.length ? text : nil
-        }
-        return nil
-    }
-    
-    override func tableView                     (tableView: UITableView, indentationLevelForRowAtIndexPath indexPath: NSIndexPath) -> Int
-    {
-        if 0 < indexPath.row {
-            //            return 1
-        }
-        return 0
-    }
-    
-    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-    {
-        let cell = UITableViewCell(style:.Value1,reuseIdentifier:nil)
-        
-        cell.selectionStyle = .None
-        
-        if let f = rows[indexPath.section][indexPath.row+1] as? FunctionOnCell {
-            f(cell:cell,indexPath:indexPath)
-        }
-        
-        return cell
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    func reload()
-    {
-        tableView.reloadData()
-    }
-    
-    
-    
-    var lastLoadedSettingsName:String?
-    
-    
-    
-    override func viewWillAppear(animated: Bool)
-    {
-        registeredSliders.removeAll()
-        registeredSwitches.removeAll()
-        
-        for update in updates {
-            update()
-        }
-        
-        updates = []
-        
-        actions.removeAll()
-        
-        rows    = [
+        return [
             [
                 "SETTINGS",
                 
@@ -179,12 +55,7 @@ class SettingsController : GenericSettingsController
                             alert.addTextFieldWithConfigurationHandler() {
                                 field in
                                 // called to configure text field before displayed
-                                if self.lastLoadedSettingsName != nil {
-                                    field.text = self.lastLoadedSettingsName!
-                                }
-                                else {
-                                    field.text = ""
-                                }
+                                field.text = DataManager.settingsGetLastName()
                             }
                             
                             let actionSave = UIAlertAction(title:"Save", style:.Default, handler: {
@@ -228,7 +99,6 @@ class SettingsController : GenericSettingsController
                                 controller.handlerForDidSelectRowAtIndexPath = { (controller:GenericListController,indexPath:NSIndexPath) -> Void in
                                     let selected = controller.items[indexPath.row]
                                     DataManager.settingsUse(selected)
-                                    self.lastLoadedSettingsName = selected
                                     controller.navigationController!.popViewControllerAnimated(true)
                                 }
                                 controller.handlerForCommitEditingStyle = { (controller:GenericListController,commitEditingStyle:UITableViewCellEditingStyle,indexPath:NSIndexPath) -> Bool in
@@ -247,6 +117,16 @@ class SettingsController : GenericSettingsController
                 },
                 
                 "Save current settings, or load previously saved settings"
+            ],
+            
+            [
+                "BACKGROUND",
+                
+                createCellForColor(DataManager.settingsGetBackgroundColor(),title:"Background",key:.SettingsBackgroundColor) {
+                    AppDelegate.rootViewController.view.backgroundColor = DataManager.settingsGetBackgroundColor()
+                },
+                
+                ""
             ],
             
             [
@@ -281,6 +161,10 @@ class SettingsController : GenericSettingsController
                         label.text          = "Theme"
                         cell.accessoryType  = .DisclosureIndicator
                         cell.selectionStyle = .Default
+                        self.registerCellSelection(indexPath) {
+                            let controller = ThemesController()
+                            AppDelegate.navigatorForSettings.pushViewController(controller, animated:true)
+                        }
                     }
                 },
                 
@@ -384,12 +268,46 @@ class SettingsController : GenericSettingsController
                 
                 ""
             ],
+            
+//            [
+//                "ITEM QUANTITY SOUNDS",
+//                
+//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+//                    if let label = cell.textLabel {
+//                        label.text          = "Add"
+//                        cell.selectionStyle = .Default
+//                        cell.accessoryType  = .DisclosureIndicator
+//                        self.registerCellSelection(indexPath) {
+//                            // None,Default,Zap,Pop,Crackle
+//                        }
+//                    }
+//                },
+//                
+//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+//                    if let label = cell.textLabel {
+//                        label.text          = "Subtract"
+//                        cell.selectionStyle = .Default
+//                        cell.accessoryType  = .DisclosureIndicator
+//                        self.registerCellSelection(indexPath) {
+//                        }
+//                    }
+//                },
+//                
+//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+//                    if let label = cell.textLabel {
+//                        label.text          = "Error"
+//                        cell.selectionStyle = .Default
+//                        cell.accessoryType  = .DisclosureIndicator
+//                        self.registerCellSelection(indexPath) {
+//                        }
+//                    }
+//                },
+//                
+//
+//                ""
+//            ],
 
         ]
-        
-        reload()
-        
-        super.viewWillAppear(animated)
     }
     
     
@@ -397,19 +315,6 @@ class SettingsController : GenericSettingsController
     
     override func viewWillDisappear(animated: Bool)
     {
-        registeredSliders.removeAll()
-        registeredSwitches.removeAll()
-        
-        for update in updates {
-            update()
-        }
-        
-        updates = []
-        
-        rows    = []
-        
-        actions.removeAll()
-        
         DataManager.synchronize()
         
         super.viewWillDisappear(animated)

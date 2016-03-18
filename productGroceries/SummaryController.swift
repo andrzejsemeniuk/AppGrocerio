@@ -249,6 +249,10 @@ class SummaryController : UITableViewController
     {
         reload(true)
         
+        
+        tableView.backgroundColor = DataManager.settingsGetBackgroundColor()
+
+        
         DataManager.displayHelpPageForSummary(self)
 
         super.viewWillAppear(animated)
@@ -277,5 +281,7 @@ class SummaryController : UITableViewController
 
         }
     }
+    
+    
     
 }

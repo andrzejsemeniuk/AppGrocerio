@@ -70,6 +70,16 @@ extension Array
     }
 }
 
+extension Int
+{
+    public var isEven:Bool {
+        return self % 2 == 0
+    }
+    public var isOdd:Bool {
+        return self % 2 == 1
+    }
+}
+
 extension Float
 {
     public func clamp(minimum:Float,_ maximum:Float) -> Float {
@@ -81,6 +91,45 @@ extension Float
     public func clamp0255() -> Float {
         return clamp(0,255)
     }
+    public func lerp(from:Float, _ to:Float) -> Float {
+        return (1.0-self)*from + self*to
+//        return from + (to - from) * self
+    }
+    public static func lerp(from:Float, _ to:Float, _ with:Float) -> Float {
+        return with.lerp(from,to)
+    }
+    public func lerp01(from:Float, _ to:Float) -> Float {
+        return min(1.0,max(0.0,self.lerp(from,to)))
+    }
+    public static func lerp01(from:Float, _ to:Float, _ with:Float) -> Float {
+        return with.lerp01(from,to)
+    }
+}
+
+extension CGFloat
+{
+    public func clamp(minimum:CGFloat,_ maximum:CGFloat) -> CGFloat {
+        return self < maximum ? (minimum < self ? self : minimum) : maximum
+    }
+    public func clamp01() -> CGFloat {
+        return clamp(0,1)
+    }
+    public func clamp0255() -> CGFloat {
+        return clamp(0,255)
+    }
+    public func lerp(from:CGFloat, _ to:CGFloat) -> CGFloat {
+        return (1.0-self)*from + self*to
+//        return from + (to - from) * self
+    }
+    public static func lerp(from:CGFloat, _ to:CGFloat, _ with:CGFloat) -> CGFloat {
+        return with.lerp(from,to)
+    }
+    public func lerp01(from:CGFloat, _ to:CGFloat) -> CGFloat {
+        return CGFloat(Float(self.lerp(from,to)).clamp01())
+    }
+    public static func lerp01(from:CGFloat, _ to:CGFloat, _ with:CGFloat) -> CGFloat {
+        return with.lerp01(from,to)
+    }
 }
 
 extension UIColor
@@ -91,18 +140,18 @@ extension UIColor
     
     public func components_RGBA_UInt8() -> (red:UInt8,green:UInt8,blue:UInt8,alpha:UInt8) {
         let components      = RGBA()
-        let maximum:Float   = 256
+        let maximum:CGFloat   = 256
         
-        let r = components.red*maximum
-        let g = components.green*maximum
-        let b = components.blue*maximum
-        let a = components.alpha*maximum
+        let r = Float(components.red*maximum).clamp0255()
+        let g = Float(components.green*maximum).clamp0255()
+        let b = Float(components.blue*maximum).clamp0255()
+        let a = Float(components.alpha*maximum).clamp0255()
         
         let result = (
-            UInt8(r.clamp0255()),
-            UInt8(g.clamp0255()),
-            UInt8(b.clamp0255()),
-            UInt8(a.clamp0255())
+            UInt8(r),
+            UInt8(g),
+            UInt8(b),
+            UInt8(a)
         )
         
         return result
@@ -122,7 +171,7 @@ extension UIColor
         return a.red==b.red && a.green==b.green && a.blue==b.blue
     }
     
-    public func RGBA() -> (red:Float,green:Float,blue:Float,alpha:Float) {
+    public func RGBA() -> (red:CGFloat,green:CGFloat,blue:CGFloat,alpha:CGFloat) {
         var r:CGFloat = 0
         var g:CGFloat = 0
         var b:CGFloat = 0
@@ -130,10 +179,10 @@ extension UIColor
         
         self.getRed(&r,green:&g,blue:&b,alpha:&a)
         
-        return (Float(r),Float(g),Float(b),Float(a))
+        return (r,g,b,a)
     }
     
-    public func HSBA() -> (hue:Float,saturation:Float,brightness:Float,alpha:Float) {
+    public func HSBA() -> (hue:CGFloat,saturation:CGFloat,brightness:CGFloat,alpha:CGFloat) {
         var h:CGFloat = 0
         var s:CGFloat = 0
         var b:CGFloat = 0
@@ -141,10 +190,10 @@ extension UIColor
         
         self.getHue(&h,saturation:&s,brightness:&b,alpha:&a)
         
-        return (Float(h),Float(s),Float(b),Float(a))
+        return (h,s,b,a)
     }
     
-    public func alpha() -> Float {
+    public func alpha() -> CGFloat {
         return RGBA().alpha
     }
     

@@ -13,6 +13,9 @@
 		5730C8601C9B6EEC009145B2 /* GenericListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C85F1C9B6EEC009145B2 /* GenericListController.swift */; settings = {ASSET_TAGS = (); }; };
 		5730C8611C9B6EEC009145B2 /* GenericListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C85F1C9B6EEC009145B2 /* GenericListController.swift */; settings = {ASSET_TAGS = (); }; };
 		5730C8621C9B6EEC009145B2 /* GenericListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C85F1C9B6EEC009145B2 /* GenericListController.swift */; settings = {ASSET_TAGS = (); }; };
+		5730C8641C9BA4B7009145B2 /* ThemesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ThemesController.swift */; settings = {ASSET_TAGS = (); }; };
+		5730C8651C9BA4B7009145B2 /* ThemesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ThemesController.swift */; settings = {ASSET_TAGS = (); }; };
+		5730C8661C9BA4B7009145B2 /* ThemesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ThemesController.swift */; settings = {ASSET_TAGS = (); }; };
 		574880F31C89EEF100A3806F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574880F21C89EEF100A3806F /* AppDelegate.swift */; };
 		574880FA1C89EEF100A3806F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 574880F81C89EEF100A3806F /* Main.storyboard */; };
 		574880FC1C89EEF100A3806F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 574880FB1C89EEF100A3806F /* Assets.xcassets */; };
@@ -62,6 +65,7 @@
 /* Begin PBXFileReference section */
 		5730C85B1C9B64DB009145B2 /* GenericSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericSettingsController.swift; sourceTree = "<group>"; };
 		5730C85F1C9B6EEC009145B2 /* GenericListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericListController.swift; sourceTree = "<group>"; };
+		5730C8631C9BA4B7009145B2 /* ThemesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemesController.swift; sourceTree = "<group>"; };
 		574880EF1C89EEF000A3806F /* productGroceries.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = productGroceries.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		574880F21C89EEF100A3806F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		574880F91C89EEF100A3806F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 				57A159BB1C90981C0031036F /* ItemsController.swift */,
 				57A159B61C9097E90031036F /* NavigationController.swift */,
 				5759A10F1C98BEC200C788A3 /* SettingsController.swift */,
+				5730C8631C9BA4B7009145B2 /* ThemesController.swift */,
 				57A159BF1C90B1C90031036F /* SummaryController.swift */,
 				57A159B21C90974D0031036F /* TabBarController.swift */,
 			);
@@ -322,6 +327,7 @@
 				57A87B301C9A40F800E496C7 /* ColorPicker.swift in Sources */,
 				574880F31C89EEF100A3806F /* AppDelegate.swift in Sources */,
 				57A159B71C9097E90031036F /* NavigationController.swift in Sources */,
+				5730C8641C9BA4B7009145B2 /* ThemesController.swift in Sources */,
 				5792CE841C933E390001B192 /* Utility.swift in Sources */,
 				57A159B31C90974D0031036F /* TabBarController.swift in Sources */,
 				57A159C01C90B1C90031036F /* SummaryController.swift in Sources */,
@@ -338,6 +344,7 @@
 				5792CE851C933E390001B192 /* Utility.swift in Sources */,
 				57A159C51C90F4CE0031036F /* DataManager.swift in Sources */,
 				57A159BD1C90981C0031036F /* ItemsController.swift in Sources */,
+				5730C8651C9BA4B7009145B2 /* ThemesController.swift in Sources */,
 				5748810A1C89EEF100A3806F /* productGroceriesTests.swift in Sources */,
 				57A159B81C9097E90031036F /* NavigationController.swift in Sources */,
 				5730C8611C9B6EEC009145B2 /* GenericListController.swift in Sources */,
@@ -353,6 +360,7 @@
 				5730C85E1C9B64DB009145B2 /* GenericSettingsController.swift in Sources */,
 				57A159BE1C90981C0031036F /* ItemsController.swift in Sources */,
 				574881151C89EEF100A3806F /* productGroceriesUITests.swift in Sources */,
+				5730C8661C9BA4B7009145B2 /* ThemesController.swift in Sources */,
 				57A159B91C9097E90031036F /* NavigationController.swift in Sources */,
 				5730C8621C9B6EEC009145B2 /* GenericListController.swift in Sources */,
 				57A159B51C90974D0031036F /* TabBarController.swift in Sources */,

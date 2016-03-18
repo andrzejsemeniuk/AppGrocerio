@@ -12,6 +12,72 @@ import UIKit
 
 class GenericSettingsController : UITableViewController
 {
+    var rows:[[Any]] = []
+    
+    
+    
+    
+    
+    override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
+    {
+        return rows.count
+    }
+    
+    override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return section < rows.count ? rows[section].count-2 : 0
+    }
+    
+    override func tableView                     (tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    {
+        if 0 < rows.count {
+            if let text = rows[section].first as? String {
+                return 0 < text.length ? text : nil
+            }
+        }
+        return nil
+    }
+    
+    override func tableView                     (tableView: UITableView, titleForFooterInSection section: Int) -> String?
+    {
+        if 0 < rows.count {
+            if let text = rows[section].last as? String {
+                return 0 < text.length ? text : nil
+            }
+        }
+        return nil
+    }
+    
+    override func tableView                     (tableView: UITableView, indentationLevelForRowAtIndexPath indexPath: NSIndexPath) -> Int
+    {
+        if 0 < indexPath.row {
+            //            return 1
+        }
+        return 0
+    }
+    
+    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = UITableViewCell(style:.Value1,reuseIdentifier:nil)
+        
+        cell.selectionStyle = .None
+        
+        if 0 < rows.count {
+            if let f = rows[indexPath.section][indexPath.row+1] as? FunctionOnCell {
+                f(cell:cell,indexPath:indexPath)
+            }
+        }
+        
+        return cell
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     typealias Action = () -> ()
     
     var actions:[NSIndexPath : Action] = [:]
@@ -32,7 +98,7 @@ class GenericSettingsController : UITableViewController
         }
     }
     
-
+    
     
     
     typealias Update = Action
@@ -93,7 +159,7 @@ class GenericSettingsController : UITableViewController
     
     typealias FunctionOnCell = (cell:UITableViewCell, indexPath:NSIndexPath) -> ()
     
-    func createCellForFont(font0:UIFont, name:String = "Font", title:String, key:DataManager.Key) -> FunctionOnCell
+    func createCellForFont(font0:UIFont, name:String = "Font", title:String, key:DataManager.Key, action:Action! = nil) -> FunctionOnCell
     {
         return
             { (cell:UITableViewCell, indexPath:NSIndexPath) in
@@ -106,6 +172,10 @@ class GenericSettingsController : UITableViewController
                     cell.selectionStyle = .Default
                     cell.accessoryType  = .DisclosureIndicator
                     self.addAction(indexPath) {
+                        
+                        if action != nil {
+                            action()
+                        }
                         
                         let fonts       = FontNamePicker()
                         
@@ -126,7 +196,7 @@ class GenericSettingsController : UITableViewController
     }
     
     
-    func createCellForColor(color0:UIColor, name:String = "Color", title:String, key:DataManager.Key) -> FunctionOnCell
+    func createCellForColor(color0:UIColor, postProcess:((UITableViewCell) -> Void)! = nil, name:String = "Color", title:String, key:DataManager.Key, action:Action! = nil) -> FunctionOnCell
     {
         return
             { (cell:UITableViewCell, indexPath:NSIndexPath) in
@@ -144,7 +214,16 @@ class GenericSettingsController : UITableViewController
                     }
                     cell.selectionStyle = .Default
                     cell.accessoryType  = .DisclosureIndicator
+                    
+                    if postProcess != nil {
+                        postProcess(cell)
+                    }
+                    
                     self.addAction(indexPath) {
+                        
+                        if action != nil {
+                            action()
+                        }
                         
                         let colors      = ColorPicker()
                         
@@ -161,5 +240,60 @@ class GenericSettingsController : UITableViewController
                 }
         }
     }
+    
+    
+    
+    func reload()
+    {
+        tableView.reloadData()
+    }
+    
+    
+    func createRows() -> [[Any]]
+    {
+        return [[Any]]()
+    }
+    
+    override func viewWillAppear(animated: Bool)
+    {
+        registeredSliders.removeAll()
+        registeredSwitches.removeAll()
+        
+        updates.removeAll()
+        
+        actions.removeAll()
+        
+        rows = createRows()
+        
+        reload()
+        
+        super.viewWillAppear(animated)
+        
+    }
+    
+    
+    override func viewWillDisappear(animated: Bool)
+    {
+        registeredSliders.removeAll()
+        registeredSwitches.removeAll()
+        
+        for update in updates {
+            update()
+        }
+        
+        updates.removeAll()
+        
+        rows.removeAll()
+        
+        actions.removeAll()
+        
+        super.viewWillDisappear(animated)
+    }
+    
+    
+    
+    
+    
+    
     
 }

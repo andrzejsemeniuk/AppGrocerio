@@ -50,6 +50,9 @@ class DataManager : NSObject
 {
     enum Key: String {
         case Categories, Items
+        
+        case SettingsBackgroundColor                        = "settings-background"
+        
         case SettingsTabCategoriesUppercase                 = "settings-categories-uppercase"
         case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
         case SettingsTabCategoriesFont                      = "settings-categories-font"
@@ -67,9 +70,17 @@ class DataManager : NSObject
         case SettingsTabItemsQuantityColorTextSameAsItems   = "settings-items-quantity-color-text-as-items"
         case SettingsTabItemsQuantityFont                   = "settings-items-quantity-font"
         case SettingsTabItemsQuantityFontSameAsItems        = "settings-items-quantity-font-as-items"
-        
+
+        case SettingsTabThemesSolidColor                    = "settings-themes-solid-color"
+        case SettingsTabThemesRangeFromColor                = "settings-themes-range-color-from"
+        case SettingsTabThemesRangeToColor                  = "settings-themes-range-color-to"
+        case SettingsTabThemesCustomColors                  = "settings-themes-custom-colors"
+        case SettingsTabThemesName                          = "settings-themes-name"
+        case SettingsTabThemesSaturation                    = "settings-themes-saturation"
+
         case SettingsCurrent                                = "settings:current"
         case SettingsList                                   = "settings-list"
+        case SettingsLastName                               = "settings-last-name"
         
         case SummaryList                                    = "summary-list"
     }
@@ -303,34 +314,85 @@ class DataManager : NSObject
         NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
     }
     
-    class func settingsGetColorForKey(key:Key, defaultValue:UIColor = UIColor.blackColor()) -> UIColor
-    {
-        if let result = settingsGetCurrent()["c:"+key.rawValue] as? [Float] {
-            return UIColor.RGBA(result[0],result[1],result[2],result[3])
-        }
-        return defaultValue
-    }
-    
-    class func settingsSetColor(value:UIColor, forKey:Key)
+    class func settingsPackColor(value:UIColor) -> [Float]
     {
         let rgba = value.RGBA()
         
         let RGBA:[Float] = [
-            rgba.red,
-            rgba.green,
-            rgba.blue,
-            rgba.alpha
+            Float(rgba.red),
+            Float(rgba.green),
+            Float(rgba.blue),
+            Float(rgba.alpha)
         ]
         
+        return RGBA
+    }
+    
+    class func settingsUnpackColor(value:[Float], defaultValue:UIColor) -> UIColor
+    {
+        if 3 < value.count
+        {
+            return UIColor.RGBA(value[0],value[1],value[2],value[3])
+        }
+        else
+        {
+            return defaultValue
+        }
+    }
+    
+    class func settingsGetColorForKey(key:Key, defaultValue:UIColor = UIColor.blackColor()) -> UIColor
+    {
+        if let result = settingsGetCurrent()["c:"+key.rawValue] as? [Float] {
+            return settingsUnpackColor(result,defaultValue:defaultValue)
+        }
+        return defaultValue
+    }
+
+    class func settingsSetColor(value:UIColor, forKey:Key)
+    {
         var defaults = settingsGetCurrent();
         
-        defaults["c:"+forKey.rawValue] = RGBA
+        defaults["c:"+forKey.rawValue] = settingsPackColor(value)
         
         NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
     }
     
+    class func settingsGetArrayForKey(key:Key, defaultValue:[AnyObject] = []) -> [AnyObject]
+    {
+        if let result = settingsGetCurrent()["A:"+key.rawValue] as? [AnyObject] {
+            return result
+        }
+        return defaultValue
+    }
     
+    class func settingsSetArray(value:[AnyObject], forKey:Key)
+    {
+        var defaults = settingsGetCurrent();
+        
+        defaults["A:"+forKey.rawValue] = value
+        
+        NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+    }
+
+
+    class func settingsGetDictionaryForKey(key:Key, defaultValue:[String:AnyObject] = [:]) -> [String:AnyObject]
+    {
+        if let result = settingsGetCurrent()["D:"+key.rawValue] as? [String:AnyObject] {
+            return result
+        }
+        return defaultValue
+    }
     
+    class func settingsSetDictionary(value:[String:AnyObject], forKey:Key)
+    {
+        var defaults = settingsGetCurrent();
+        
+        defaults["D:"+forKey.rawValue] = value
+        
+        NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+    }
+    
+
     
     
     
@@ -379,8 +441,14 @@ class DataManager : NSObject
 
     
     
+    class func settingsGetBackgroundColor() -> UIColor
+    {
+        let color0 = UIColor.whiteColor()
+        
+        return settingsGetColorForKey(.SettingsBackgroundColor,defaultValue:color0)
+    }
     
-    
+
     class func settingsGetCategoriesTextColor() -> UIColor
     {
         let color0 = UIColor.blackColor()
@@ -427,9 +495,82 @@ class DataManager : NSObject
     
     
     
+    class func settingsSetThemeWithName(name:String)
+    {
+        settingsSetString(name,forKey:Key.SettingsTabThemesName)
+    }
+
+
+    
+    
+    
+    
+    
+    class func settingsGetThemeName() -> String
+    {
+        return settingsGetStringForKey(Key.SettingsTabThemesName,defaultValue:"Rainbow")
+    }
     
     
 
+    
+    
+    
+    
+    class func settingsGetThemesSolidColor(defaultValue:UIColor = UIColor.redColor()) -> UIColor
+    {
+        return settingsGetColorForKey(.SettingsTabThemesSolidColor,defaultValue:defaultValue)
+    }
+
+    class func settingsGetThemesRangeFromColor(defaultValue:UIColor = UIColor.yellowColor()) -> UIColor
+    {
+        return settingsGetColorForKey(.SettingsTabThemesRangeFromColor,defaultValue:defaultValue)
+//        let dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
+//        
+//        if let color = dictionary["from"] as? [Float] {
+//            return settingsUnpackColor(color,defaultValue:defaultValue)
+//        }
+//        
+//        return defaultValue
+    }
+    
+    class func settingsGetThemesRangeToColor(defaultValue:UIColor = UIColor.orangeColor()) -> UIColor
+    {
+        return settingsGetColorForKey(.SettingsTabThemesRangeToColor,defaultValue:defaultValue)
+//        let dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
+//        
+//        if let color = dictionary["to"] as? [Float] {
+//            return settingsUnpackColor(color,defaultValue:defaultValue)
+//        }
+//        
+//        return defaultValue
+    }
+    
+
+    
+    class func settingsSetThemesSolidColor(color:UIColor)
+    {
+        settingsSetColor(color,forKey:.SettingsTabThemesSolidColor)
+    }
+
+    class func settingsSetThemesRangeFromColor(color:UIColor)
+    {
+        settingsSetColor(color,forKey:.SettingsTabThemesRangeFromColor)
+//        var dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
+//        dictionary["from"] = settingsPackColor(color)
+//        settingsSetDictionary(dictionary,forKey:.SettingsTabThemesRangeColors)
+    }
+    
+    class func settingsSetThemesRangeToColor(color:UIColor)
+    {
+        settingsSetColor(color,forKey:.SettingsTabThemesRangeToColor)
+//        var dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
+//        dictionary["to"] = settingsPackColor(color)
+//        settingsSetDictionary(dictionary,forKey:.SettingsTabThemesRangeColors)
+    }
+    
+    
+    
 
     
     
@@ -614,15 +755,27 @@ class DataManager : NSObject
     
     
     
+    class func settingsGetLastName(defaultValue:String = "") -> String
+    {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if let result = defaults.stringForKey(Key.SettingsLastName.rawValue) {
+            return result
+        }
+        
+        return defaultValue
+    }
     
     private class func settingsKeyForName(name:String) -> String {
         return "settings="+name
     }
     
     
-    class func settingsUse      (name:String) -> Bool
+    class func settingsUse      (var name:String) -> Bool
     {
         var result = false
+        
+        name = name.trimmed()
         
         if 0 < name.length
         {
@@ -632,6 +785,8 @@ class DataManager : NSObject
             {
                 defaults.setObject(settings,forKey:Key.SettingsCurrent.rawValue)
                 
+                defaults.setObject(name,forKey:Key.SettingsLastName.rawValue)
+                
                 result = true
             }
         }
@@ -639,9 +794,11 @@ class DataManager : NSObject
         return result
     }
     
-    class func settingsRemove    (name:String) -> Bool
+    class func settingsRemove    (var name:String) -> Bool
     {
         var result = false
+        
+        name = name.trimmed()
         
         if 0 < name.length
         {
@@ -666,9 +823,11 @@ class DataManager : NSObject
         return result
     }
     
-    class func settingsSave     (name:String) -> Bool
+    class func settingsSave     (var name:String) -> Bool
     {
         var result = false
+        
+        name = name.trimmed()
         
         if 0 < name.length
         {
@@ -677,7 +836,9 @@ class DataManager : NSObject
             if let settings = defaults.dictionaryForKey(Key.SettingsCurrent.rawValue)
             {
                 defaults.setObject(settings,forKey:settingsKeyForName(name))
-            
+                
+                defaults.setObject(name,forKey:Key.SettingsLastName.rawValue)
+
                 do
                 {
                     var list = Set<String>(settingsList())
