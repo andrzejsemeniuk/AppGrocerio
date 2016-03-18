@@ -46,6 +46,9 @@ class SettingsController : GenericSettingsController
                 "SETTINGS",
                 
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.detailTextLabel {
+                        label.text = DataManager.settingsGetLastName()
+                    }
                     if let label = cell.textLabel {
                         label.text          = "Save"
                         cell.selectionStyle = .Default

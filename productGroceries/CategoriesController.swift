@@ -12,6 +12,7 @@ import UIKit
 class CategoriesController : UITableViewController {
     
     var categories:[String] = []
+    var quantities:[Int]    = []
     
     
     static var instance:CategoriesController! = nil
@@ -47,9 +48,8 @@ class CategoriesController : UITableViewController {
         ]
         
         navigationItem.rightBarButtonItems = items
-
         
-        categories                  = DataManager.allCategories()
+        reload()
     }
     
     override func didReceiveMemoryWarning()
@@ -192,6 +192,32 @@ class CategoriesController : UITableViewController {
         cell.accessoryType      = .None//.DisclosureIndicator        
     }
     
+    func styleQuantity(cell:UITableViewCell,indexPath:NSIndexPath,quantity:Int) -> (fill:UIView,label:UILabel)
+    {
+        
+        let fill = UIView()
+        
+        fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
+        fill.frame.origin.x         = AppDelegate.rootViewController.view.bounds.width-fill.frame.size.width
+        fill.backgroundColor        = DataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
+        
+        cell.addSubview(fill)
+        
+        
+        let label = UILabel()
+        
+        label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
+        label.font                  = DataManager.settingsGetItemsQuantityFont()
+        label.textColor             = DataManager.settingsGetItemsQuantityTextColor()
+        label.text                  = String(quantity)
+        label.textAlignment         = .Right
+        
+        cell.accessoryView          = label
+        cell.editingAccessoryView   = label
+        
+        return (fill,label)
+    }
+    
     
     override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
     {
@@ -209,6 +235,11 @@ class CategoriesController : UITableViewController {
         
         styleCell(cell,indexPath:indexPath)
         
+        if 0 < quantities[indexPath.row]
+        {
+            let views = CategoriesController.instance.styleQuantity(cell,indexPath:indexPath,quantity:quantities[indexPath.row])
+        }
+        
         return cell
     }
 
@@ -220,6 +251,20 @@ class CategoriesController : UITableViewController {
     {
         categories = DataManager.allCategories()
         
+        quantities = []
+        
+        for category in categories
+        {
+            let items = DataManager.allItemsInCategory(category)
+            var count = 0
+            for item in items {
+                if 0 < item.quantity {
+                    count++
+                }
+            }
+            quantities += [ count ]
+        }
+
         tableView.reloadData()
     }
     
@@ -300,7 +345,7 @@ class CategoriesController : UITableViewController {
     
     override func viewWillAppear(animated: Bool)
     {
-        tableView.reloadData()
+        reload()
 
         
         tableView.backgroundColor = DataManager.settingsGetBackgroundColor()

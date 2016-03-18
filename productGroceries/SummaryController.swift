@@ -9,12 +9,13 @@
 import Foundation
 import UIKit
 
-class SummaryController : UITableViewController
+class SummaryController : UITableViewController, UIPopoverPresentationControllerDelegate
 {
     var items = [[Item]]()
     
     var lastTap:UITableViewTap!
     
+    var buttonLoad:UIBarButtonItem!
     
     
     override func viewDidLoad()
@@ -36,8 +37,10 @@ class SummaryController : UITableViewController
                 items = [UIBarButtonItem]()
             }
             
+            buttonLoad = UIBarButtonItem(barButtonSystemItem:.Bookmarks, target:self, action: "load")
+            
             items! += [
-                UIBarButtonItem(barButtonSystemItem:.Bookmarks, target:self, action: "load"),
+                buttonLoad
             ]
             
             navigationItem.leftBarButtonItems = items
@@ -55,7 +58,7 @@ class SummaryController : UITableViewController
             }
             
             items! += [
-                UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
+                UIBarButtonItem(barButtonSystemItem:.Save, target:self, action: "save"),
             ]
             
             navigationItem.rightBarButtonItems = items
@@ -85,7 +88,7 @@ class SummaryController : UITableViewController
     
     
     
-    func add()
+    func save()
     {
         let alert = UIAlertController(title:"Save Grocery List", message:"Specify name of grocery list:", preferredStyle:.Alert)
         
@@ -103,9 +106,11 @@ class SummaryController : UITableViewController
         let actionSave = UIAlertAction(title:"Save", style:.Destructive, handler: {
             action in
             
-            if let fields = alert.textFields, text = fields[0].text {
-                if DataManager.summarySave(text.trimmed()) {
-                    self.lastGroceryListName = text.trimmed()
+            if let fields = alert.textFields, text = fields[0].text?.trimmed() {
+                if text != "Clear" {
+                    if DataManager.summarySave(text) {
+                        self.lastGroceryListName = text
+                    }
                 }
             }
         })
@@ -126,10 +131,66 @@ class SummaryController : UITableViewController
     func load()
     {
         
+        let list = GenericListController()
+        
+        list.items                      = ["Clear"] + DataManager.summaryList().sort()
+        list.tableView.separatorStyle   = .None
+
+        list.handlerForDidSelectRowAtIndexPath = { (controller:GenericListController,indexPath:NSIndexPath) -> Void in
+            let row         = indexPath.row
+            let selection   = list.items[row]
+            if selection == "Clear" {
+                DataManager.summaryClear()
+            }
+            else {
+                DataManager.summaryUse(selection)
+            }
+//            controller.dismissViewControllerAnimated(true, completion:nil)
+            controller.navigationController!.popViewControllerAnimated(true)
+        }
+
+        self.navigationController!.pushViewController(list,animated:true)
+        
+//        let list = GenericListController()
+//        
+//        list.items                          = ["Clear",""] + DataManager.summaryList()
+//        list.modalPresentationStyle         = UIModalPresentationStyle.Popover
+//        list.preferredContentSize           = CGSizeMake(400, 400)
+////        list.tableView.frame = CGRectMake(0,0,200,200)
+//
+//        self.presentViewController(list, animated: true, completion: nil)
+//
+//        let popover = list.popoverPresentationController
+////        popover?.delegate                   = self
+//        popover?.barButtonItem              = buttonLoad
+//        popover?.popoverLayoutMargins       = UIEdgeInsetsMake(60,60,60,60)
+
+//        list.handlerForDidSelectRowAtIndexPath = { (controller:GenericListController,indexPath:NSIndexPath) -> Void in
+//            let row         = indexPath.row
+//            let selection   = list.items[row]
+//            if selection == "Clear" {
+//                DataManager.summaryClear()
+//            }
+//            else {
+//                DataManager.summaryUse(selection)
+//            }
+//            controller.dismissViewControllerAnimated(true, completion:nil)
+//        }
+
+    }
+
+    
+    
+    
+    func prepareForPopoverPresentation(popoverPresentationController: UIPopoverPresentationController)
+    {
+        
     }
     
-    
-    
+    func adaptivePresentationStyleForPresentationController(controller:UIPresentationController) -> UIModalPresentationStyle
+    {
+        return .Popover
+    }
     
     
     
@@ -206,27 +267,7 @@ class SummaryController : UITableViewController
         
         cell.selectionStyle = .None
 
-        
-        let fill = UIView()
-        
-        fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
-        fill.frame.origin.x         = tableView.bounds.width-fill.frame.size.width
-        fill.backgroundColor        = DataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
-        
-        cell.addSubview(fill)
-        
-
-        let label = UILabel()
-        
-        label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
-        label.font                  = DataManager.settingsGetItemsQuantityFont()
-        label.textColor             = DataManager.settingsGetItemsQuantityTextColor()
-        label.text                  = String(item.quantity)
-        label.textAlignment         = .Right
-        
-        cell.accessoryView          = label
-        cell.editingAccessoryView   = label
-
+        let views = CategoriesController.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
         
         return cell
     }

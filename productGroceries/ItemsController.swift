@@ -107,27 +107,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         if 0 < item.quantity
         {
-            
-            let fill = UIView()
-            
-            fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
-            fill.frame.origin.x         = tableView.bounds.width-fill.frame.size.width
-            fill.backgroundColor        = DataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
-            
-            cell.addSubview(fill)
-            
-            
-            let label = UILabel()
-            
-            label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
-            label.font                  = DataManager.settingsGetItemsQuantityFont()
-            label.textColor             = DataManager.settingsGetItemsQuantityTextColor()
-            label.text                  = String(item.quantity)
-            label.textAlignment         = .Right
-            
-            cell.accessoryView          = label
-            cell.editingAccessoryView   = label
-            
+            let views = CategoriesController.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
         }
         
         return cell
