@@ -35,10 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         AppDelegate.__instance      = self
         
-//        ItemsDataManager.clearHelpFlags()
-//        ItemsDataManager.reset()
+//        DataManager.clearHelpFlags()
+//        DataManager.reset()
 //        NSUserDefaults.clear()
-        ItemsDataManager.resetIfEmpty()
+        DataManager.resetIfEmpty()
         
         // a window displays views and distributes events
         window                      = UIWindow()

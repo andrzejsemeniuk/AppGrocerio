@@ -32,17 +32,21 @@ struct Item
     }
     
     func serialize() -> [AnyObject] {
-        return [quantity,note]
+        return [quantity,note,name,category]
     }
     
     static func deserialize(name:String, category:String, from:[AnyObject]) -> Item {
         return Item(name:name,category:category,quantity:from[0] as! Int,note:from[1] as! String)
     }
+
+    static func deserialize(from:[AnyObject]) -> Item {
+        return Item(name:from[2] as! String,category:from[3] as! String,quantity:from[0] as! Int,note:from[1] as! String)
+    }
 }
 
 
 
-class ItemsDataManager : NSObject
+class DataManager : NSObject
 {
     enum Key: String {
         case Categories, Items
@@ -64,6 +68,10 @@ class ItemsDataManager : NSObject
         case SettingsTabItemsQuantityFont                   = "settings-items-quantity-font"
         case SettingsTabItemsQuantityFontSameAsItems        = "settings-items-quantity-font-as-items"
         
+        case SettingsCurrent                                = "settings:current"
+        case SettingsList                                   = "settings-list"
+        
+        case SummaryList                                    = "summary-list"
     }
     
     
@@ -228,39 +236,59 @@ class ItemsDataManager : NSObject
     
     
     
+    class func settingsGetCurrent() -> [String:AnyObject]
+    {
+        if let defaults = NSUserDefaults.standardUserDefaults().dictionaryForKey(Key.SettingsCurrent.rawValue) {
+            return defaults
+        }
+        
+        let defaults = [String:AnyObject]()
+        
+        NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+        
+        return defaults
+    }
+    
+    
+    
+    
     class func settingsGetBoolForKey(key:Key, defaultValue:Bool = false) -> Bool
     {
-//        return NSUserDefaults.standardUserDefaults().boolForKey(key.rawValue)
-        if let result = NSUserDefaults.standardUserDefaults().objectForKey("bool:"+key.rawValue) {
-            return result as! Bool
+        if let result = settingsGetCurrent()["b:"+key.rawValue] as? Bool {
+            return result
         }
         return defaultValue
     }
     
     class func settingsSetBool(value:Bool, forKey:Key)
     {
-//        NSUserDefaults.standardUserDefaults().setBool(value,forKey:forKey.rawValue)
-        NSUserDefaults.standardUserDefaults().setObject(value,forKey:"bool:"+forKey.rawValue)
+        var defaults = settingsGetCurrent();
+        
+        defaults["b:"+forKey.rawValue] = value
+
+        NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
     }
     
     class func settingsGetFloatForKey(key:Key, defaultValue:Float = 0) -> Float
     {
-//        return NSUserDefaults.standardUserDefaults().floatForKey(key.rawValue)
-        if let result = NSUserDefaults.standardUserDefaults().objectForKey("float:"+key.rawValue) {
-            return result as! Float
+        if let result = settingsGetCurrent()["f:"+key.rawValue] as? Float {
+            return result
         }
         return defaultValue
     }
     
     class func settingsSetFloat(value:Float, forKey:Key)
     {
-//        NSUserDefaults.standardUserDefaults().setFloat(value,forKey:forKey.rawValue)
-        NSUserDefaults.standardUserDefaults().setObject(value,forKey:"float:"+forKey.rawValue)
+        var defaults = settingsGetCurrent();
+        
+        defaults["f:"+forKey.rawValue] = value
+        
+        NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
     }
     
     class func settingsGetStringForKey(key:Key, defaultValue:String = "") -> String
     {
-        if let result = NSUserDefaults.standardUserDefaults().stringForKey("string:"+key.rawValue) {
+        if let result = settingsGetCurrent()["s:"+key.rawValue] as? String {
             return result
         }
         return defaultValue
@@ -268,12 +296,16 @@ class ItemsDataManager : NSObject
     
     class func settingsSetString(value:String, forKey:Key)
     {
-        NSUserDefaults.standardUserDefaults().setObject(value,forKey:"string:"+forKey.rawValue)
+        var defaults = settingsGetCurrent();
+        
+        defaults["s:"+forKey.rawValue] = value
+        
+        NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
     }
     
     class func settingsGetColorForKey(key:Key, defaultValue:UIColor = UIColor.blackColor()) -> UIColor
     {
-        if let result = NSUserDefaults.standardUserDefaults().objectForKey("color:"+key.rawValue) as? [Float] {
+        if let result = settingsGetCurrent()["c:"+key.rawValue] as? [Float] {
             return UIColor.RGBA(result[0],result[1],result[2],result[3])
         }
         return defaultValue
@@ -289,7 +321,12 @@ class ItemsDataManager : NSObject
             rgba.blue,
             rgba.alpha
         ]
-        NSUserDefaults.standardUserDefaults().setObject(RGBA,forKey:"color:"+forKey.rawValue)
+        
+        var defaults = settingsGetCurrent();
+        
+        defaults["c:"+forKey.rawValue] = RGBA
+        
+        NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
     }
     
     
@@ -299,7 +336,7 @@ class ItemsDataManager : NSObject
     
     class func settingsGetCategoriesFont() -> UIFont
     {
-        let font0 = ItemsDataManager.defaultFont
+        let font0 = DataManager.defaultFont
         
         if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:font0.familyName), size:font0.pointSize) {
             return result
@@ -314,7 +351,7 @@ class ItemsDataManager : NSObject
             return settingsGetCategoriesFont()
         }
         
-        let font0 = ItemsDataManager.defaultFont
+        let font0 = DataManager.defaultFont
         
         if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:font0.familyName), size:font0.pointSize) {
             return result
@@ -329,7 +366,7 @@ class ItemsDataManager : NSObject
             return settingsGetItemsFont()
         }
         
-        let font0 = ItemsDataManager.defaultFont
+        let font0 = DataManager.defaultFont
         
         if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:font0.familyName), size:font0.pointSize) {
             return result
@@ -572,5 +609,219 @@ class ItemsDataManager : NSObject
         
         defaults.synchronize()
     }
+    
+    
+    
+    
+    
+    
+    private class func settingsKeyForName(name:String) -> String {
+        return "settings="+name
+    }
+    
+    
+    class func settingsUse      (name:String) -> Bool
+    {
+        var result = false
+        
+        if 0 < name.length
+        {
+            let defaults = NSUserDefaults.standardUserDefaults()
+            
+            if let settings = defaults.dictionaryForKey(settingsKeyForName(name))
+            {
+                defaults.setObject(settings,forKey:Key.SettingsCurrent.rawValue)
+                
+                result = true
+            }
+        }
+        
+        return result
+    }
+    
+    class func settingsRemove    (name:String) -> Bool
+    {
+        var result = false
+        
+        if 0 < name.length
+        {
+            let defaults = NSUserDefaults.standardUserDefaults()
+            
+            defaults.removeObjectForKey(settingsKeyForName(name))
+                
+            do
+            {
+                var list = Set<String>(settingsList())
+                
+                list.remove(name)
+                
+                let array = Array(list)
+                
+                defaults.setObject(array,forKey:Key.SettingsList.rawValue)
+            }
+            
+            result = true
+        }
+        
+        return result
+    }
+    
+    class func settingsSave     (name:String) -> Bool
+    {
+        var result = false
+        
+        if 0 < name.length
+        {
+            let defaults = NSUserDefaults.standardUserDefaults()
+            
+            if let settings = defaults.dictionaryForKey(Key.SettingsCurrent.rawValue)
+            {
+                defaults.setObject(settings,forKey:settingsKeyForName(name))
+            
+                do
+                {
+                    var list = Set<String>(settingsList())
+                    
+                    list.insert(name)
+                    
+                    let array = Array(list)
+                    
+                    defaults.setObject(array,forKey:Key.SettingsList.rawValue)
+                }
+                
+                result = true
+            }
+        }
+        
+        return result
+    }
+    
+    class func settingsList     () -> [String]
+    {
+        var result:[String] = []
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if let array = defaults.arrayForKey(Key.SettingsList.rawValue) {
+            
+            for element in array {
+                
+                result.append(element as! String)
+                
+            }
+        }
+        
+        return result
+    }
+    
+    
+    
+    
+    
+    private class func summaryKeyForName(name:String) -> String {
+        return "summary="+name
+    }
+    
+    class func summaryClear     ()
+    {
+        for outer in summary() {
+            for item in outer {
+                resetItem(item)
+            }
+        }
+    }
+    
+    class func summaryGet       () -> [Item]
+    {
+        var array = [Item]()
+        
+        for outer in summary() {
+            for item in outer {
+                array.append(item)
+            }
+        }
+        
+        return array
+    }
+    
+    class func summaryUse       (name:String) -> Bool
+    {
+        var result = false
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if let summary = defaults.arrayForKey(summaryKeyForName(name)) {
+            
+            summaryClear()
+            
+            for element in summary {
+                
+                if let array = element as? [AnyObject] {
+                    
+                    let item = Item.deserialize(array)
+                    
+                    putItem(item)
+                }
+            }
+            result = true
+        }
+        
+        return result
+    }
+    
+    class func summarySave      (name:String) -> Bool
+    {
+        var result = false
+        
+        if 0 < name.length
+        {
+            let defaults = NSUserDefaults.standardUserDefaults()
+            
+            var items = [AnyObject]()
+            
+            for item in summaryGet() {
+                items.append(item.serialize())
+            }
+            
+            defaults.setObject(items,forKey:summaryKeyForName(name))
+            
+            do
+            {
+                var list = Set<String>(summaryList())
+                
+                list.insert(name)
+                
+                let array = Array(list)
+                
+                defaults.setObject(array,forKey:Key.SummaryList.rawValue)
+            }
+
+            result = true
+        }
+        
+        return result
+    }
+    
+    class func summaryList      () -> [String]
+    {
+        var result:[String] = []
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        if let array = defaults.arrayForKey(Key.SummaryList.rawValue) {
+            
+            for element in array {
+                
+                result.append(element as! String)
+            }
+        }
+        
+        return result.sort()
+    }
+
+    
+    
+    
+    
 }
 

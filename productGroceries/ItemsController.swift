@@ -90,7 +90,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             
 //            let rgba  = color.RGBA()
             
-            let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:1)
+            let alpha = DataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:1)
             
             color = color.colorWithAlphaComponent(CGFloat(alpha))
                 
@@ -99,8 +99,8 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         if let label = cell.textLabel {
             label.text      = item.name
-            label.textColor = ItemsDataManager.settingsGetItemsTextColor()
-            label.font      = ItemsDataManager.settingsGetItemsFont()
+            label.textColor = DataManager.settingsGetItemsTextColor()
+            label.font      = DataManager.settingsGetItemsFont()
         }
         
         cell.selectionStyle = .Default
@@ -112,7 +112,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             
             fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
             fill.frame.origin.x         = tableView.bounds.width-fill.frame.size.width
-            fill.backgroundColor        = ItemsDataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
+            fill.backgroundColor        = DataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
             
             cell.addSubview(fill)
             
@@ -120,8 +120,8 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             let label = UILabel()
             
             label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
-            label.font                  = ItemsDataManager.settingsGetItemsQuantityFont()
-            label.textColor             = ItemsDataManager.settingsGetItemsQuantityTextColor()
+            label.font                  = DataManager.settingsGetItemsQuantityFont()
+            label.textColor             = DataManager.settingsGetItemsQuantityTextColor()
             label.text                  = String(item.quantity)
             label.textAlignment         = .Right
             
@@ -138,7 +138,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     func reload()
     {
-        items = ItemsDataManager.allItemsInCategory(category)
+        items = DataManager.allItemsInCategory(category)
         
         self.title = category
 
@@ -160,7 +160,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             action in
             
             if let fields = alert.textFields, text = fields[0].text {
-                ItemsDataManager.putItem(Item.create(name:text.trimmed(),category:self.category))
+                DataManager.putItem(Item.create(name:text.trimmed(),category:self.category))
                 self.reload()
             }
         })
@@ -188,7 +188,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             print("None")
         case .Delete:
             let item = items[indexPath.row]
-            ItemsDataManager.removeItem(item)
+            DataManager.removeItem(item)
             items.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
         case .Insert:
@@ -216,7 +216,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             }
             
             if update {
-                ItemsDataManager.putItem(item)
+                DataManager.putItem(item)
                 items[indexPath.row] = item
                 self.reload()
             }
@@ -230,7 +230,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     {
         reload()
         
-        ItemsDataManager.displayHelpPageForItems(self)
+        DataManager.displayHelpPageForItems(self)
 
         super.viewWillAppear(animated)
     }

@@ -59,17 +59,17 @@ class SummaryController : UITableViewController
         
         let text                    = items[section][0].category
         
-        if ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
+        if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
             result.text                 = text.uppercaseString
         }
         else {
             result.text                 = text
         }
 
-        result.textColor            = ItemsDataManager.settingsGetCategoriesTextColor()
-        result.font                 = ItemsDataManager.settingsGetCategoriesFont()
+        result.textColor            = DataManager.settingsGetCategoriesTextColor()
+        result.font                 = DataManager.settingsGetCategoriesFont()
 
-        if ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
+        if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
             result.font = result.font.fontWithSize(result.font.pointSize+2)
         }
         
@@ -101,7 +101,7 @@ class SummaryController : UITableViewController
             
 //            let rgba  = color.RGBA()
             
-            let alpha = ItemsDataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:1)
+            let alpha = DataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:1)
             
             color = color.colorWithAlphaComponent(CGFloat(alpha))
             
@@ -110,8 +110,8 @@ class SummaryController : UITableViewController
         
         if let label = cell.textLabel {
             label.text      = item.name
-            label.textColor = ItemsDataManager.settingsGetItemsTextColor()
-            label.font      = ItemsDataManager.settingsGetItemsFont()
+            label.textColor = DataManager.settingsGetItemsTextColor()
+            label.font      = DataManager.settingsGetItemsFont()
         }
         
         cell.selectionStyle = .None
@@ -121,7 +121,7 @@ class SummaryController : UITableViewController
         
         fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
         fill.frame.origin.x         = tableView.bounds.width-fill.frame.size.width
-        fill.backgroundColor        = ItemsDataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
+        fill.backgroundColor        = DataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
         
         cell.addSubview(fill)
         
@@ -129,8 +129,8 @@ class SummaryController : UITableViewController
         let label = UILabel()
         
         label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
-        label.font                  = ItemsDataManager.settingsGetItemsQuantityFont()
-        label.textColor             = ItemsDataManager.settingsGetItemsQuantityTextColor()
+        label.font                  = DataManager.settingsGetItemsQuantityFont()
+        label.textColor             = DataManager.settingsGetItemsQuantityTextColor()
         label.text                  = String(item.quantity)
         label.textAlignment         = .Right
         
@@ -146,7 +146,7 @@ class SummaryController : UITableViewController
     
     func reload(updateTable:Bool = true)
     {
-        items = ItemsDataManager.summary()
+        items = DataManager.summary()
 
         if updateTable {
             tableView.reloadData()
@@ -159,7 +159,7 @@ class SummaryController : UITableViewController
     {
         reload(true)
         
-        ItemsDataManager.displayHelpPageForSummary(self)
+        DataManager.displayHelpPageForSummary(self)
 
         super.viewWillAppear(animated)
     }
@@ -178,7 +178,7 @@ class SummaryController : UITableViewController
             let section     = indexPath.section
             let row         = indexPath.row
             let item        = items[section][row]
-            ItemsDataManager.resetItem(item)
+            DataManager.resetItem(item)
             items[section].removeAtIndex(row)
             if items[section].count < 1 {
                 items.removeAtIndex(section)

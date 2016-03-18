@@ -49,7 +49,7 @@ class CategoriesController : UITableViewController {
         navigationItem.rightBarButtonItems = items
 
         
-        categories                  = ItemsDataManager.allCategories()
+        categories                  = DataManager.allCategories()
     }
     
     override func didReceiveMemoryWarning()
@@ -126,17 +126,17 @@ class CategoriesController : UITableViewController {
         
         if let label = cell.textLabel {
             
-            if ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
+            if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
                 label.text = categories[indexPath.row].uppercaseString
             }
             else {
                 label.text = categories[indexPath.row]
             }
             
-            label.textColor = ItemsDataManager.settingsGetCategoriesTextColor()
-            label.font      = ItemsDataManager.settingsGetCategoriesFont()
+            label.textColor = DataManager.settingsGetCategoriesTextColor()
+            label.font      = DataManager.settingsGetCategoriesFont()
             
-            if ItemsDataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
+            if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
                 label.font = label.font.fontWithSize(label.font.pointSize+2)
             }
             
@@ -160,7 +160,7 @@ class CategoriesController : UITableViewController {
     
     func reload()
     {
-        categories = ItemsDataManager.allCategories()
+        categories = DataManager.allCategories()
         
         tableView.reloadData()
     }
@@ -181,7 +181,7 @@ class CategoriesController : UITableViewController {
             action in
             
             if let fields = alert.textFields, text = fields[0].text {
-                if ItemsDataManager.addCategory(text) {
+                if DataManager.addCategory(text) {
                     self.reload()
                 }
             }
@@ -210,7 +210,7 @@ class CategoriesController : UITableViewController {
             print("None")
         case .Delete:
             let category = categories[indexPath.row]
-            ItemsDataManager.removeCategory(category)
+            DataManager.removeCategory(category)
             categories.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
             self.reload()
@@ -233,7 +233,7 @@ class CategoriesController : UITableViewController {
 //        self.navigationBar.translucent = NO;
         
         items.category  = category
-        items.items     = ItemsDataManager.allItemsInCategory(category)
+        items.items     = DataManager.allItemsInCategory(category)
         
         AppDelegate.navigatorForCategories.pushViewController(items, animated:true)
     }
@@ -244,7 +244,7 @@ class CategoriesController : UITableViewController {
     {
         tableView.reloadData()
         
-        ItemsDataManager.displayHelpPageForCategories(self)
+        DataManager.displayHelpPageForCategories(self)
         
         super.viewWillAppear(animated)
     }
