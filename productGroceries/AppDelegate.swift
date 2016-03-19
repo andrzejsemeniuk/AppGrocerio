@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        DataManager.clearHelpFlags()
 //        DataManager.reset()
-        NSUserDefaults.clear()
+//        NSUserDefaults.clear()
         DataManager.resetIfEmpty()
         
         // a window displays views and distributes events
@@ -77,7 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let SETTINGS                = UINavigationController(rootViewController:settings)
         
-        SETTINGS.tabBarItem         = UITabBarItem(title:"Settings", image:UIImage(named:"image-icon-tabbaritem-summary-default"), tag:3)
+        SETTINGS.tabBarItem         = UITabBarItem(title:"Settings", image:UIImage(named:"image-icon-tabbaritem-settings-default"), tag:3)
         
         AppDelegate.__navigatorForSettings     = SETTINGS
         

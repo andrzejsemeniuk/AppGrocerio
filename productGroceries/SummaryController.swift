@@ -103,7 +103,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
             }
         }
         
-        let actionSave = UIAlertAction(title:"Save", style:.Destructive, handler: {
+        let actionSave = UIAlertAction(title:"Save", style:.Default, handler: {
             action in
             
             if let fields = alert.textFields, text = fields[0].text?.trimmed() {
