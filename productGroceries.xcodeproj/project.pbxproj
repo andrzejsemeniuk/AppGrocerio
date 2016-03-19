@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5714B8631C9DC37900B4FEC7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5714B8611C9DC37900B4FEC7 /* LaunchScreen.storyboard */; };
 		5730C85C1C9B64DB009145B2 /* GenericSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C85B1C9B64DB009145B2 /* GenericSettingsController.swift */; };
 		5730C85D1C9B64DB009145B2 /* GenericSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C85B1C9B64DB009145B2 /* GenericSettingsController.swift */; };
 		5730C85E1C9B64DB009145B2 /* GenericSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C85B1C9B64DB009145B2 /* GenericSettingsController.swift */; };
@@ -19,7 +20,6 @@
 		574880F31C89EEF100A3806F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574880F21C89EEF100A3806F /* AppDelegate.swift */; };
 		574880FA1C89EEF100A3806F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 574880F81C89EEF100A3806F /* Main.storyboard */; };
 		574880FC1C89EEF100A3806F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 574880FB1C89EEF100A3806F /* Assets.xcassets */; };
-		574880FF1C89EEF100A3806F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 574880FD1C89EEF100A3806F /* LaunchScreen.storyboard */; };
 		5748810A1C89EEF100A3806F /* productGroceriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574881091C89EEF100A3806F /* productGroceriesTests.swift */; };
 		574881151C89EEF100A3806F /* productGroceriesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574881141C89EEF100A3806F /* productGroceriesUITests.swift */; };
 		5759A1101C98BEC200C788A3 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5759A10F1C98BEC200C788A3 /* SettingsController.swift */; };
@@ -63,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5714B8621C9DC37900B4FEC7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = productGroceries/Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5730C85B1C9B64DB009145B2 /* GenericSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericSettingsController.swift; sourceTree = "<group>"; };
 		5730C85F1C9B6EEC009145B2 /* GenericListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericListController.swift; sourceTree = "<group>"; };
 		5730C8631C9BA4B7009145B2 /* ThemesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemesController.swift; sourceTree = "<group>"; };
@@ -70,7 +71,6 @@
 		574880F21C89EEF100A3806F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		574880F91C89EEF100A3806F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		574880FB1C89EEF100A3806F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		574880FE1C89EEF100A3806F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		574881001C89EEF100A3806F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		574881051C89EEF100A3806F /* productGroceriesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = productGroceriesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		574881091C89EEF100A3806F /* productGroceriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = productGroceriesTests.swift; sourceTree = "<group>"; };
@@ -142,8 +142,8 @@
 				574880F21C89EEF100A3806F /* AppDelegate.swift */,
 				574880FB1C89EEF100A3806F /* Assets.xcassets */,
 				57A159BA1C9098070031036F /* Controllers */,
-				574880FD1C89EEF100A3806F /* LaunchScreen.storyboard */,
 				574880F81C89EEF100A3806F /* Main.storyboard */,
+				5714B8611C9DC37900B4FEC7 /* LaunchScreen.storyboard */,
 				57A159C31C90F4CE0031036F /* DataManager.swift */,
 				5792CE831C933E390001B192 /* Utility.swift */,
 			);
@@ -289,7 +289,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				574880FF1C89EEF100A3806F /* LaunchScreen.storyboard in Resources */,
+				5714B8631C9DC37900B4FEC7 /* LaunchScreen.storyboard in Resources */,
 				574880FC1C89EEF100A3806F /* Assets.xcassets in Resources */,
 				574880FA1C89EEF100A3806F /* Main.storyboard in Resources */,
 			);
@@ -382,20 +382,21 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		5714B8611C9DC37900B4FEC7 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5714B8621C9DC37900B4FEC7 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		574880F81C89EEF100A3806F /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				574880F91C89EEF100A3806F /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		574880FD1C89EEF100A3806F /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				574880FE1C89EEF100A3806F /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -486,7 +487,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = productGroceries/Info.plist;
@@ -502,7 +503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = productGroceries/Info.plist;
