@@ -37,7 +37,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
                 items = [UIBarButtonItem]()
             }
             
-            buttonLoad = UIBarButtonItem(barButtonSystemItem:.Bookmarks, target:self, action: "load")
+            buttonLoad = UIBarButtonItem(title:"Load", style:.Plain, target:self, action: "load")
             
             items! += [
                 buttonLoad
@@ -246,27 +246,8 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
         
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
-        do
-        {
-            let isEven = indexPath.row % 2 == 0
-            
-            var color = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
-            
-//            let rgba  = color.RGBA()
-            
-            let alpha = DataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:1)
-            
-            color = color.colorWithAlphaComponent(CGFloat(alpha))
-            
-            cell.backgroundColor = color
-        }
-        
-        if let label = cell.textLabel {
-            label.text      = item.name
-            label.textColor = DataManager.settingsGetItemsTextColor()
-            label.font      = DataManager.settingsGetItemsFont()
-        }
-        
+        ItemsController.styleCell(cell,item:item,indexPath:indexPath)
+
         cell.selectionStyle = .None
 
         let views = CategoriesController.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)

@@ -66,6 +66,45 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     
     
+    
+    class func styleCell(cell:UITableViewCell,item:Item,indexPath:NSIndexPath)
+    {
+        do
+        {
+            var color = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
+            
+            //            let rgba  = color.RGBA()
+            
+            let alpha = DataManager.settingsGetFloatForKey(indexPath.row.isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:0.8)
+            
+            color = color.colorWithAlphaComponent(CGFloat(alpha))
+            
+            cell.backgroundColor = color
+        }
+        
+        if let label = cell.textLabel {
+            if DataManager.settingsGetBoolForKey(.SettingsTabItemsUppercase) {
+                label.text = item.name.uppercaseString
+            }
+            else {
+                label.text = item.name
+            }
+            label.textColor = DataManager.settingsGetItemsTextColor()
+            label.font      = DataManager.settingsGetItemsFont()
+
+            if DataManager.settingsGetBoolForKey(.SettingsTabItemsEmphasize) {
+                label.font = label.font.fontWithSize(label.font.pointSize+1)
+            }
+            
+        }
+        
+        cell.selectionStyle = .Default
+    }
+
+    
+    
+    
+    
     override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
     {
         return 1
@@ -82,28 +121,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
         
-        do
-        {
-            let isEven = indexPath.row % 2 == 0
-            
-            var color = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
-            
-//            let rgba  = color.RGBA()
-            
-            let alpha = DataManager.settingsGetFloatForKey(isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:1)
-            
-            color = color.colorWithAlphaComponent(CGFloat(alpha))
-                
-            cell.backgroundColor = color
-        }
-        
-        if let label = cell.textLabel {
-            label.text      = item.name
-            label.textColor = DataManager.settingsGetItemsTextColor()
-            label.font      = DataManager.settingsGetItemsFont()
-        }
-        
-        cell.selectionStyle = .Default
+        ItemsController.styleCell(cell,item:item,indexPath:indexPath)
         
         if 0 < item.quantity
         {

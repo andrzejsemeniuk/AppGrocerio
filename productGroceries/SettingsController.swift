@@ -67,6 +67,10 @@ class SettingsController : GenericSettingsController
                                 if let fields = alert.textFields, text = fields[0].text {
                                     if 0 < text.length {
                                         DataManager.settingsSave(text)
+                                        self.tableView.reloadRowsAtIndexPaths([
+                                            indexPath,
+                                            NSIndexPath(forRow:indexPath.row+1,inSection:indexPath.section)
+                                            ], withRowAnimation: .Left)
                                     }
                                 }
                             })
@@ -88,8 +92,14 @@ class SettingsController : GenericSettingsController
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
                     if let label = cell.textLabel {
                         label.text          = "Load"
-                        cell.selectionStyle = .Default
-                        cell.accessoryType  = .DisclosureIndicator
+                        if DataManager.settingsListIsEmpty() {
+                            cell.selectionStyle = .None
+                            cell.accessoryType  = .None
+                        }
+                        else {
+                            cell.selectionStyle = .Default
+                            cell.accessoryType  = .DisclosureIndicator
+                        }
                         self.registerCellSelection(indexPath) {
                             let list = DataManager.settingsList()
                             
@@ -164,7 +174,7 @@ class SettingsController : GenericSettingsController
                         label.text = DataManager.settingsGetThemeName()
                     }
                     if let label = cell.textLabel {
-                        label.text          = "Theme"
+                        label.text          = "Background"
                         cell.accessoryType  = .DisclosureIndicator
                         cell.selectionStyle = .Default
                         self.registerCellSelection(indexPath) {
@@ -208,6 +218,27 @@ class SettingsController : GenericSettingsController
 //                    }
 //                },
                 
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        cell.selectionStyle = .Default
+                        label.text          = "Uppercase"
+                        cell.accessoryView  = self.registerSwitch(DataManager.settingsGetBoolForKey(.SettingsTabItemsUppercase), update: { (myswitch:UISwitch) in
+                            DataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsUppercase)
+                        })
+                    }
+                },
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        cell.selectionStyle = .Default
+                        label.text          = "Emphasize"
+                        cell.accessoryView  = self.registerSwitch(DataManager.settingsGetBoolForKey(.SettingsTabItemsEmphasize), update: { (myswitch:UISwitch) in
+                            DataManager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsEmphasize)
+                        })
+                    }
+                },
+                
+
                 ""
             ],
 

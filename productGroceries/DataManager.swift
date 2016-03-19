@@ -59,6 +59,8 @@ class DataManager : NSObject
         case SettingsTabCategoriesTheme                     = "settings-categories-theme"
         case SettingsTabCategoriesTextColor                 = "settings-categories-text-color"
         case SettingsTabItemsFont                           = "settings-items-font"
+        case SettingsTabItemsUppercase                      = "settings-items-uppercase"
+        case SettingsTabItemsEmphasize                      = "settings-items-emphasize"
         case SettingsTabItemsFontSameAsCategories           = "settings-items-font-as-categories"
         case SettingsTabItemsTextColor                      = "settings-items-text-color"
         case SettingsTabItemsTextColorSameAsCategories      = "settings-items-text-color-as-categories"
@@ -446,7 +448,7 @@ class DataManager : NSObject
         return settingsGetColorForKey(.SettingsTabCategoriesTextColor,defaultValue:defaultValue)
     }
     
-    class func settingsGetItemsTextColor(defaultValue:UIColor = UIColor(hue:0.08)) -> UIColor
+    class func settingsGetItemsTextColor(defaultValue:UIColor = UIColor(hue:0.95)) -> UIColor
     {
         if settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories) {
             return settingsGetCategoriesTextColor()
@@ -457,16 +459,16 @@ class DataManager : NSObject
     
     class func settingsGetItemsQuantityBackgroundColorWithOpacity(opacityOn:Bool) -> UIColor
     {
-        let color0  = UIColor(hue:0,saturation:0.4)
+        let color0  = UIColor.redColor()
         
         let color1  = settingsGetColorForKey(.SettingsTabItemsQuantityColorBackground,defaultValue:color0)
         
-        let alpha   = opacityOn ? settingsGetFloatForKey(.SettingsTabItemsQuantityColorBackgroundOpacity,defaultValue:1.0) : 1.0
+        let alpha   = opacityOn ? settingsGetFloatForKey(.SettingsTabItemsQuantityColorBackgroundOpacity,defaultValue:0.8) : 0.8
         
         return color1.colorWithAlphaComponent(CGFloat(alpha))
     }
     
-    class func settingsGetItemsQuantityTextColor(defaultValue:UIColor = UIColor.redColor()) -> UIColor
+    class func settingsGetItemsQuantityTextColor(defaultValue:UIColor = UIColor.whiteColor()) -> UIColor
     {
         if settingsGetBoolForKey(.SettingsTabItemsQuantityColorTextSameAsItems) {
             return settingsGetItemsTextColor()
@@ -492,7 +494,7 @@ class DataManager : NSObject
     
     
     
-    class func settingsGetThemeName(defaultValue:String = "Rainbow") -> String
+    class func settingsGetThemeName(defaultValue:String = "Plain") -> String
     {
         return settingsGetStringForKey(Key.SettingsTabThemesName,defaultValue:defaultValue)
     }
@@ -570,7 +572,7 @@ class DataManager : NSObject
             defaults.setBool(true,forKey:key)
             
             let alert = UIAlertController(title:"Categories", message:"Welcome!  Add new categories by tapping on the plus button "
-                + "in the top right corner.  Remove categories permanently by swiping from right to left.", preferredStyle:.Alert)
+                + "in the top right corner.  Remove categories by swiping from right to left.", preferredStyle:.Alert)
             
             let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
                 action in
@@ -784,6 +786,15 @@ class DataManager : NSObject
         }
         
         return result
+    }
+    
+    class func settingsListIsEmpty() -> Bool
+    {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        let array = defaults.arrayForKey(Key.SettingsList.rawValue)
+        
+        return array == nil || 0 == array!.count
     }
     
     class func settingsList     () -> [String]

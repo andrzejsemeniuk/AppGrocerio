@@ -34,20 +34,48 @@ class CategoriesController : UITableViewController {
         
         tableView.separatorStyle = .None
 
+        
+        
+        
         // TODO CREATE REUSABLE CELL
         
-        var items = navigationItem.rightBarButtonItems
         
-        if items == nil {
-            items = [UIBarButtonItem]()
+        
+        do
+        {
+            var items = navigationItem.rightBarButtonItems
+            
+            if items == nil {
+                items = [UIBarButtonItem]()
+            }
+            
+            items! += [
+                UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
+            ]
+
+            navigationItem.rightBarButtonItems = items
         }
+
         
-        items! += [
-            UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
-//            editButtonItem(),
-        ]
         
-        navigationItem.rightBarButtonItems = items
+        
+        do
+        {
+            var items = navigationItem.leftBarButtonItems
+            
+            if items == nil {
+                items = [UIBarButtonItem]()
+            }
+            
+            items! += [
+                UIBarButtonItem(title:"Rebuild", style:.Plain, target:self, action: "rebuild"),
+            ]
+            
+            navigationItem.leftBarButtonItems = items
+        }
+
+        
+        
         
         reload()
     }
@@ -295,6 +323,30 @@ class CategoriesController : UITableViewController {
         })
         
         alert.addAction(actionAdd)
+        alert.addAction(actionCancel)
+        
+        AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
+            print("completed showing add alert")
+        })
+    }
+    
+    
+    func rebuild()
+    {
+        let alert = UIAlertController(title:"Rebuild Categories", message:"This action will re-add any missing categories and items.", preferredStyle:.Alert)
+        
+        let actionOK = UIAlertAction(title:"OK", style:.Default, handler: {
+            action in
+            
+            DataManager.createCategories()
+            self.reload()
+        })
+        
+        let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
+            action in
+        })
+        
+        alert.addAction(actionOK)
         alert.addAction(actionCancel)
         
         AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
