@@ -67,7 +67,7 @@
 		5730C85B1C9B64DB009145B2 /* GenericSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericSettingsController.swift; sourceTree = "<group>"; };
 		5730C85F1C9B6EEC009145B2 /* GenericListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericListController.swift; sourceTree = "<group>"; };
 		5730C8631C9BA4B7009145B2 /* ThemesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemesController.swift; sourceTree = "<group>"; };
-		574880EF1C89EEF000A3806F /* productGroceries.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = productGroceries.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		574880EF1C89EEF000A3806F /* Groceries.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Groceries.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		574880F21C89EEF100A3806F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		574880F91C89EEF100A3806F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		574880FB1C89EEF100A3806F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -128,7 +128,7 @@
 		574880F01C89EEF000A3806F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				574880EF1C89EEF000A3806F /* productGroceries.app */,
+				574880EF1C89EEF000A3806F /* Groceries.app */,
 				574881051C89EEF100A3806F /* productGroceriesTests.xctest */,
 				574881101C89EEF100A3806F /* productGroceriesUITests.xctest */,
 			);
@@ -203,7 +203,7 @@
 			);
 			name = productGroceries;
 			productName = productGroceries;
-			productReference = 574880EF1C89EEF000A3806F /* productGroceries.app */;
+			productReference = 574880EF1C89EEF000A3806F /* Groceries.app */;
 			productType = "com.apple.product-type.application";
 		};
 		574881041C89EEF100A3806F /* productGroceriesTests */ = {
@@ -494,7 +494,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tinygamefactory.groceries;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Groceries;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
@@ -510,7 +510,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tinygamefactory.groceries;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Groceries;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
