@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class ThemesController : GenericSettingsController
+class ControllerOfThemes : GenericControllerOfSettings
 {
     
     override func viewDidLoad()
@@ -54,15 +54,15 @@ class ThemesController : GenericSettingsController
         {
             CATEGORIES.append(" ")
             
-            let count = CategoriesController.instance.categories.count
+            let count = ControllerOfCategories.instance.categories.count
             
-            for var row = 0; row < count; row++ {
+            for var row in 0..<count {
                 
                 let ROW = row
                 
                 CATEGORIES.append(
                     { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                        CategoriesController.instance.styleCell(cell,indexPath:NSIndexPath(forRow:ROW,inSection:0))
+                        ControllerOfCategories.instance.styleCell(cell,indexPath:NSIndexPath(forRow:ROW,inSection:0))
                         
                         cell.selectionStyle = .None
                 })
@@ -78,11 +78,11 @@ class ThemesController : GenericSettingsController
                     cell.selectionStyle = .Default
                     label.text          = name
                     self.addAction(indexPath) {
-                        DataManager.settingsSetThemeWithName(name)
+                        Data.Manager.settingsSetThemeWithName(name)
                         self.reload()
                     }
                 }
-                if DataManager.settingsGetThemeName() == name {
+                if Data.Manager.settingsGetThemeName() == name {
                     cell.accessoryType = .Checkmark
                 }
                 else {
@@ -102,8 +102,8 @@ class ThemesController : GenericSettingsController
                 "", //"PREDEFINED THEME SATURATION",
                 
                 { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    let slider = self.registerSlider(DataManager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
-//                        DataManager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
+//                    let slider = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
+//                        Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
 //                    })
 //                    let W:CGFloat = AppDelegate.rootViewController.view.bounds.width
 //                    let w:CGFloat = W/2.0
@@ -111,8 +111,8 @@ class ThemesController : GenericSettingsController
 //                    cell.addSubview(slider)
                     if let label = cell.textLabel {
                         label.text          = "Saturation"
-                        cell.accessoryView  = self.registerSlider(DataManager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
-                            DataManager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
+                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
+                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
                         })
                         cell.accessoryType  = .None
                         cell.selectionStyle = .Default
@@ -145,16 +145,16 @@ class ThemesController : GenericSettingsController
                 
                 definePredefinedThemeWithName("Solid"),
                 
-                createCellForColor(DataManager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
+                createCellForColor(Data.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
 //                        self.reload()
                 },
                 
                 definePredefinedThemeWithName("Range"),
                 
-                createCellForColor(DataManager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
+                createCellForColor(Data.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
 //                        self.reload()
                 },
-                createCellForColor(DataManager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
+                createCellForColor(Data.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
 //                        self.reload()
                 },
                 

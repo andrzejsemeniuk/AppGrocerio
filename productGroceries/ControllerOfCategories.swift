@@ -1,5 +1,5 @@
 //
-//  CategoriesController.swift
+//  ControllerOfCategories.swift
 //  productGroceries
 //
 //  Created by Andrzej Semeniuk on 3/9/16.
@@ -9,18 +9,18 @@
 import Foundation
 import UIKit
 
-class CategoriesController : UITableViewController {
+class ControllerOfCategories : UITableViewController {
     
     var categories:[String] = []
     var quantities:[Int]    = []
     
     
-    static var instance:CategoriesController! = nil
+    static var instance:ControllerOfCategories! = nil
     
     
     override func viewDidLoad()
     {
-        CategoriesController.instance = self
+        ControllerOfCategories.instance = self
         
         super.viewDidLoad()
         
@@ -113,11 +113,11 @@ class CategoriesController : UITableViewController {
 
     func colorForCategoryIndex(index:Int) -> UIColor
     {
-        let saturation = CGFloat(DataManager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4))
+        let saturation = CGFloat(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4))
         
         let mark:CGFloat = CGFloat(Float(index)/Float(categories.count)).clamp01()
         
-        switch DataManager.settingsGetThemeName()
+        switch Data.Manager.settingsGetThemeName()
         {
         case "Apple":
             return UIColor(hue:mark.lerp01(0.15,0.35), saturation:saturation, brightness:1.0, alpha:1.0)
@@ -134,13 +134,13 @@ class CategoriesController : UITableViewController {
         case "Rainbow":
             return UIColor(hue:mark.lerp01(0.0,0.9), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Range":
-            let hue0 = DataManager.settingsGetColorForKey(.SettingsTabThemesRangeFromColor).HSBA().hue
-            let hue1 = DataManager.settingsGetColorForKey(.SettingsTabThemesRangeToColor).HSBA().hue
+            let hue0 = Data.Manager.settingsGetColorForKey(.SettingsTabThemesRangeFromColor).HSBA().hue
+            let hue1 = Data.Manager.settingsGetColorForKey(.SettingsTabThemesRangeToColor).HSBA().hue
             return UIColor(hue:mark.lerp01(hue0,hue1), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Strawberry":
             return UIColor(hue:mark.lerp01(0.89,0.99), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Solid":
-            let HSBA = DataManager.settingsGetColorForKey(.SettingsTabThemesSolidColor).HSBA()
+            let HSBA = Data.Manager.settingsGetColorForKey(.SettingsTabThemesSolidColor).HSBA()
             return UIColor(hue:CGFloat(HSBA.hue), saturation:saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
         default:
             break
@@ -160,7 +160,7 @@ class CategoriesController : UITableViewController {
     }
     
     
-    func colorForItem(item:Item,onRow:Int) -> UIColor {
+    func colorForItem(item:Data.Item,onRow:Int) -> UIColor {
         let categoryColor = colorForCategory(item.category)
             
         let HSBA = categoryColor.HSBA()
@@ -186,23 +186,22 @@ class CategoriesController : UITableViewController {
     
     func styleCell(cell:UITableViewCell,indexPath:NSIndexPath)
     {
-        // TODO PREFERENCES: SATURATION
         cell.backgroundColor    = colorForCategoryIndex(indexPath.row)
         
         print("styleCell: indexPath.row=\(indexPath.row), section=\(indexPath.section)")
         if let label = cell.textLabel {
             
-            if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
+            if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
                 label.text = categories[indexPath.row].uppercaseString
             }
             else {
                 label.text = categories[indexPath.row]
             }
             
-            label.textColor = DataManager.settingsGetCategoriesTextColor()
-            label.font      = DataManager.settingsGetCategoriesFont()
+            label.textColor = Data.Manager.settingsGetCategoriesTextColor()
+            label.font      = Data.Manager.settingsGetCategoriesFont()
             
-            if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
+            if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
                 label.font = label.font.fontWithSize(label.font.pointSize+2)
             }
             
@@ -227,7 +226,7 @@ class CategoriesController : UITableViewController {
         
         fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
         fill.frame.origin.x         = AppDelegate.rootViewController.view.bounds.width-fill.frame.size.width
-        fill.backgroundColor        = DataManager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
+        fill.backgroundColor        = Data.Manager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
         
         cell.addSubview(fill)
         
@@ -235,8 +234,8 @@ class CategoriesController : UITableViewController {
         let label = UILabel()
         
         label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
-        label.font                  = DataManager.settingsGetItemsQuantityFont()
-        label.textColor             = DataManager.settingsGetItemsQuantityTextColor()
+        label.font                  = Data.Manager.settingsGetItemsQuantityFont()
+        label.textColor             = Data.Manager.settingsGetItemsQuantityTextColor()
         label.text                  = String(quantity)
         label.textAlignment         = .Right
         
@@ -265,7 +264,7 @@ class CategoriesController : UITableViewController {
         
         if 0 < quantities[indexPath.row]
         {
-            let views = CategoriesController.instance.styleQuantity(cell,indexPath:indexPath,quantity:quantities[indexPath.row])
+            let views = ControllerOfCategories.instance.styleQuantity(cell,indexPath:indexPath,quantity:quantities[indexPath.row])
         }
         
         return cell
@@ -277,13 +276,13 @@ class CategoriesController : UITableViewController {
     
     func reload()
     {
-        categories = DataManager.allCategories()
+        categories = Data.Manager.allCategories()
         
         quantities = []
         
         for category in categories
         {
-            let items = DataManager.allItemsInCategory(category)
+            let items = Data.Manager.allItemsInCategory(category)
             var count = 0
             for item in items {
                 if 0 < item.quantity {
@@ -312,7 +311,7 @@ class CategoriesController : UITableViewController {
             action in
             
             if let fields = alert.textFields, text = fields[0].text {
-                if DataManager.addCategory(text) {
+                if Data.Manager.addCategory(text) {
                     self.reload()
                 }
             }
@@ -338,7 +337,7 @@ class CategoriesController : UITableViewController {
         let actionOK = UIAlertAction(title:"OK", style:.Default, handler: {
             action in
             
-            DataManager.createCategories()
+            Data.Manager.createCategories()
             self.reload()
         })
         
@@ -365,7 +364,7 @@ class CategoriesController : UITableViewController {
             print("None")
         case .Delete:
             let category = categories[indexPath.row]
-            DataManager.removeCategory(category)
+            Data.Manager.removeCategory(category)
             categories.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
             self.reload()
@@ -388,7 +387,7 @@ class CategoriesController : UITableViewController {
 //        self.navigationBar.translucent = NO;
         
         items.category  = category
-        items.items     = DataManager.allItemsInCategory(category)
+        items.items     = Data.Manager.allItemsInCategory(category)
         
         AppDelegate.navigatorForCategories.pushViewController(items, animated:true)
     }
@@ -400,10 +399,10 @@ class CategoriesController : UITableViewController {
         reload()
 
         
-        tableView.backgroundColor = DataManager.settingsGetBackgroundColor()
+        tableView.backgroundColor = Data.Manager.settingsGetBackgroundColor()
 
         
-        DataManager.displayHelpPageForCategories(self)
+        Data.Manager.displayHelpPageForCategories(self)
         
         super.viewWillAppear(animated)
     }

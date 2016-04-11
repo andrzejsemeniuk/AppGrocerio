@@ -1,5 +1,5 @@
 //
-//  SummaryController.swift
+//  ControllerOfSummary.swift
 //  productGroceries
 //
 //  Created by Andrzej Semeniuk on 3/9/16.
@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-class SummaryController : UITableViewController, UIPopoverPresentationControllerDelegate
+class ControllerOfSummary : UITableViewController, UIPopoverPresentationControllerDelegate
 {
-    var items = [[Item]]()
+    var items:[[Data.Item]] = [[]]
     
     var lastTap:UITableViewTap!
     
@@ -37,7 +37,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
                 items = [UIBarButtonItem]()
             }
             
-            buttonLoad = UIBarButtonItem(title:"Load", style:.Plain, target:self, action: "load")
+            buttonLoad = UIBarButtonItem(title:"Load", style:.Plain, target:self, action: #selector(ControllerOfSummary.load))
             
             items! += [
                 buttonLoad
@@ -108,7 +108,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
             
             if let fields = alert.textFields, text = fields[0].text?.trimmed() {
                 if text != "Clear" {
-                    if DataManager.summarySave(text) {
+                    if Data.Manager.summarySave(text) {
                         self.lastGroceryListName = text
                     }
                 }
@@ -131,21 +131,21 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
     func load()
     {
         
-        let list = GenericListController()
+        let list = GenericControllerOfList()
         
-        list.items                      = ["Clear"] + DataManager.summaryList()
+        list.items                      = ["Clear"] + Data.Manager.summaryList()
         list.items = list.items.sort()
         
 //        list.tableView.separatorStyle   = .SingleLineEtched
 
-        list.handlerForDidSelectRowAtIndexPath = { (controller:GenericListController,indexPath:NSIndexPath) -> Void in
+        list.handlerForDidSelectRowAtIndexPath = { (controller:GenericControllerOfList,indexPath:NSIndexPath) -> Void in
             let row         = indexPath.row
             let selection   = list.items[row]
             if selection == "Clear" {
-                DataManager.summaryClear()
+                Data.Manager.summaryClear()
             }
             else {
-                DataManager.summaryUse(selection)
+                Data.Manager.summaryUse(selection)
             }
 //            controller.dismissViewControllerAnimated(true, completion:nil)
             controller.navigationController!.popViewControllerAnimated(true)
@@ -155,7 +155,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
         
 //        let list = GenericListController()
 //        
-//        list.items                          = ["Clear",""] + DataManager.summaryList()
+//        list.items                          = ["Clear",""] + Data.Manager.summaryList()
 //        list.modalPresentationStyle         = UIModalPresentationStyle.Popover
 //        list.preferredContentSize           = CGSizeMake(400, 400)
 ////        list.tableView.frame = CGRectMake(0,0,200,200)
@@ -171,10 +171,10 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
 //            let row         = indexPath.row
 //            let selection   = list.items[row]
 //            if selection == "Clear" {
-//                DataManager.summaryClear()
+//                Data.Manager.summaryClear()
 //            }
 //            else {
-//                DataManager.summaryUse(selection)
+//                Data.Manager.summaryUse(selection)
 //            }
 //            controller.dismissViewControllerAnimated(true, completion:nil)
 //        }
@@ -212,24 +212,24 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
         
         let text                    = items[section][0].category
         
-        if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
+        if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
             result.text                 = text.uppercaseString
         }
         else {
             result.text                 = text
         }
 
-        result.textColor            = DataManager.settingsGetCategoriesTextColor()
-        result.font                 = DataManager.settingsGetCategoriesFont()
+        result.textColor            = Data.Manager.settingsGetCategoriesTextColor()
+        result.font                 = Data.Manager.settingsGetCategoriesFont()
 
-        if DataManager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
+        if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
             result.font = result.font.fontWithSize(result.font.pointSize+2)
         }
         
 
         result.textAlignment        = .Center
 //        result.font                 = UIFont.systemFontOfSize(12, weight:2.0)
-        result.backgroundColor      = CategoriesController.instance.colorForCategory(text)
+        result.backgroundColor      = ControllerOfCategories.instance.colorForCategory(text)
 //        result.textColor            = UIColor.whiteColor()
         
         return result
@@ -250,7 +250,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
 
         cell.selectionStyle = .None
 
-        let views = CategoriesController.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
+        let views = ControllerOfCategories.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
         
         return cell
     }
@@ -260,7 +260,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
     
     func reload(updateTable:Bool = true)
     {
-        items = DataManager.summary()
+        items = Data.Manager.summary()
 
         if updateTable {
             tableView.reloadData()
@@ -274,10 +274,10 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
         reload(true)
         
         
-        tableView.backgroundColor = DataManager.settingsGetBackgroundColor()
+        tableView.backgroundColor = Data.Manager.settingsGetBackgroundColor()
 
         
-        DataManager.displayHelpPageForSummary(self)
+        Data.Manager.displayHelpPageForSummary(self)
 
         super.viewWillAppear(animated)
     }
@@ -296,7 +296,7 @@ class SummaryController : UITableViewController, UIPopoverPresentationController
             let section     = indexPath.section
             let row         = indexPath.row
             let item        = items[section][row]
-            DataManager.resetItem(item)
+            Data.Manager.resetItem(item)
             items[section].removeAtIndex(row)
             if items[section].count < 1 {
                 items.removeAtIndex(section)

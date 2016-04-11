@@ -35,10 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         AppDelegate.__instance      = self
         
-//        DataManager.clearHelpFlags()
-//        DataManager.reset()
+//        Data.Manager.clearHelpFlags()
+//        Data.Manager.reset()
 //        NSUserDefaults.clear()
-        DataManager.resetIfEmpty()
+        Data.Manager.resetIfEmpty()
         
         // a window displays views and distributes events
         window                      = UIWindow()
@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         
-        let categories              = CategoriesController()
+        let categories              = ControllerOfCategories()
         
         let CATEGORIES              = UINavigationController(rootViewController:categories)
         
@@ -63,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         
-        let summary                 = SummaryController()
+        let summary                 = ControllerOfSummary()
         summary.title               = "Summary"
 
         let SUMMARY                 = UINavigationController(rootViewController:summary)
@@ -82,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppDelegate.__navigatorForSettings     = SETTINGS
         
         
-        let TABS                    = TabBarController()
+        let TABS                    = UITabBarController()
         
         TABS.setViewControllers([CATEGORIES,SUMMARY,SETTINGS], animated:true)
         
@@ -125,32 +125,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
 }
-
-
-extension AppDelegate
-{
-    static var rootViewController : UIViewController {
-        return UIApplication.sharedApplication().keyWindow!.rootViewController!
-    }
-
-}
-
-
-
-
-// ITEMS/ADD NOTE BASED ON UILongPressGestureRecognizer on cell
-// SETTINGS PAGE?
-// SETTINGS/ADD COLOR THEMES? APPLE,RAINBOW,GRAPE,STRAWBERRY,PLAIN
-// SETTINGS/THEMES/SATURATION?
-// SETTINGS/FONT TYPE,SIZE,BOLD/PLAIN
-// SETTINGS/ITEM COUNT BG-COLOR, FG-COLOR
-// SETTINGS/ITEM NAMES COLOR:GRAY/BLACK/SYSTEM
-// SAVE SUMMARY?
-
-
-
-
-
-
-
-

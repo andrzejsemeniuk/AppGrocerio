@@ -11,7 +11,7 @@ import UIKit
 
 class ItemsController : UITableViewController, UIGestureRecognizerDelegate
 {
-    var items:[Item]                = []
+    var items:[Data.Item]                = []
     
     var category:String             = ""
     
@@ -67,15 +67,15 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     
     
-    class func styleCell(cell:UITableViewCell,item:Item,indexPath:NSIndexPath)
+    class func styleCell(cell:UITableViewCell,item:Data.Item,indexPath:NSIndexPath)
     {
         do
         {
-            var color = CategoriesController.instance.colorForItem(item,onRow:indexPath.row)
+            var color = ControllerOfCategories.instance.colorForItem(item,onRow:indexPath.row)
             
             //            let rgba  = color.RGBA()
             
-            let alpha = DataManager.settingsGetFloatForKey(indexPath.row.isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:0.8)
+            let alpha = Data.Manager.settingsGetFloatForKey(indexPath.row.isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:0.8)
             
             color = color.colorWithAlphaComponent(CGFloat(alpha))
             
@@ -83,16 +83,16 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         }
         
         if let label = cell.textLabel {
-            if DataManager.settingsGetBoolForKey(.SettingsTabItemsUppercase) {
+            if Data.Manager.settingsGetBoolForKey(.SettingsTabItemsUppercase) {
                 label.text = item.name.uppercaseString
             }
             else {
                 label.text = item.name
             }
-            label.textColor = DataManager.settingsGetItemsTextColor()
-            label.font      = DataManager.settingsGetItemsFont()
+            label.textColor = Data.Manager.settingsGetItemsTextColor()
+            label.font      = Data.Manager.settingsGetItemsFont()
 
-            if DataManager.settingsGetBoolForKey(.SettingsTabItemsEmphasize) {
+            if Data.Manager.settingsGetBoolForKey(.SettingsTabItemsEmphasize) {
                 label.font = label.font.fontWithSize(label.font.pointSize+1)
             }
             
@@ -125,7 +125,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         if 0 < item.quantity
         {
-            let views = CategoriesController.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
+            let views = ControllerOfCategories.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
         }
         
         return cell
@@ -136,7 +136,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     func reload()
     {
-        items = DataManager.allItemsInCategory(category)
+        items = Data.Manager.allItemsInCategory(category)
         
         self.title = category
 
@@ -158,7 +158,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             action in
             
             if let fields = alert.textFields, text = fields[0].text {
-                DataManager.putItem(Item.create(name:text.trimmed(),category:self.category))
+                Data.Manager.putItem(Data.Item.create(name:text.trimmed(),category:self.category))
                 self.reload()
             }
         })
@@ -186,7 +186,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             print("None")
         case .Delete:
             let item = items[indexPath.row]
-            DataManager.removeItem(item)
+            Data.Manager.removeItem(item)
             items.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
         case .Insert:
@@ -214,7 +214,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             }
             
             if update {
-                DataManager.putItem(item)
+                Data.Manager.putItem(item)
                 items[indexPath.row] = item
                 self.reload()
             }
@@ -229,10 +229,10 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         reload()
 
         
-        tableView.backgroundColor = DataManager.settingsGetBackgroundColor()
+        tableView.backgroundColor = Data.Manager.settingsGetBackgroundColor()
         
 
-        DataManager.displayHelpPageForItems(self)
+        Data.Manager.displayHelpPageForItems(self)
 
         super.viewWillAppear(animated)
     }
