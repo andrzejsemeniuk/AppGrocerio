@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 import UIKit
 
 
@@ -14,8 +15,8 @@ class Data : NSObject
 {
     struct Item
     {
-        let name:       String
-        let category:   String
+        var name:       String
+        var category:   String
         var quantity:   Int         = 0
         var note:       String      = ""
         
@@ -96,78 +97,208 @@ class Data : NSObject
             return "category:"+category
         }
         
-        class func putItem              (item:Item)
+        
+        
+        
+        class func itemPut              (item:Item)
         {
-            let defaults = NSUserDefaults.standardUserDefaults()
+            // if item does not exit
+            //  insert
+            // else
+            //  update
             
-            let key = itemsKey(item.category)
             
-            var all = defaults.dictionaryForKey(key)
-            
-            if all == nil {
-                all = [String:AnyObject]()
+            if true
+            {
+                do {
+                    let entityDescription   = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
+                    
+                    let set                 = { (newItem:NSManagedObject) in
+                        newItem.setValue(item.name,         forKey:"name")
+                        newItem.setValue(item.category,     forKey:"category")
+                        newItem.setValue(item.quantity,     forKey:"quantity")
+                        newItem.setValue(item.note,         forKey:"note")
+                    }
+                    
+                    let create              = {
+                        let newItem             = NSManagedObject(entity: entityDescription!, insertIntoManagedObjectContext: AppDelegate.managedObjectContext)
+                        set(newItem)
+                        try newItem.managedObjectContext?.save()
+                    }
+                    
+                    let update              = { (newItem:NSManagedObject) in
+                        set(newItem)
+                        try newItem.managedObjectContext?.save()
+                    }
+                    
+                    let request             = NSFetchRequest()
+                    
+                    request.entity          = entityDescription
+                    
+                    request.predicate       = NSPredicate(format:"(name = %@) AND (category = %@)", item.name, item.category)
+                    
+                    do {
+                        let result          = try AppDelegate.managedObjectContext.executeFetchRequest(request)
+                        
+                        if 0 < result.count {
+                            try update(result[0] as! NSManagedObject)
+                        }
+                        else {
+                            try create()
+                        }
+                    } catch let error as NSError {
+                        let fetchError      = error as NSError
+                        print(fetchError)
+                        try create()
+                    }
+
+                } catch let error as NSError {
+                    print(error)
+                }
             }
-            
-            all![item.name] = item.serialize()
-            
-            defaults.setObject(all!,forKey:key)
+            else
+            {
+                let defaults = NSUserDefaults.standardUserDefaults()
+                
+                let key = itemsKey(item.category)
+                
+                var all = defaults.dictionaryForKey(key)
+                
+                if all == nil {
+                    all = [String:AnyObject]()
+                }
+                
+                all![item.name] = item.serialize()
+                
+                defaults.setObject(all!,forKey:key)
+            }
         }
         
-        class func resetItem           (item:Item)
+        class func itemReset           (item:Item)
         {
-            let defaults = NSUserDefaults.standardUserDefaults()
+            // if item exists
+            //  reset it
             
-            let key = itemsKey(item.category)
-            
-            if var all = defaults.dictionaryForKey(key) {
-                all.removeValueForKey(item.name)
-                var item1 = item
-                item1.reset()
-                all[item.name] = item1.serialize()
-                defaults.setObject(all,forKey:key)
+            if true {
+                itemPut(Item(name:item.name,category:item.category,quantity:0,note:""))
+            }
+            else {
+                let defaults = NSUserDefaults.standardUserDefaults()
+                
+                let key = itemsKey(item.category)
+                
+                if var all = defaults.dictionaryForKey(key) {
+                    all.removeValueForKey(item.name)
+                    var item1 = item
+                    item1.reset()
+                    all[item.name] = item1.serialize()
+                    defaults.setObject(all,forKey:key)
+                }
             }
         }
         
-        class func removeItem           (item:Item)
+        class func itemRemove           (item:Item)
         {
-            let key = itemsKey(item.category)
+            // if item exists
+            //  remove it
             
-            let defaults = NSUserDefaults.standardUserDefaults()
-            
-            if var all = defaults.dictionaryForKey(key) {
-                all.removeValueForKey(item.name)
-                defaults.setObject(all,forKey:key)
+            if true {
+                let entityDescription   = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
+                let oldItem             = NSManagedObject(entity: entityDescription!, insertIntoManagedObjectContext: AppDelegate.managedObjectContext)
+                
+                oldItem.setValue(item.name,         forKey:"name")
+                oldItem.setValue(item.category,     forKey:"category")
+//                oldItem.setValue(item.quantity,     forKey:"quantity")
+//                oldItem.setValue(item.note,         forKey:"note")
+
+                AppDelegate.managedObjectContext.deleteObject(oldItem)
+            }
+            else {
+                let key = itemsKey(item.category)
+                
+                let defaults = NSUserDefaults.standardUserDefaults()
+                
+                if var all = defaults.dictionaryForKey(key) {
+                    all.removeValueForKey(item.name)
+                    defaults.setObject(all,forKey:key)
+                }
             }
         }
         
-        class func allItemsInCategory   (category:String, sorted:Bool = true) -> [Item]
+        class func itemRemoveAll            ()
         {
-            var result:[Item] = []
+            let fetchRequest        = NSFetchRequest(entityName: "Item")
+            let deleteRequest       = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            do {
+                try AppDelegate.persistentStoreCoordinator.executeRequest(deleteRequest, withContext: AppDelegate.managedObjectContext)
+            } catch let error as NSError {
+                print(error)
+            }
+        }
+        
+        class func itemGetAllInCategory   (category:String, sorted:Bool = true) -> [Item]
+        {
+            // return all items in category
             
-            if let all = defaults.dictionaryForKey(itemsKey(category)) {
-                for (key,value) in all {
-                    if let array = value as? Array<AnyObject> {
-                        result.append(Item.deserialize(key, category:category, from:array))
+            var results:[Item] = []
+            
+            if true {
+                let request             = NSFetchRequest()
+                
+                let entityDescription   = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
+                
+                request.entity          = entityDescription
+
+                request.predicate       = NSPredicate(format:"%K = %@", "category", category)
+                
+                do {
+                    let result          = try AppDelegate.managedObjectContext.executeFetchRequest(request)
+                    print(result)
+                    
+                    var anItem:Item = Item(name:"",category:"",quantity:0,note:"")
+                    
+                    for object in result {
+//                        print("object=\(object)")
+                        anItem.name     = object.valueForKey("name") as! String
+                        anItem.category = object.valueForKey("category") as! String
+                        anItem.quantity = object.valueForKey("quantity") as! Int
+                        anItem.note     = object.valueForKey("note") as! String
+                        
+                        results.append(anItem)
+                    }
+                    
+                } catch {
+                    let fetchError      = error as NSError
+                    print(fetchError)
+                }
+            }
+            else {
+                let defaults = NSUserDefaults.standardUserDefaults()
+                
+                if let all = defaults.dictionaryForKey(itemsKey(category)) {
+                    for (key,value) in all {
+                        if let array = value as? Array<AnyObject> {
+                            results.append(Item.deserialize(key, category:category, from:array))
+                        }
                     }
                 }
             }
             
-            return sorted ? result.sort { $0.name < $1.name } : result
+            return sorted ? results.sort { $0.name < $1.name } : results
         }
         
         
         
         
-        class func addCategory          (newCategory:String) -> Bool
+        class func categoryAdd          (newCategory:String) -> Bool
         {
             var result = false
             
             let category = newCategory.trimmed()
             
             if !category.empty {
-                var categories = allCategories()
+                var categories = categoryGetAll()
                 if !categories.contains(category) {
                     categories.append(category)
                     let defaults = NSUserDefaults.standardUserDefaults()
@@ -179,21 +310,21 @@ class Data : NSObject
             return result
         }
         
-        class func resetCategory        (category:String)
+        class func categoryReset        (category:String)
         {
-            for item in allItemsInCategory(category,sorted:false) {
-                resetItem(item)
+            for item in itemGetAllInCategory(category,sorted:false) {
+                itemReset(item)
             }
         }
         
-        class func removeCategory       (oldCategory:String) -> Bool
+        class func categoryRemove       (oldCategory:String) -> Bool
         {
             var result = false
             
             let category = oldCategory.trimmed()
             
             if !category.empty {
-                let categories0 = allCategories()
+                let categories0 = categoryGetAll()
                 let categories1 = categories0.filter({ $0 != category })
                 
                 if categories1.count < categories0.count {
@@ -207,14 +338,14 @@ class Data : NSObject
             return result
         }
         
-        class func clearCategories      ()
+        class func categoryClearAll      ()
         {
-            for category in allCategories() {
-                removeCategory(category)
+            for category in categoryGetAll() {
+                categoryRemove(category)
             }
         }
         
-        class func allCategories        () -> [String]
+        class func categoryGetAll        () -> [String]
         {
             let defaults = NSUserDefaults.standardUserDefaults()
             
@@ -233,9 +364,9 @@ class Data : NSObject
         {
             var result = [[Item]]()
             
-            for category in allCategories() {
+            for category in categoryGetAll() {
                 var add = [Item]()
-                for item in allItemsInCategory(category,sorted:true) {
+                for item in itemGetAllInCategory(category,sorted:true) {
                     if item.isModified() {
                         add.append(item)
                     }
@@ -649,7 +780,7 @@ class Data : NSObject
         
         class func resetIfEmpty()
         {
-            let categories = allCategories()
+            let categories = categoryGetAll()
             
             if categories.count < 1 {
                 reset()
@@ -658,7 +789,7 @@ class Data : NSObject
         
         class func reset()
         {
-            let categories = allCategories()
+            let categories = categoryGetAll()
             
             // empty,0 => yes
             // empty,n => no
@@ -668,7 +799,7 @@ class Data : NSObject
             
             
             for category in categories {
-                removeCategory(category)
+                categoryRemove(category)
             }
             
             createCategories()
@@ -829,7 +960,7 @@ class Data : NSObject
         {
             for outer in summary() {
                 for item in outer {
-                    resetItem(item)
+                    itemReset(item)
                 }
             }
         }
@@ -863,7 +994,7 @@ class Data : NSObject
                         
                         let item = Item.deserialize(array)
                         
-                        putItem(item)
+                        itemPut(item)
                     }
                 }
                 result = true
@@ -931,9 +1062,9 @@ class Data : NSObject
             let createCategory = { (name:String, items:[String]) in
                 let category = name.trimmed()
                 if 0 < category.length {
-                    addCategory(category)
+                    categoryAdd(category)
                     for item in items {
-                        putItem(Item.create(name:item.trimmed(),category:category))
+                        itemPut(Item.create(name:item.trimmed(),category:category))
                     }
                 }
             }

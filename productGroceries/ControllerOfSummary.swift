@@ -296,7 +296,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             let section     = indexPath.section
             let row         = indexPath.row
             let item        = items[section][row]
-            Data.Manager.resetItem(item)
+            Data.Manager.itemReset(item)
             items[section].removeAtIndex(row)
             if items[section].count < 1 {
                 items.removeAtIndex(section)

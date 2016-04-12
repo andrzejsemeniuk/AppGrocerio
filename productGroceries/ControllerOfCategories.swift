@@ -276,13 +276,13 @@ class ControllerOfCategories : UITableViewController {
     
     func reload()
     {
-        categories = Data.Manager.allCategories()
+        categories = Data.Manager.categoryGetAll()
         
         quantities = []
         
         for category in categories
         {
-            let items = Data.Manager.allItemsInCategory(category)
+            let items = Data.Manager.itemGetAllInCategory(category)
             var count = 0
             for item in items {
                 if 0 < item.quantity {
@@ -311,7 +311,7 @@ class ControllerOfCategories : UITableViewController {
             action in
             
             if let fields = alert.textFields, text = fields[0].text {
-                if Data.Manager.addCategory(text) {
+                if Data.Manager.categoryAdd(text) {
                     self.reload()
                 }
             }
@@ -364,7 +364,7 @@ class ControllerOfCategories : UITableViewController {
             print("None")
         case .Delete:
             let category = categories[indexPath.row]
-            Data.Manager.removeCategory(category)
+            Data.Manager.categoryRemove(category)
             categories.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
             self.reload()
@@ -387,7 +387,7 @@ class ControllerOfCategories : UITableViewController {
 //        self.navigationBar.translucent = NO;
         
         items.category  = category
-        items.items     = Data.Manager.allItemsInCategory(category)
+        items.items     = Data.Manager.itemGetAllInCategory(category)
         
         AppDelegate.navigatorForCategories.pushViewController(items, animated:true)
     }

@@ -20,6 +20,7 @@
 		574880FC1C89EEF100A3806F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 574880FB1C89EEF100A3806F /* Assets.xcassets */; };
 		5748810A1C89EEF100A3806F /* productGroceriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574881091C89EEF100A3806F /* productGroceriesTests.swift */; };
 		574881151C89EEF100A3806F /* productGroceriesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574881141C89EEF100A3806F /* productGroceriesUITests.swift */; };
+		574AD0BF1CBC6A6F0008A580 /* productGroceries.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 574AD0BD1CBC6A6F0008A580 /* productGroceries.xcdatamodeld */; };
 		5759A1101C98BEC200C788A3 /* ControllerOfSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5759A10F1C98BEC200C788A3 /* ControllerOfSettings.swift */; };
 		5759A1111C98BEC200C788A3 /* ControllerOfSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5759A10F1C98BEC200C788A3 /* ControllerOfSettings.swift */; };
 		57A159BC1C90981C0031036F /* ControllerOfItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159BB1C90981C0031036F /* ControllerOfItems.swift */; };
@@ -69,6 +70,7 @@
 		574881101C89EEF100A3806F /* productGroceriesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = productGroceriesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		574881141C89EEF100A3806F /* productGroceriesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = productGroceriesUITests.swift; sourceTree = "<group>"; };
 		574881161C89EEF100A3806F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		574AD0BE1CBC6A6F0008A580 /* productGroceries.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = productGroceries.xcdatamodel; sourceTree = "<group>"; };
 		5759A10F1C98BEC200C788A3 /* ControllerOfSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ControllerOfSettings.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		57A159BB1C90981C0031036F /* ControllerOfItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerOfItems.swift; sourceTree = "<group>"; };
 		57A159BF1C90B1C90031036F /* ControllerOfSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ControllerOfSummary.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -105,6 +107,7 @@
 		574880E61C89EEF000A3806F = {
 			isa = PBXGroup;
 			children = (
+				574AD0BD1CBC6A6F0008A580 /* productGroceries.xcdatamodeld */,
 				574880F11C89EEF000A3806F /* productGroceries */,
 				574881081C89EEF100A3806F /* productGroceriesTests */,
 				574881131C89EEF100A3806F /* productGroceriesUITests */,
@@ -312,6 +315,7 @@
 				5730C8641C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */,
 				57124C4C1CBC3768000F2B0E /* GenericControllerOfPickerOfColor.swift in Sources */,
 				57A159C01C90B1C90031036F /* ControllerOfSummary.swift in Sources */,
+				574AD0BF1CBC6A6F0008A580 /* productGroceries.xcdatamodeld in Sources */,
 				57B215B21C91FB2C004B86A2 /* ControllerOfCategories.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -573,6 +577,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		574AD0BD1CBC6A6F0008A580 /* productGroceries.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				574AD0BE1CBC6A6F0008A580 /* productGroceries.xcdatamodel */,
+			);
+			currentVersion = 574AD0BE1CBC6A6F0008A580 /* productGroceries.xcdatamodel */;
+			name = productGroceries.xcdatamodeld;
+			path = productGroceries/productGroceries.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 574880E71C89EEF000A3806F /* Project object */;
 }

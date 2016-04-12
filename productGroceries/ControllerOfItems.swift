@@ -136,7 +136,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     func reload()
     {
-        items = Data.Manager.allItemsInCategory(category)
+        items = Data.Manager.itemGetAllInCategory(category)
         
         self.title = category
 
@@ -158,7 +158,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             action in
             
             if let fields = alert.textFields, text = fields[0].text {
-                Data.Manager.putItem(Data.Item.create(name:text.trimmed(),category:self.category))
+                Data.Manager.itemPut(Data.Item.create(name:text.trimmed(),category:self.category))
                 self.reload()
             }
         })
@@ -186,7 +186,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             print("None")
         case .Delete:
             let item = items[indexPath.row]
-            Data.Manager.removeItem(item)
+            Data.Manager.itemRemove(item)
             items.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
         case .Insert:
@@ -214,7 +214,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             }
             
             if update {
-                Data.Manager.putItem(item)
+                Data.Manager.itemPut(item)
                 items[indexPath.row] = item
                 self.reload()
             }
