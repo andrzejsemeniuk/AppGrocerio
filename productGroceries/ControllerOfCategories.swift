@@ -50,28 +50,10 @@ class ControllerOfCategories : UITableViewController {
             }
             
             items! += [
-                UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
+                UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: #selector(ControllerOfCategories.add)),
             ]
 
             navigationItem.rightBarButtonItems = items
-        }
-
-        
-        
-        
-        do
-        {
-            var items = navigationItem.leftBarButtonItems
-            
-            if items == nil {
-                items = [UIBarButtonItem]()
-            }
-            
-            items! += [
-                UIBarButtonItem(title:"Rebuild", style:.Plain, target:self, action: "rebuild"),
-            ]
-            
-            navigationItem.leftBarButtonItems = items
         }
 
         
@@ -134,14 +116,17 @@ class ControllerOfCategories : UITableViewController {
         case "Rainbow":
             return UIColor(hue:mark.lerp01(0.0,0.9), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Range":
-            let hue0 = Data.Manager.settingsGetColorForKey(.SettingsTabThemesRangeFromColor).HSBA().hue
-            let hue1 = Data.Manager.settingsGetColorForKey(.SettingsTabThemesRangeToColor).HSBA().hue
-            return UIColor(hue:mark.lerp01(hue0,hue1), saturation:saturation, brightness:1.0, alpha:1.0)
+            let color0  = Data.Manager.settingsGetColorForKey(.SettingsTabThemesRangeFromColor).HSBA()
+            let color1  = Data.Manager.settingsGetColorForKey(.SettingsTabThemesRangeToColor).HSBA()
+            return UIColor(hue:mark.lerp01(color0.hue,color1.hue),
+                           saturation:mark.lerp01(color0.saturation,color1.saturation)*saturation,
+                           brightness:mark.lerp01(color0.brightness,color1.brightness),
+                           alpha:1.0)
         case "Strawberry":
             return UIColor(hue:mark.lerp01(0.89,0.99), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Solid":
             let HSBA = Data.Manager.settingsGetColorForKey(.SettingsTabThemesSolidColor).HSBA()
-            return UIColor(hue:CGFloat(HSBA.hue), saturation:saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
+            return UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
         default:
             break
         }
@@ -189,6 +174,7 @@ class ControllerOfCategories : UITableViewController {
         cell.backgroundColor    = colorForCategoryIndex(indexPath.row)
         
         print("styleCell: indexPath.row=\(indexPath.row), section=\(indexPath.section)")
+        
         if let label = cell.textLabel {
             
             if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
@@ -330,29 +316,6 @@ class ControllerOfCategories : UITableViewController {
     }
     
     
-    func rebuild()
-    {
-        let alert = UIAlertController(title:"Rebuild Categories", message:"This action will re-add any missing categories and items.", preferredStyle:.Alert)
-        
-        let actionOK = UIAlertAction(title:"OK", style:.Default, handler: {
-            action in
-            
-            Data.Manager.createCategories()
-            self.reload()
-        })
-        
-        let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
-            action in
-        })
-        
-        alert.addAction(actionOK)
-        alert.addAction(actionCancel)
-        
-        AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
-            print("completed showing add alert")
-        })
-    }
-    
     
     // NOTE: THIS IS A TABLE-DATA-SOURCE-DELEGATE METHOD
     
@@ -376,22 +339,36 @@ class ControllerOfCategories : UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
-        let category = categories[indexPath.row]
+        openItemsForRow(indexPath.row)
+    }
+
+
+    func openItemsForRow(row:Int) -> ItemsController
+    {
+        let category    = categories[row]
         
-        let items = ItemsController()
+        let items       = ItemsController()
         
-        items.colorOfCategory = colorForCategoryIndex(indexPath.row)
-        
-//        self.navigationBar.barTintColor = [UIColor blueColor];
-//        self.navigationBar.tintColor = [UIColor whiteColor];
-//        self.navigationBar.translucent = NO;
+        items.colorOfCategory = colorForCategoryIndex(row)
         
         items.category  = category
         items.items     = Data.Manager.itemGetAllInCategory(category)
         
         AppDelegate.navigatorForCategories.pushViewController(items, animated:true)
+        
+        return items
     }
 
+    func openItemsForCategory(category:String,name:String? = nil)
+    {
+        if let index = categories.indexOf(category) {
+            let items = openItemsForRow(index)
+            
+            if let item = name {
+                items.scrollToItem(item)
+            }
+        }
+    }
     
     
     override func viewWillAppear(animated: Bool)

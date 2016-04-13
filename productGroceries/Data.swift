@@ -100,13 +100,14 @@ class Data : NSObject
         
         
         
-        class func itemPut              (item:Item)
+        class func itemPut              (item:Item,addQuantity:Bool = false)
         {
             // if item does not exit
             //  insert
             // else
             //  update
             
+            var item = item
             
             if true
             {
@@ -127,6 +128,12 @@ class Data : NSObject
                     }
                     
                     let update              = { (newItem:NSManagedObject) in
+                        if addQuantity {
+                            item.quantity += newItem.valueForKey("quantity") as? Int ?? 0
+                            if item.quantity < 0 {
+                                item.quantity = 0
+                            }
+                        }
                         set(newItem)
                         try newItem.managedObjectContext?.save()
                     }
@@ -778,13 +785,142 @@ class Data : NSObject
             defaults.removeObjectForKey("display-help-summary")
         }
         
-        class func resetIfEmpty()
+        class func migrateItemsIfRequired()
+        {
+            let request             = NSFetchRequest()
+            
+            request.entity          = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
+            
+            do {
+                let result          = try AppDelegate.managedObjectContext.executeFetchRequest(request)
+                
+                if result.count == 0 {
+                    createCategories()
+                }
+            }
+            catch {
+                print(error)
+            }
+        }
+        
+        class func resetIfRequired()
         {
             let categories = categoryGetAll()
             
             if categories.count < 1 {
                 reset()
             }
+            else {
+                migrateItemsIfRequired()
+            }
+            
+            resetSettings()
+        }
+        
+        class func resetSettings()
+        {
+            // DEFAULT
+            
+            
+            //            case SettingsTabCategoriesUppercase                 = "settings-categories-uppercase"
+            //            case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
+            //            case SettingsTabCategoriesFont                      = "settings-categories-font"
+            //            case SettingsTabCategoriesTheme                     = "settings-categories-theme"
+            //            case SettingsTabCategoriesTextColor                 = "settings-categories-text-color"
+            //            case SettingsTabItemsFont                           = "settings-items-font"
+            //            case SettingsTabItemsUppercase                      = "settings-items-uppercase"
+            //            case SettingsTabItemsEmphasize                      = "settings-items-emphasize"
+            //            case SettingsTabItemsFontSameAsCategories           = "settings-items-font-as-categories"
+            //            case SettingsTabItemsTextColor                      = "settings-items-text-color"
+            //            case SettingsTabItemsTextColorSameAsCategories      = "settings-items-text-color-as-categories"
+            //            case SettingsTabItemsRowOddOpacity                  = "settings-items-row-odd-alpha"
+            //            case SettingsTabItemsRowEvenOpacity                 = "settings-items-row-even-alpha"
+            //            case SettingsTabItemsQuantityColorBackground        = "settings-items-quantity-color-bg"
+            //            case SettingsTabItemsQuantityColorBackgroundOpacity = "settings-items-quantity-color-bg-opacity"
+            //            case SettingsTabItemsQuantityColorText              = "settings-items-quantity-color-text"
+            //            case SettingsTabItemsQuantityColorTextSameAsItems   = "settings-items-quantity-color-text-as-items"
+            //            case SettingsTabItemsQuantityFont                   = "settings-items-quantity-font"
+            //            case SettingsTabItemsQuantityFontSameAsItems        = "settings-items-quantity-font-as-items"
+            //
+            //            case SettingsTabThemesSolidColor                    = "settings-themes-solid-color"
+            //            case SettingsTabThemesRangeFromColor                = "settings-themes-range-color-from"
+            //            case SettingsTabThemesRangeToColor                  = "settings-themes-range-color-to"
+            //            case SettingsTabThemesCustomColors                  = "settings-themes-custom-colors"
+            //            case SettingsTabThemesName                          = "settings-themes-name"
+            //            case SettingsTabThemesSaturation                    = "settings-themes-saturation"
+            
+            
+            
+            if NOT(settingsExist("Default")) {
+                
+                settingsUse                                 ("Default")
+                
+                settingsSetColor                            (UIColor(hue:0.4)                                   ,forKey:.SettingsBackgroundColor)
+                
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesEmphasize)
+                settingsSetString                           ("Helvetica-Bold"                                   ,forKey:.SettingsTabCategoriesFont)
+                settingsSetColor                            (UIColor(hue:0,saturation:1,brightness:1)           ,forKey:.SettingsTabCategoriesTextColor)
+                
+                //            settingsSetThemesSolidColor                 (UIColor.whiteColor())
+                settingsSetThemeWithName                    ("Plain")
+                
+                
+                settingsSetString                           ("Helvetica"                                        ,forKey:.SettingsTabItemsFont)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
+                //            settingsSetBool                             (true                                               ,forKey:.SettingsTabItemsFontSameAsCategories)
+                settingsSetColor                            (UIColor(hue:0.0,saturation:1,brightness:1)         ,forKey:.SettingsTabItemsTextColor)
+                //            settingsSetBool                             (true                                               ,forKey:.SettingsTabItemsTextColorSameAsCategories)
+                settingsSetFloat                            (0.30                                               ,forKey:.SettingsTabItemsRowOddOpacity)
+                settingsSetFloat                            (0.70                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0,saturation:1,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                settingsSetColor                            (UIColor(hue:0,saturation:0,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorText)
+                //            settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsQuantityColorTextSameAsItems)
+                settingsSetString                           ("Helvetica"                                        ,forKey:.SettingsTabItemsQuantityFont)
+                //            settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsQuantityFontSameAsItems)
+                
+                settingsSave                                ("Default")
+            }
+
+            
+            
+            
+            
+            if NOT(settingsExist("Chalkboard")) {
+                settingsUse                                 ("Chalkboard")
+                
+                settingsSetColor                            (UIColor(hue:0.40,brightness:0.80)                                   ,forKey:.SettingsBackgroundColor)
+                
+                settingsSetThemesRangeFromColor             (UIColor(hue:0.40,brightness:0.83))
+                settingsSetThemesRangeToColor               (UIColor(hue:0.40,brightness:0.85))
+                settingsSetFloat                            (0.90                                               ,forKey:.SettingsTabThemesSaturation)
+                settingsSetThemeWithName                    ("Range")
+                
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
+                settingsSetBool                             (true                                               ,forKey:.SettingsTabCategoriesEmphasize)
+                settingsSetString                           ("Chalkduster"                                      ,forKey:.SettingsTabCategoriesFont)
+                settingsSetColor                            (UIColor(hue:0.40,saturation:0.1,brightness:1)        ,forKey:.SettingsTabCategoriesTextColor)
+                
+                settingsSetString                           ("Chalkduster"                                      ,forKey:.SettingsTabItemsFont)
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0,brightness:0.9)      ,forKey:.SettingsTabItemsTextColor)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
+                
+                settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabItemsRowOddOpacity)
+                settingsSetFloat                            (0.10                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0,saturation:0,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorText)
+                settingsSetString                           ("Chalkduster"                                      ,forKey:.SettingsTabItemsQuantityFont)
+                settingsSetColor                            (UIColor(hue:0.4,saturation:1,brightness:0.1)       ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetFloat                            (0.10                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                
+                settingsSave                                ("Chalkboard")
+            }
+            
+
         }
         
         class func reset()
@@ -834,6 +970,25 @@ class Data : NSObject
             return "settings="+name
         }
         
+        
+        class func settingsExist    (var name:String) -> Bool
+        {
+            var result = false
+            
+            name = name.trimmed()
+            
+            if 0 < name.length
+            {
+                let defaults = NSUserDefaults.standardUserDefaults()
+                
+                if let settings = defaults.dictionaryForKey(settingsKeyForName(name))
+                {
+                    result = true
+                }
+            }
+            
+            return result
+        }
         
         class func settingsUse      (var name:String) -> Bool
         {
@@ -976,6 +1131,29 @@ class Data : NSObject
             }
             
             return array
+        }
+        
+        class func summaryAdd       (name:String) -> Bool
+        {
+            var result = false
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
+            
+            if let summary = defaults.arrayForKey(summaryKeyForName(name)) {
+                
+                for element in summary {
+                    
+                    if let array = element as? [AnyObject] {
+                        
+                        let item = Item.deserialize(array)
+                        
+                        itemPut(item,addQuantity:true)
+                    }
+                }
+                result = true
+            }
+            
+            return result
         }
         
         class func summaryUse       (name:String) -> Bool

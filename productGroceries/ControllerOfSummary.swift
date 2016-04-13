@@ -9,13 +9,15 @@
 import Foundation
 import UIKit
 
-class ControllerOfSummary : UITableViewController, UIPopoverPresentationControllerDelegate
+class ControllerOfSummary : UITableViewController, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate
 {
     var items:[[Data.Item]] = [[]]
     
     var lastTap:UITableViewTap!
     
     var buttonLoad:UIBarButtonItem!
+    
+    
     
     
     override func viewDidLoad()
@@ -37,7 +39,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
                 items = [UIBarButtonItem]()
             }
             
-            buttonLoad = UIBarButtonItem(title:"Load", style:.Plain, target:self, action: #selector(ControllerOfSummary.load))
+            buttonLoad = UIBarButtonItem(title:"Add", style:.Plain, target:self, action: #selector(ControllerOfSummary.add))
             
             items! += [
                 buttonLoad
@@ -58,10 +60,24 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             }
             
             items! += [
-                UIBarButtonItem(barButtonSystemItem:.Save, target:self, action: "save"),
+                UIBarButtonItem(barButtonSystemItem:.Save, target:self, action: #selector(ControllerOfSummary.save))
             ]
             
             navigationItem.rightBarButtonItems = items
+        }
+
+        
+        
+        
+        do
+        {
+            // "add gesture recognizer to determine which side of cell was tapped on"
+            
+            let recognizer = UITapGestureRecognizer(target:self, action:#selector(ItemsController.handleTap(_:)))
+            
+            recognizer.delegate = self
+            
+            tableView.addGestureRecognizer(recognizer)
         }
 
         
@@ -128,24 +144,28 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     }
 
     
-    func load()
+    
+    
+    
+    func add()
     {
+        let CLEAR   = "[ Clear ]"
         
-        let list = GenericControllerOfList()
+        let list    = GenericControllerOfList()
         
-        list.items                      = ["Clear"] + Data.Manager.summaryList()
-        list.items = list.items.sort()
+        list.items  = [CLEAR] + Data.Manager.summaryList()
+        list.items  = list.items.sort()
         
 //        list.tableView.separatorStyle   = .SingleLineEtched
 
         list.handlerForDidSelectRowAtIndexPath = { (controller:GenericControllerOfList,indexPath:NSIndexPath) -> Void in
             let row         = indexPath.row
             let selection   = list.items[row]
-            if selection == "Clear" {
+            if selection == CLEAR {
                 Data.Manager.summaryClear()
             }
             else {
-                Data.Manager.summaryUse(selection)
+                Data.Manager.summaryAdd(selection)
             }
 //            controller.dismissViewControllerAnimated(true, completion:nil)
             controller.navigationController!.popViewControllerAnimated(true)
@@ -308,4 +328,74 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     
     
+    
+    
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        let section     = indexPath.section
+        let row         = indexPath.row
+        var item        = items[section][row]
+        
+        if lastTap.path == indexPath {
+            var update = false
+            
+            if lastTap.point.x < tableView.bounds.width*0.3 {
+                if 0 < item.quantity {
+                    item.quantity -= 1
+                    update = true
+                }
+            }
+            else if lastTap.point.x > tableView.bounds.width*0.7 {
+                item.quantity += 1
+                update = true
+            }
+            else {
+                AppDelegate.tabBarController.selectedIndex = 0
+                
+                if let categories = AppDelegate.navigatorForCategories.viewControllers[0] as? ControllerOfCategories {
+                    AppDelegate.navigatorForCategories.popToRootViewControllerAnimated(false)
+                    categories.openItemsForCategory(item.category,name:item.name)
+                }
+            }
+            
+            if update {
+                Data.Manager.itemPut(item)
+                if item.quantity < 1 {
+                    items[section].removeAtIndex(row)
+                    if items[section].count < 1 {
+                        items.removeAtIndex(section)
+                    }
+                }
+                else {
+                    items[section][row] = item
+                }
+                self.reload()
+            }
+        }
+    }
+
+    
+
+    
+    
+    func gestureRecognizerShouldBegin(recognizer: UIGestureRecognizer) -> Bool
+    {
+        let point = recognizer.locationInView(tableView)
+        
+        if let path = tableView.indexPathForRowAtPoint(point)
+        {
+            lastTap = UITableViewTap(path:path, point:point)
+        }
+        
+        return false
+    }
+    
+    
+    func handleTap(recognizer:UIGestureRecognizer)
+    {
+        // unused - we're not interested
+    }
+
 }

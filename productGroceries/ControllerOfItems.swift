@@ -20,6 +20,8 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     var lastTap:UITableViewTap!
     
     
+    
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -39,7 +41,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         }
         
         items! += [
-            UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: "add"),
+            UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: #selector(ItemsController.add))
 //            editButtonItem(),
         ]
         
@@ -49,12 +51,14 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         // "add gesture recognizer to determine which side of cell was tapped on"
         
-        let recognizer = UITapGestureRecognizer(target:self, action:"handleTap:")
+        let recognizer = UITapGestureRecognizer(target:self, action:#selector(ItemsController.handleTap(_:)))
         
         recognizer.delegate = self
         
         tableView.addGestureRecognizer(recognizer)
     }
+    
+    
     
     override func didReceiveMemoryWarning()
     {
@@ -204,12 +208,12 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             
             if lastTap.point.x < tableView.bounds.width/2 {
                 if 0 < item.quantity {
-                    item.quantity--
+                    item.quantity -= 1
                     update = true
                 }
             }
             else {
-                item.quantity++
+                item.quantity += 1
                 update = true
             }
             
@@ -222,6 +226,25 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     }
 
     
+    
+    
+    func scrollToItem(name:String)
+    {
+        var row = -1
+        
+        for (index,item) in items.enumerate() {
+            if item.name == name {
+                row = index
+                break
+            }
+        }
+        
+        if 0 <= row {
+            let path = NSIndexPath(forRow:row,inSection:0)
+            
+            tableView.scrollToRowAtIndexPath(path,atScrollPosition:.Middle,animated:true)
+        }
+    }
     
     
     override func viewWillAppear(animated: Bool)
@@ -252,6 +275,8 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         return false
     }
+    
+    
     
 
     func handleTap(recognizer:UIGestureRecognizer)

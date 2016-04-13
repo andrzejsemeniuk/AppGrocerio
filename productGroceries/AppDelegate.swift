@@ -14,12 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    private static var __tabBarController:UITabBarController?
     private static var __navigatorForCategories:UINavigationController?
     private static var __navigatorForSettings:UINavigationController?
     private static var __instance:AppDelegate?
     
     class var instance:AppDelegate {
         return __instance!
+    }
+    
+    class var tabBarController:UITabBarController {
+        return __tabBarController!
     }
     
     class var navigatorForCategories:UINavigationController {
@@ -40,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        Data.Manager.clearHelpFlags()
 //        Data.Manager.reset()
 //        NSUserDefaults.clear()
-        Data.Manager.resetIfEmpty()
+        Data.Manager.resetIfRequired()
         
         // a window displays views and distributes events
         window                      = UIWindow()
@@ -89,6 +94,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TABS.setViewControllers([CATEGORIES,SUMMARY,SETTINGS], animated:true)
         
         TABS.selectedViewController = CATEGORIES
+        
+        AppDelegate.__tabBarController = TABS
         
         
         WINDOW.rootViewController   = TABS

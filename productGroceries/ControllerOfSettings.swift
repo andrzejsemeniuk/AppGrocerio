@@ -34,7 +34,30 @@ class SettingsController : GenericControllerOfSettings
     
     
     
+    func rebuild()
+    {
+        let alert = UIAlertController(title:"Rebuild Categories", message:"This action will re-add any missing categories and items.", preferredStyle:.Alert)
+        
+        let actionOK = UIAlertAction(title:"OK", style:.Default, handler: {
+            action in
+            
+            Data.Manager.createCategories()
+            self.reload()
+        })
+        
+        let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
+            action in
+        })
+        
+        alert.addAction(actionOK)
+        alert.addAction(actionCancel)
+        
+        AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
+            print("completed showing add alert")
+        })
+    }
     
+
     
     
     
@@ -192,6 +215,24 @@ class SettingsController : GenericControllerOfSettings
                 },
                 
                 ""
+            ],
+            
+            [
+             
+                "",
+
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Rebuild"
+                        cell.accessoryType  = .None
+                        cell.selectionStyle = .Default
+                        self.registerCellSelection(indexPath) {
+                            self.rebuild()
+                        }
+                    }
+                },
+                
+                "If you deleted any categories manually, you can re-add them all with Rebuild"
             ],
             
             [
