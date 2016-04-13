@@ -171,7 +171,9 @@ class ControllerOfCategories : UITableViewController {
     
     func styleCell(cell:UITableViewCell,indexPath:NSIndexPath)
     {
-        cell.backgroundColor    = colorForCategoryIndex(indexPath.row)
+        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Data.Manager.settingsGetSelectionColor())
+
+        cell.backgroundColor        = colorForCategoryIndex(indexPath.row)
         
         print("styleCell: indexPath.row=\(indexPath.row), section=\(indexPath.section)")
         

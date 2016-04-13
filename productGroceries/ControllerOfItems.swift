@@ -73,6 +73,8 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     class func styleCell(cell:UITableViewCell,item:Data.Item,indexPath:NSIndexPath)
     {
+        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Data.Manager.settingsGetSelectionColor())
+        
         do
         {
             var color = ControllerOfCategories.instance.colorForItem(item,onRow:indexPath.row)
@@ -99,7 +101,6 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             if Data.Manager.settingsGetBoolForKey(.SettingsTabItemsEmphasize) {
                 label.font = label.font.fontWithSize(label.font.pointSize+1)
             }
-            
         }
         
         cell.selectionStyle = .Default

@@ -270,8 +270,28 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
 
         cell.selectionStyle = .None
 
-        let views = ControllerOfCategories.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
-        
+        if let label = cell.textLabel
+        {
+            if item.quantity == -1
+            {
+                let s = NSMutableAttributedString(string:label.text!)
+                
+                let range = NSRange(location:0,length:s.string.startIndex.distanceTo(s.string.endIndex))
+                
+                s.addAttribute(NSStrikethroughStyleAttributeName,
+                               value:2,
+                               range:range)
+                
+                label.attributedText = s;
+                
+//                label.text = nil
+            }
+            else
+            {
+                let views = ControllerOfCategories.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
+            }
+        }
+
         return cell
     }
     
@@ -342,13 +362,26 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             var update = false
             
             if lastTap.point.x < tableView.bounds.width*0.3 {
-                if 0 < item.quantity {
-                    item.quantity -= 1
-                    update = true
+                // q=1 => jump to -1 to indicate strikethrough
+                // q=-1 => remove
+                if item.quantity == -1 {
+                    item.quantity = 0
                 }
+                else if 1 < item.quantity {
+                    item.quantity -= 1
+                }
+                else {
+                    item.quantity = -1
+                }
+                update = true
             }
             else if lastTap.point.x > tableView.bounds.width*0.7 {
-                item.quantity += 1
+                if item.quantity == -1 {
+                    item.quantity = 1
+                }
+                else {
+                    item.quantity += 1
+                }
                 update = true
             }
             else {
@@ -362,7 +395,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             
             if update {
                 Data.Manager.itemPut(item)
-                if item.quantity < 1 {
+                if item.quantity == 0 {
                     items[section].removeAtIndex(row)
                     if items[section].count < 1 {
                         items.removeAtIndex(section)

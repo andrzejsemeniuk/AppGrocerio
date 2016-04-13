@@ -55,6 +55,8 @@ class Data : NSObject
             case Categories, Items
             
             case SettingsBackgroundColor                        = "settings-background"
+            case SettingsSelectionColor                         = "settings-selection-color"
+            case SettingsSelectionColorOpacity                  = "settings-selection-color-opacity"
             
             case SettingsTabCategoriesUppercase                 = "settings-categories-uppercase"
             case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
@@ -374,7 +376,7 @@ class Data : NSObject
             for category in categoryGetAll() {
                 var add = [Item]()
                 for item in itemGetAllInCategory(category,sorted:true) {
-                    if item.isModified() {
+                    if 0 != item.quantity {
                         add.append(item)
                     }
                 }
@@ -582,6 +584,16 @@ class Data : NSObject
             return settingsGetColorForKey(.SettingsBackgroundColor,defaultValue:defaultValue)
         }
         
+        class func settingsGetSelectionColor(defaultValue:UIColor = UIColor(gray:1,alpha:0.2)) -> UIColor
+        {
+            let hsba    = settingsGetColorForKey(.SettingsSelectionColor,defaultValue:defaultValue).HSBA()
+            
+            let opacity = settingsGetFloatForKey(.SettingsSelectionColorOpacity,defaultValue:Float(defaultValue.alpha()))
+            
+            return UIColor(hue:hsba.hue,saturation:hsba.saturation,brightness:hsba.brightness,alpha:CGFloat(opacity))
+        }
+        
+
         
         class func settingsGetCategoriesTextColor(defaultValue:UIColor = UIColor(hue:0.87)) -> UIColor
         {
@@ -892,8 +904,6 @@ class Data : NSObject
             if NOT(settingsExist("Chalkboard")) {
                 settingsUse                                 ("Chalkboard")
                 
-                settingsSetColor                            (UIColor(hue:0.40,brightness:0.80)                                   ,forKey:.SettingsBackgroundColor)
-                
                 settingsSetThemesRangeFromColor             (UIColor(hue:0.40,brightness:0.83))
                 settingsSetThemesRangeToColor               (UIColor(hue:0.40,brightness:0.85))
                 settingsSetFloat                            (0.90                                               ,forKey:.SettingsTabThemesSaturation)
@@ -902,20 +912,25 @@ class Data : NSObject
                 settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
                 settingsSetBool                             (true                                               ,forKey:.SettingsTabCategoriesEmphasize)
                 settingsSetString                           ("Chalkduster"                                      ,forKey:.SettingsTabCategoriesFont)
-                settingsSetColor                            (UIColor(hue:0.40,saturation:0.1,brightness:1)        ,forKey:.SettingsTabCategoriesTextColor)
+                settingsSetColor                            (UIColor(hue:0.40,saturation:0.10,brightness:1.00)  ,forKey:.SettingsTabCategoriesTextColor)
                 
                 settingsSetString                           ("Chalkduster"                                      ,forKey:.SettingsTabItemsFont)
-                settingsSetColor                            (UIColor(hue:0.00,saturation:0,brightness:0.9)      ,forKey:.SettingsTabItemsTextColor)
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.90)  ,forKey:.SettingsTabItemsTextColor)
                 settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
                 settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
                 
                 settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabItemsRowOddOpacity)
                 settingsSetFloat                            (0.10                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
                 
-                settingsSetColor                            (UIColor(hue:0,saturation:0,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorText)
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabItemsQuantityColorText)
                 settingsSetString                           ("Chalkduster"                                      ,forKey:.SettingsTabItemsQuantityFont)
                 settingsSetColor                            (UIColor(hue:0.4,saturation:1,brightness:0.1)       ,forKey:.SettingsTabItemsQuantityColorBackground)
                 settingsSetFloat                            (0.10                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+
+                settingsSetColor                            (UIColor(hue:0.30,saturation:0.80,brightness:1.00)  ,forKey:.SettingsSelectionColor)
+                settingsSetFloat                            (0.50                                               ,forKey:.SettingsSelectionColorOpacity)
+
+                settingsSetColor                            (UIColor(hue:0.40,brightness:0.80)                  ,forKey:.SettingsBackgroundColor)
                 
                 settingsSave                                ("Chalkboard")
             }

@@ -162,17 +162,6 @@ class SettingsController : GenericControllerOfSettings
             ],
             
             [
-                "BACKGROUND",
-                
-                createCellForColor(Data.Manager.settingsGetBackgroundColor(),title:"Background",key:.SettingsBackgroundColor) {
-                    AppDelegate.rootViewController.view.backgroundColor     = Data.Manager.settingsGetBackgroundColor()
-                    self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
-                },
-                
-                ""
-            ],
-            
-            [
                 "CATEGORIES",
                 
                 createCellForFont(Data.Manager.settingsGetCategoriesFont(),title:"Categories",key:.SettingsTabCategoriesFont),
@@ -299,7 +288,7 @@ class SettingsController : GenericControllerOfSettings
                         cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabItemsRowEvenOpacity, defaultValue:1), update: { (myslider:UISlider) in
                             Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsRowEvenOpacity)
                         })
-                        cell.accessoryType  = .DisclosureIndicator
+                        cell.accessoryType  = .None
                         cell.selectionStyle = .Default
                     }
                 },
@@ -310,7 +299,7 @@ class SettingsController : GenericControllerOfSettings
                         cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabItemsRowOddOpacity, defaultValue:1), update: { (myslider:UISlider) in
                             Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsRowOddOpacity)
                         })
-                        cell.accessoryType  = .DisclosureIndicator
+                        cell.accessoryType  = .None
                         cell.selectionStyle = .Default
                     }
                 },
@@ -354,6 +343,37 @@ class SettingsController : GenericControllerOfSettings
                 ""
             ],
             
+            [
+                "SELECTION",
+                
+                createCellForColor(Data.Manager.settingsGetColorForKey(.SettingsSelectionColor),title:"Selection",key:.SettingsSelectionColor) {
+                },
+                
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        label.text          = "Opacity"
+                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsSelectionColorOpacity, defaultValue:0.2), update: { (myslider:UISlider) in
+                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsSelectionColorOpacity)
+                        })
+                        cell.accessoryType  = .None
+                        cell.selectionStyle = .Default
+                    }
+                },
+                
+                "Set selection properties for rows on all tabs"
+            ],
+            
+            [
+                "APP",
+                
+                createCellForColor(Data.Manager.settingsGetBackgroundColor(),name:"Background",title:"Background",key:.SettingsBackgroundColor) {
+                    AppDelegate.rootViewController.view.backgroundColor     = Data.Manager.settingsGetBackgroundColor()
+                    self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
+                },
+                
+                "Set app properties"
+            ],
+            
 //            [
 //                "ITEM QUANTITY SOUNDS",
 //                
@@ -392,9 +412,21 @@ class SettingsController : GenericControllerOfSettings
 //                ""
 //            ],
 
+            
         ]
     }
     
+    
+    
+    
+    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = super.tableView(tableView, cellForRowAtIndexPath:indexPath)
+        
+        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Data.Manager.settingsGetSelectionColor())
+        
+        return cell
+    }
     
     
     
