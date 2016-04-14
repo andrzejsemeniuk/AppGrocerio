@@ -7,7 +7,11 @@
 //
 
 import Foundation
+import AVFoundation
 import UIKit
+
+
+
 
 class ItemsController : UITableViewController, UIGestureRecognizerDelegate
 {
@@ -200,6 +204,14 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     }
     
     
+    
+    
+    
+    var player:AVAudioPlayer?
+
+    
+    
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         var item = items[indexPath.row]
@@ -207,14 +219,20 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         if lastTap.path == indexPath {
             var update = false
             
-            if lastTap.point.x < tableView.bounds.width/2 {
+            if lastTap.point.x < tableView.bounds.width * 0.3 {
                 if 0 < item.quantity {
+                    Audio.playItemDecrement()
+
                     item.quantity -= 1
+                    
                     update = true
                 }
             }
-            else {
+            else if lastTap.point.x > tableView.bounds.width * 0.7 {
+                Audio.playItemIncrement()
+                
                 item.quantity += 1
+                
                 update = true
             }
             
@@ -229,7 +247,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     
     
-    func scrollToItem(name:String)
+    func scrollToItem(name:String,select:Bool = true)
     {
         var row = -1
         
@@ -243,7 +261,8 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         if 0 <= row {
             let path = NSIndexPath(forRow:row,inSection:0)
             
-            tableView.scrollToRowAtIndexPath(path,atScrollPosition:.Middle,animated:true)
+//            tableView.scrollToRowAtIndexPath(path,atScrollPosition:.Middle,animated:true)
+            tableView.selectRowAtIndexPath(path,animated:true,scrollPosition:.Middle)
         }
     }
     

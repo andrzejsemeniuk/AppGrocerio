@@ -367,7 +367,7 @@ class ControllerOfCategories : UITableViewController {
             let items = openItemsForRow(index)
             
             if let item = name {
-                items.scrollToItem(item)
+                items.scrollToItem(item,select:true)
             }
         }
     }

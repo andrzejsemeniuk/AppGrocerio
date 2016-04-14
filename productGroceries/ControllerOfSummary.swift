@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 class ControllerOfSummary : UITableViewController, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate
 {
     var items:[[Data.Item]] = [[]]
@@ -103,7 +104,9 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     var lastGroceryListName:String?
     
     
+    let CLEAR   = "<< Clear >>"
     
+
     func save()
     {
         let alert = UIAlertController(title:"Save Grocery List", message:"Specify name of grocery list:", preferredStyle:.Alert)
@@ -123,7 +126,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             action in
             
             if let fields = alert.textFields, text = fields[0].text?.trimmed() {
-                if text != "Clear" {
+                if text != self.CLEAR {
                     if Data.Manager.summarySave(text) {
                         self.lastGroceryListName = text
                     }
@@ -149,8 +152,6 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     func add()
     {
-        let CLEAR   = "[ Clear ]"
-        
         let list    = GenericControllerOfList()
         
         list.items  = [CLEAR] + Data.Manager.summaryList()
@@ -161,7 +162,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         list.handlerForDidSelectRowAtIndexPath = { (controller:GenericControllerOfList,indexPath:NSIndexPath) -> Void in
             let row         = indexPath.row
             let selection   = list.items[row]
-            if selection == CLEAR {
+            if selection == self.CLEAR {
                 Data.Manager.summaryClear()
             }
             else {
@@ -201,7 +202,6 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
 
     }
 
-    
     
     
     func prepareForPopoverPresentation(popoverPresentationController: UIPopoverPresentationController)
@@ -352,6 +352,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     
     
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         let section     = indexPath.section
@@ -362,29 +363,38 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             var update = false
             
             if lastTap.point.x < tableView.bounds.width*0.3 {
-                // q=1 => jump to -1 to indicate strikethrough
-                // q=-1 => remove
+                
                 if item.quantity == -1 {
+                    Audio.playItemDisappear()
                     item.quantity = 0
                 }
                 else if 1 < item.quantity {
+                    Audio.playItemDecrement()
                     item.quantity -= 1
                 }
                 else {
+                    Audio.playItemCrossOut()
                     item.quantity = -1
                 }
+                
                 update = true
             }
             else if lastTap.point.x > tableView.bounds.width*0.7 {
+                
+                Audio.playItemIncrement()
+
                 if item.quantity == -1 {
                     item.quantity = 1
                 }
                 else {
                     item.quantity += 1
                 }
+                
                 update = true
             }
             else {
+//                self.player = Audio.play("Beep short 07.mp3")
+                
                 AppDelegate.tabBarController.selectedIndex = 0
                 
                 if let categories = AppDelegate.navigatorForCategories.viewControllers[0] as? ControllerOfCategories {

@@ -371,6 +371,17 @@ class SettingsController : GenericControllerOfSettings
                     self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
                 },
                 
+                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                    if let label = cell.textLabel {
+                        cell.selectionStyle = .Default
+                        label.text          = "Audio"
+                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsAudioOn,defaultValue:true), update: { (myswitch:UISwitch) in
+                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsAudioOn)
+                        })
+                    }
+                },
+                
+
                 "Set app properties"
             ],
             

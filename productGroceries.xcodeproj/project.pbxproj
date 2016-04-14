@@ -12,6 +12,20 @@
 		57124C4D1CBC3768000F2B0E /* GenericControllerOfPickerOfFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57124C491CBC3768000F2B0E /* GenericControllerOfPickerOfFont.swift */; };
 		57124C4E1CBC3768000F2B0E /* GenericControllerOfSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57124C4A1CBC3768000F2B0E /* GenericControllerOfSettings.swift */; };
 		5714B8631C9DC37900B4FEC7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5714B8611C9DC37900B4FEC7 /* LaunchScreen.storyboard */; };
+		5715FC481CBEED5400044118 /* Beep short 07.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC451CBEED5400044118 /* Beep short 07.mp3 */; };
+		5715FC491CBEED5400044118 /* Beep short 14.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC461CBEED5400044118 /* Beep short 14.mp3 */; };
+		5715FC4A1CBEED5400044118 /* Beep short 16.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC471CBEED5400044118 /* Beep short 16.mp3 */; };
+		5715FC4D1CBEFB6C00044118 /* Multimedia button click 193.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC4B1CBEFB6C00044118 /* Multimedia button click 193.mp3 */; };
+		5715FC4E1CBEFB6C00044118 /* Multimedia button click 194.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC4C1CBEFB6C00044118 /* Multimedia button click 194.mp3 */; };
+		5715FC501CBEFBAA00044118 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5715FC4F1CBEFBAA00044118 /* Audio.swift */; };
+		5715FC511CBEFBAA00044118 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5715FC4F1CBEFBAA00044118 /* Audio.swift */; };
+		5715FC521CBEFBAA00044118 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5715FC4F1CBEFBAA00044118 /* Audio.swift */; };
+		5715FC541CBEFD7C00044118 /* Multimedia button click 158.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC531CBEFD7C00044118 /* Multimedia button click 158.mp3 */; };
+		5715FC551CBEFD7C00044118 /* Multimedia button click 158.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC531CBEFD7C00044118 /* Multimedia button click 158.mp3 */; };
+		5715FC561CBEFD7C00044118 /* Multimedia button click 158.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC531CBEFD7C00044118 /* Multimedia button click 158.mp3 */; };
+		5715FC581CBEFDDA00044118 /* Multimedia button click 54.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC571CBEFDDA00044118 /* Multimedia button click 54.mp3 */; };
+		5715FC591CBEFDDA00044118 /* Multimedia button click 54.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC571CBEFDDA00044118 /* Multimedia button click 54.mp3 */; };
+		5715FC5A1CBEFDDA00044118 /* Multimedia button click 54.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5715FC571CBEFDDA00044118 /* Multimedia button click 54.mp3 */; };
 		5730C8641C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */; };
 		5730C8651C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */; };
 		5730C8661C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */; };
@@ -58,6 +72,14 @@
 		57124C491CBC3768000F2B0E /* GenericControllerOfPickerOfFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GenericControllerOfPickerOfFont.swift; path = ../../TGFSwift/GenericControllerOfPickerOfFont.swift; sourceTree = "<group>"; };
 		57124C4A1CBC3768000F2B0E /* GenericControllerOfSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GenericControllerOfSettings.swift; path = ../../TGFSwift/GenericControllerOfSettings.swift; sourceTree = "<group>"; };
 		5714B8621C9DC37900B4FEC7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = productGroceries/Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5715FC451CBEED5400044118 /* Beep short 07.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Beep short 07.mp3"; path = "Resources/Audio/Beep short 07.mp3"; sourceTree = "<group>"; };
+		5715FC461CBEED5400044118 /* Beep short 14.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Beep short 14.mp3"; path = "Resources/Audio/Beep short 14.mp3"; sourceTree = "<group>"; };
+		5715FC471CBEED5400044118 /* Beep short 16.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Beep short 16.mp3"; path = "Resources/Audio/Beep short 16.mp3"; sourceTree = "<group>"; };
+		5715FC4B1CBEFB6C00044118 /* Multimedia button click 193.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 193.mp3"; path = "Resources/Audio/Multimedia button click 193.mp3"; sourceTree = "<group>"; };
+		5715FC4C1CBEFB6C00044118 /* Multimedia button click 194.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 194.mp3"; path = "Resources/Audio/Multimedia button click 194.mp3"; sourceTree = "<group>"; };
+		5715FC4F1CBEFBAA00044118 /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
+		5715FC531CBEFD7C00044118 /* Multimedia button click 158.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 158.mp3"; path = "Resources/Audio/Multimedia button click 158.mp3"; sourceTree = "<group>"; };
+		5715FC571CBEFDDA00044118 /* Multimedia button click 54.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 54.mp3"; path = "Resources/Audio/Multimedia button click 54.mp3"; sourceTree = "<group>"; };
 		5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerOfThemes.swift; sourceTree = "<group>"; };
 		574880EF1C89EEF000A3806F /* Groceries.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Groceries.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		574880F21C89EEF100A3806F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -104,6 +126,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5715FC431CBEED3700044118 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5715FC441CBEED3D00044118 /* Audio */,
+				5715FC4F1CBEFBAA00044118 /* Audio.swift */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		5715FC441CBEED3D00044118 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				5715FC451CBEED5400044118 /* Beep short 07.mp3 */,
+				5715FC461CBEED5400044118 /* Beep short 14.mp3 */,
+				5715FC471CBEED5400044118 /* Beep short 16.mp3 */,
+				5715FC571CBEFDDA00044118 /* Multimedia button click 54.mp3 */,
+				5715FC531CBEFD7C00044118 /* Multimedia button click 158.mp3 */,
+				5715FC4B1CBEFB6C00044118 /* Multimedia button click 193.mp3 */,
+				5715FC4C1CBEFB6C00044118 /* Multimedia button click 194.mp3 */,
+			);
+			name = Audio;
+			sourceTree = "<group>";
+		};
 		574880E61C89EEF000A3806F = {
 			isa = PBXGroup;
 			children = (
@@ -128,6 +173,7 @@
 		574880F11C89EEF000A3806F /* productGroceries */ = {
 			isa = PBXGroup;
 			children = (
+				5715FC431CBEED3700044118 /* Resources */,
 				574881001C89EEF100A3806F /* Info.plist */,
 				574880F21C89EEF100A3806F /* AppDelegate.swift */,
 				57B215B11C91FB2C004B86A2 /* ControllerOfCategories.swift */,
@@ -277,8 +323,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5715FC581CBEFDDA00044118 /* Multimedia button click 54.mp3 in Resources */,
+				5715FC541CBEFD7C00044118 /* Multimedia button click 158.mp3 in Resources */,
+				5715FC4E1CBEFB6C00044118 /* Multimedia button click 194.mp3 in Resources */,
 				5714B8631C9DC37900B4FEC7 /* LaunchScreen.storyboard in Resources */,
+				5715FC4D1CBEFB6C00044118 /* Multimedia button click 193.mp3 in Resources */,
 				574880FC1C89EEF100A3806F /* Assets.xcassets in Resources */,
+				5715FC491CBEED5400044118 /* Beep short 14.mp3 in Resources */,
+				5715FC481CBEED5400044118 /* Beep short 07.mp3 in Resources */,
+				5715FC4A1CBEED5400044118 /* Beep short 16.mp3 in Resources */,
 				574880FA1C89EEF100A3806F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +340,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5715FC591CBEFDDA00044118 /* Multimedia button click 54.mp3 in Resources */,
+				5715FC551CBEFD7C00044118 /* Multimedia button click 158.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +349,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5715FC5A1CBEFDDA00044118 /* Multimedia button click 54.mp3 in Resources */,
+				5715FC561CBEFD7C00044118 /* Multimedia button click 158.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +367,7 @@
 				57A159C41C90F4CE0031036F /* Data.swift in Sources */,
 				57124C4D1CBC3768000F2B0E /* GenericControllerOfPickerOfFont.swift in Sources */,
 				57124C4E1CBC3768000F2B0E /* GenericControllerOfSettings.swift in Sources */,
+				5715FC501CBEFBAA00044118 /* Audio.swift in Sources */,
 				57A159BC1C90981C0031036F /* ControllerOfItems.swift in Sources */,
 				574880F31C89EEF100A3806F /* AppDelegate.swift in Sources */,
 				5730C8641C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */,
@@ -330,6 +388,7 @@
 				5730C8651C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */,
 				5748810A1C89EEF100A3806F /* productGroceriesTests.swift in Sources */,
 				57A159C11C90B1C90031036F /* ControllerOfSummary.swift in Sources */,
+				5715FC511CBEFBAA00044118 /* Audio.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +400,7 @@
 				574881151C89EEF100A3806F /* productGroceriesUITests.swift in Sources */,
 				5730C8661C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */,
 				57A159C21C90B1C90031036F /* ControllerOfSummary.swift in Sources */,
+				5715FC521CBEFBAA00044118 /* Audio.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

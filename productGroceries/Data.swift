@@ -55,6 +55,7 @@ class Data : NSObject
             case Categories, Items
             
             case SettingsBackgroundColor                        = "settings-background"
+            case SettingsAudioOn                                = "settings-audio-on"
             case SettingsSelectionColor                         = "settings-selection-color"
             case SettingsSelectionColorOpacity                  = "settings-selection-color-opacity"
             
@@ -93,7 +94,6 @@ class Data : NSObject
         }
         
         
-        private static let defaultFont:UIFont = UIFont(name:"Helvetica",size:UIFont.labelFontSize())!
         
         private class func itemsKey(category:String) -> String {
             return "category:"+category
@@ -131,10 +131,14 @@ class Data : NSObject
                     
                     let update              = { (newItem:NSManagedObject) in
                         if addQuantity {
-                            item.quantity += newItem.valueForKey("quantity") as? Int ?? 0
+                            var quantity = newItem.valueForKey("quantity") as? Int ?? 0
+                            if quantity < 0 {
+                                quantity = 0
+                            }
                             if item.quantity < 0 {
                                 item.quantity = 0
                             }
+                            item.quantity += quantity
                         }
                         set(newItem)
                         try newItem.managedObjectContext?.save()
@@ -263,7 +267,7 @@ class Data : NSObject
                 
                 do {
                     let result          = try AppDelegate.managedObjectContext.executeFetchRequest(request)
-                    print(result)
+//                    print(result)
                     
                     var anItem:Item = Item(name:"",category:"",quantity:0,note:"")
                     
@@ -540,39 +544,57 @@ class Data : NSObject
         
         
         
-        class func settingsGetCategoriesFont(defaultValue:UIFont = Data.Manager.defaultFont) -> UIFont
+        class func settingsGetCategoriesFont(defaultValue:UIFont? = nil) -> UIFont
         {
-            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:defaultValue.familyName), size:defaultValue.pointSize) {
+            var defaultValue = defaultValue
+            
+            if defaultValue == nil {
+                defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+            }
+            
+            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:defaultValue!.familyName), size:defaultValue!.pointSize) {
                 return result
             }
             
-            return defaultValue.fontWithSize(UIFont.labelFontSize())
+            return defaultValue!
         }
         
-        class func settingsGetItemsFont(defaultValue:UIFont = Data.Manager.defaultFont) -> UIFont
+        class func settingsGetItemsFont(defaultValue:UIFont? = nil) -> UIFont
         {
             if settingsGetBoolForKey(.SettingsTabItemsFontSameAsCategories) {
                 return settingsGetCategoriesFont()
             }
             
-            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:defaultValue.familyName), size:defaultValue.pointSize) {
+            var defaultValue = defaultValue
+            
+            if defaultValue == nil {
+                defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            }
+            
+            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:defaultValue!.familyName), size:defaultValue!.pointSize) {
                 return result
             }
             
-            return defaultValue
+            return defaultValue!
         }
         
-        class func settingsGetItemsQuantityFont(defaultValue:UIFont = Data.Manager.defaultFont) -> UIFont
+        class func settingsGetItemsQuantityFont(defaultValue:UIFont? = nil) -> UIFont
         {
             if settingsGetBoolForKey(.SettingsTabItemsQuantityFontSameAsItems) {
                 return settingsGetItemsFont()
             }
             
-            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:defaultValue.familyName), size:defaultValue.pointSize) {
+            var defaultValue = defaultValue
+            
+            if defaultValue == nil {
+                defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            }
+            
+            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:defaultValue!.familyName), size:defaultValue!.pointSize) {
                 return result
             }
             
-            return defaultValue
+            return defaultValue!
         }
         
         
@@ -863,7 +885,8 @@ class Data : NSObject
             
             
             
-            if NOT(settingsExist("Default")) {
+            do
+            {
                 
                 settingsUse                                 ("Default")
                 
@@ -901,7 +924,8 @@ class Data : NSObject
             
             
             
-            if NOT(settingsExist("Chalkboard")) {
+            do
+            {
                 settingsUse                                 ("Chalkboard")
                 
                 settingsSetThemesRangeFromColor             (UIColor(hue:0.40,brightness:0.83))
@@ -936,6 +960,42 @@ class Data : NSObject
             }
             
 
+            do
+            {
+                settingsUse                                 ("Honey")
+                
+                settingsSetThemesRangeFromColor             (UIColor(hue:0.10,brightness:1.00))
+                settingsSetThemesRangeToColor               (UIColor(hue:0.13,brightness:1.00))
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabThemesSaturation)
+                settingsSetThemeWithName                    ("Range")
+                
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
+                settingsSetBool                             (true                                               ,forKey:.SettingsTabCategoriesEmphasize)
+                settingsSetString                           ("Noteworthy-Bold"                                  ,forKey:.SettingsTabCategoriesFont)
+                settingsSetColor                            (UIColor(hue:0.06,saturation:1.00,brightness:1.00)  ,forKey:.SettingsTabCategoriesTextColor)
+                
+                settingsSetString                           ("Noteworthy-Bold"                                  ,forKey:.SettingsTabItemsFont)
+                settingsSetColor                            (UIColor(hue:0.10,saturation:0.40,brightness:1.00)  ,forKey:.SettingsTabItemsTextColor)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
+                
+                settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabItemsRowOddOpacity)
+                settingsSetFloat                            (0.20                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.10,saturation:0.40,brightness:1.00)  ,forKey:.SettingsTabItemsQuantityColorText)
+                settingsSetString                           ("Noteworthy-Bold"                                  ,forKey:.SettingsTabItemsQuantityFont)
+                settingsSetColor                            (UIColor(hue:0.05,saturation:1.00,brightness:0.10)  ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetFloat                            (0.10                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.80,brightness:1.00)  ,forKey:.SettingsSelectionColor)
+                settingsSetFloat                            (0.50                                               ,forKey:.SettingsSelectionColorOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.08,brightness:1.00)                  ,forKey:.SettingsBackgroundColor)
+                
+                settingsSave                                ("Honey")
+            }
+            
+            
         }
         
         class func reset()
