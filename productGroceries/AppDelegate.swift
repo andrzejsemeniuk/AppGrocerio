@@ -40,6 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         AppDelegate.__instance      = self
         
+        Audio.initialize()
+        
 //        Data.Manager.itemRemoveAll()
 //        Data.Manager.createCategories()
 //        Data.Manager.clearHelpFlags()

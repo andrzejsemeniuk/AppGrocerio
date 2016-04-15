@@ -59,12 +59,17 @@ class Data : NSObject
             case SettingsSelectionColor                         = "settings-selection-color"
             case SettingsSelectionColorOpacity                  = "settings-selection-color-opacity"
             
+            case SettingsTabSettingsHeaderTextColor             = "settings-header-text-color"
+            case SettingsTabSettingsFooterTextColor             = "settings-footer-text-color"
+
             case SettingsTabCategoriesUppercase                 = "settings-categories-uppercase"
             case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
             case SettingsTabCategoriesFont                      = "settings-categories-font"
+            case SettingsTabCategoriesFontGrowth                = "settings-categories-font-growth"
             case SettingsTabCategoriesTheme                     = "settings-categories-theme"
             case SettingsTabCategoriesTextColor                 = "settings-categories-text-color"
             case SettingsTabItemsFont                           = "settings-items-font"
+            case SettingsTabItemsFontGrowth                     = "settings-items-font-growth"
             case SettingsTabItemsUppercase                      = "settings-items-uppercase"
             case SettingsTabItemsEmphasize                      = "settings-items-emphasize"
             case SettingsTabItemsFontSameAsCategories           = "settings-items-font-as-categories"
@@ -77,6 +82,7 @@ class Data : NSObject
             case SettingsTabItemsQuantityColorText              = "settings-items-quantity-color-text"
             case SettingsTabItemsQuantityColorTextSameAsItems   = "settings-items-quantity-color-text-as-items"
             case SettingsTabItemsQuantityFont                   = "settings-items-quantity-font"
+            case SettingsTabItemsQuantityFontGrowth             = "settings-items-quantity-font-growth"
             case SettingsTabItemsQuantityFontSameAsItems        = "settings-items-quantity-font-as-items"
             
             case SettingsTabThemesSolidColor                    = "settings-themes-solid-color"
@@ -428,6 +434,14 @@ class Data : NSObject
             NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
         }
         
+        class func settingsGetCGFloatForKey(key:Key, defaultValue:Float = 0) -> CGFloat
+        {
+            if let result = settingsGetCurrent()["f:"+key.rawValue] as? Float {
+                return CGFloat(result)
+            }
+            return CGFloat(defaultValue)
+        }
+        
         class func settingsGetFloatForKey(key:Key, defaultValue:Float = 0) -> Float
         {
             if let result = settingsGetCurrent()["f:"+key.rawValue] as? Float {
@@ -552,7 +566,9 @@ class Data : NSObject
                 defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             }
             
-            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:defaultValue!.familyName), size:defaultValue!.pointSize) {
+            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:defaultValue!.familyName),
+                                   size:defaultValue!.pointSize + settingsGetCGFloatForKey(.SettingsTabCategoriesFontGrowth))
+            {
                 return result
             }
             
@@ -571,7 +587,9 @@ class Data : NSObject
                 defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             }
             
-            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:defaultValue!.familyName), size:defaultValue!.pointSize) {
+            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:defaultValue!.familyName),
+                                   size:defaultValue!.pointSize + settingsGetCGFloatForKey(.SettingsTabItemsFontGrowth))
+            {
                 return result
             }
             
@@ -590,7 +608,9 @@ class Data : NSObject
                 defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             }
             
-            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:defaultValue!.familyName), size:defaultValue!.pointSize) {
+            if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:defaultValue!.familyName),
+                                   size:defaultValue!.pointSize + settingsGetCGFloatForKey(.SettingsTabItemsQuantityFontGrowth))
+            {
                 return result
             }
             
@@ -742,7 +762,7 @@ class Data : NSObject
             
             let defaults = NSUserDefaults.standardUserDefaults()
             
-            if !defaults.boolForKey(key) {
+            if false && !defaults.boolForKey(key) {
                 defaults.setBool(true,forKey:key)
                 
                 let alert = UIAlertController(title:"Categories", message:"Welcome!  Add new categories by tapping on the plus button "
@@ -770,7 +790,7 @@ class Data : NSObject
             if !defaults.boolForKey(key) {
                 defaults.setBool(true,forKey:key)
                 
-                let alert = UIAlertController(title:"Items", message:"Tap on the right side of an item to increase its quantity.  Tap on the left side to decrease its quantity.", preferredStyle:.Alert)
+                let alert = UIAlertController(title:"Items", message:"Tap on the right side of an item to add quantity.  Tap on the left side to subtract quantity.", preferredStyle:.Alert)
                 
                 let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
                     action in
@@ -792,7 +812,7 @@ class Data : NSObject
             
             let defaults = NSUserDefaults.standardUserDefaults()
             
-            if !defaults.boolForKey(key) {
+            if false && !defaults.boolForKey(key) {
                 defaults.setBool(true,forKey:key)
                 
                 let alert = UIAlertController(title:"Summary", message:"This page presents a list of items you selected in categories.  Remove an item by swiping from right to left.", preferredStyle:.Alert)
@@ -856,80 +876,16 @@ class Data : NSObject
             // DEFAULT
             
             
-            //            case SettingsTabCategoriesUppercase                 = "settings-categories-uppercase"
-            //            case SettingsTabCategoriesEmphasize                 = "settings-categories-emphasize"
-            //            case SettingsTabCategoriesFont                      = "settings-categories-font"
-            //            case SettingsTabCategoriesTheme                     = "settings-categories-theme"
-            //            case SettingsTabCategoriesTextColor                 = "settings-categories-text-color"
-            //            case SettingsTabItemsFont                           = "settings-items-font"
-            //            case SettingsTabItemsUppercase                      = "settings-items-uppercase"
-            //            case SettingsTabItemsEmphasize                      = "settings-items-emphasize"
-            //            case SettingsTabItemsFontSameAsCategories           = "settings-items-font-as-categories"
-            //            case SettingsTabItemsTextColor                      = "settings-items-text-color"
-            //            case SettingsTabItemsTextColorSameAsCategories      = "settings-items-text-color-as-categories"
-            //            case SettingsTabItemsRowOddOpacity                  = "settings-items-row-odd-alpha"
-            //            case SettingsTabItemsRowEvenOpacity                 = "settings-items-row-even-alpha"
-            //            case SettingsTabItemsQuantityColorBackground        = "settings-items-quantity-color-bg"
-            //            case SettingsTabItemsQuantityColorBackgroundOpacity = "settings-items-quantity-color-bg-opacity"
-            //            case SettingsTabItemsQuantityColorText              = "settings-items-quantity-color-text"
-            //            case SettingsTabItemsQuantityColorTextSameAsItems   = "settings-items-quantity-color-text-as-items"
-            //            case SettingsTabItemsQuantityFont                   = "settings-items-quantity-font"
-            //            case SettingsTabItemsQuantityFontSameAsItems        = "settings-items-quantity-font-as-items"
-            //
-            //            case SettingsTabThemesSolidColor                    = "settings-themes-solid-color"
-            //            case SettingsTabThemesRangeFromColor                = "settings-themes-range-color-from"
-            //            case SettingsTabThemesRangeToColor                  = "settings-themes-range-color-to"
-            //            case SettingsTabThemesCustomColors                  = "settings-themes-custom-colors"
-            //            case SettingsTabThemesName                          = "settings-themes-name"
-            //            case SettingsTabThemesSaturation                    = "settings-themes-saturation"
             
-            
-            
-            do
-            {
-                
-                settingsUse                                 ("Default")
-                
-                settingsSetColor                            (UIColor(hue:0.4)                                   ,forKey:.SettingsBackgroundColor)
-                
-                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
-                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesEmphasize)
-                settingsSetString                           ("Helvetica-Bold"                                   ,forKey:.SettingsTabCategoriesFont)
-                settingsSetColor                            (UIColor(hue:0,saturation:1,brightness:1)           ,forKey:.SettingsTabCategoriesTextColor)
-                
-                //            settingsSetThemesSolidColor                 (UIColor.whiteColor())
-                settingsSetThemeWithName                    ("Plain")
-                
-                
-                settingsSetString                           ("Helvetica"                                        ,forKey:.SettingsTabItemsFont)
-                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
-                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
-                //            settingsSetBool                             (true                                               ,forKey:.SettingsTabItemsFontSameAsCategories)
-                settingsSetColor                            (UIColor(hue:0.0,saturation:1,brightness:1)         ,forKey:.SettingsTabItemsTextColor)
-                //            settingsSetBool                             (true                                               ,forKey:.SettingsTabItemsTextColorSameAsCategories)
-                settingsSetFloat                            (0.30                                               ,forKey:.SettingsTabItemsRowOddOpacity)
-                settingsSetFloat                            (0.70                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
-                
-                settingsSetColor                            (UIColor(hue:0,saturation:1,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorBackground)
-                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
-                settingsSetColor                            (UIColor(hue:0,saturation:0,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorText)
-                //            settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsQuantityColorTextSameAsItems)
-                settingsSetString                           ("Helvetica"                                        ,forKey:.SettingsTabItemsQuantityFont)
-                //            settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsQuantityFontSameAsItems)
-                
-                settingsSave                                ("Default")
-            }
-
-            
-            
+            let settings0 = settingsGetLastName()
             
             
             do
             {
                 settingsUse                                 ("Chalkboard")
                 
-                settingsSetThemesRangeFromColor             (UIColor(hue:0.40,brightness:0.83))
-                settingsSetThemesRangeToColor               (UIColor(hue:0.40,brightness:0.85))
+                settingsSetThemesRangeFromColor             (UIColor(hue:0.40,brightness:0.73))
+                settingsSetThemesRangeToColor               (UIColor(hue:0.40,brightness:0.75))
                 settingsSetFloat                            (0.90                                               ,forKey:.SettingsTabThemesSaturation)
                 settingsSetThemeWithName                    ("Range")
                 
@@ -949,13 +905,15 @@ class Data : NSObject
                 settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabItemsQuantityColorText)
                 settingsSetString                           ("Chalkduster"                                      ,forKey:.SettingsTabItemsQuantityFont)
                 settingsSetColor                            (UIColor(hue:0.4,saturation:1,brightness:0.1)       ,forKey:.SettingsTabItemsQuantityColorBackground)
-                settingsSetFloat                            (0.10                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                settingsSetFloat                            (0.20                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
 
                 settingsSetColor                            (UIColor(hue:0.30,saturation:0.80,brightness:1.00)  ,forKey:.SettingsSelectionColor)
                 settingsSetFloat                            (0.50                                               ,forKey:.SettingsSelectionColorOpacity)
 
-                settingsSetColor                            (UIColor(hue:0.40,brightness:0.80)                  ,forKey:.SettingsBackgroundColor)
-                
+                settingsSetColor                            (UIColor(hue:0.40,brightness:0.60)                  ,forKey:.SettingsBackgroundColor)
+                settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
+                settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
+
                 settingsSave                                ("Chalkboard")
             }
             
@@ -984,18 +942,192 @@ class Data : NSObject
                 
                 settingsSetColor                            (UIColor(hue:0.10,saturation:0.40,brightness:1.00)  ,forKey:.SettingsTabItemsQuantityColorText)
                 settingsSetString                           ("Noteworthy-Bold"                                  ,forKey:.SettingsTabItemsQuantityFont)
-                settingsSetColor                            (UIColor(hue:0.05,saturation:1.00,brightness:0.10)  ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetColor                            (UIColor(hue:0.15,saturation:1.00,brightness:0.30)  ,forKey:.SettingsTabItemsQuantityColorBackground)
                 settingsSetFloat                            (0.10                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
                 
                 settingsSetColor                            (UIColor(hue:0.00,saturation:0.80,brightness:1.00)  ,forKey:.SettingsSelectionColor)
                 settingsSetFloat                            (0.50                                               ,forKey:.SettingsSelectionColorOpacity)
                 
                 settingsSetColor                            (UIColor(hue:0.08,brightness:1.00)                  ,forKey:.SettingsBackgroundColor)
-                
+                settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
+                settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
+
                 settingsSave                                ("Honey")
             }
             
             
+            do
+            {
+                let growth:Float = 4
+                
+                settingsUse                                 ("Pink")
+                
+                settingsSetThemesRangeFromColor             (UIColor(hue:0.90,brightness:1.00))
+                settingsSetThemesRangeToColor               (UIColor(hue:0.93,brightness:1.00))
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabThemesSaturation)
+                settingsSetThemeWithName                    ("Range")
+                
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
+                settingsSetBool                             (true                                               ,forKey:.SettingsTabCategoriesEmphasize)
+                settingsSetString                           ("SnellRoundhand-Black"                             ,forKey:.SettingsTabCategoriesFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabCategoriesFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.85,saturation:0.30,brightness:1.00)  ,forKey:.SettingsTabCategoriesTextColor)
+                
+                settingsSetString                           ("SnellRoundhand-Bold"                              ,forKey:.SettingsTabItemsFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabItemsFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.80,saturation:0.30,brightness:1.00)  ,forKey:.SettingsTabItemsTextColor)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
+                
+                settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabItemsRowOddOpacity)
+                settingsSetFloat                            (0.20                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.80,saturation:0.20,brightness:1.00)  ,forKey:.SettingsTabItemsQuantityColorText)
+                settingsSetString                           ("SnellRoundhand-Black"                             ,forKey:.SettingsTabItemsQuantityFont)
+                settingsSetFloat                            (growth + 1                                         ,forKey:.SettingsTabItemsQuantityFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.85,saturation:1.00,brightness:0.50)  ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetFloat                            (0.50                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.51,saturation:0.20,brightness:1.00)  ,forKey:.SettingsSelectionColor)
+                settingsSetFloat                            (0.30                                               ,forKey:.SettingsSelectionColorOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.90,saturation:1.00,brightness:1.00)  ,forKey:.SettingsBackgroundColor)
+                settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
+                settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
+                
+                settingsSave                                ("Pink")
+            }
+            
+
+            do
+            {
+                let growth:Float = 4
+                
+                settingsUse                                 ("Sky")
+                
+                settingsSetThemesRangeFromColor             (UIColor(hue:0.57,brightness:1.00))
+                settingsSetThemesRangeToColor               (UIColor(hue:0.60,brightness:1.00))
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabThemesSaturation)
+                settingsSetThemeWithName                    ("Range")
+                
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesEmphasize)
+                settingsSetString                           ("GillSans-LightItalic"                             ,forKey:.SettingsTabCategoriesFont)
+                settingsSetFloat                            (growth + 1                                         ,forKey:.SettingsTabCategoriesFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.65,saturation:0.30,brightness:1.00)  ,forKey:.SettingsTabCategoriesTextColor)
+                
+                settingsSetString                           ("GillSans-Italic"                                  ,forKey:.SettingsTabItemsFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabItemsFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.60,saturation:0.30,brightness:1.00)  ,forKey:.SettingsTabItemsTextColor)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
+                
+                settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabItemsRowOddOpacity)
+                settingsSetFloat                            (0.20                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.60,saturation:0.20,brightness:1.00)  ,forKey:.SettingsTabItemsQuantityColorText)
+                settingsSetString                           ("GillSans-BoldItalic"                              ,forKey:.SettingsTabItemsQuantityFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabItemsQuantityFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.58,saturation:1.00,brightness:0.80)  ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetFloat                            (0.70                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.06,saturation:1.00,brightness:1.00)  ,forKey:.SettingsSelectionColor)
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsSelectionColorOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.60,saturation:0.80,brightness:1.00)  ,forKey:.SettingsBackgroundColor)
+                settingsSetColor                            (UIColor(hue:0.65,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
+                settingsSetColor                            (UIColor(hue:0.65,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
+                
+                settingsSave                                ("Sky")
+            }
+            
+            
+            do
+            {
+                let growth:Float = 1
+                
+                settingsUse                                 ("Charcoal")
+                
+                settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabThemesSaturation)
+                settingsSetThemeWithName                    ("Charcoal")
+                
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesEmphasize)
+                settingsSetString                           ("GillSans"                                         ,forKey:.SettingsTabCategoriesFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabCategoriesFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.80)  ,forKey:.SettingsTabCategoriesTextColor)
+                
+                settingsSetString                           ("GillSans-Italic"                                  ,forKey:.SettingsTabItemsFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabItemsFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.90)  ,forKey:.SettingsTabItemsTextColor)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
+                
+                settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabItemsRowOddOpacity)
+                settingsSetFloat                            (0.40                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.00)  ,forKey:.SettingsTabItemsQuantityColorText)
+                settingsSetString                           ("GillSans"                                         ,forKey:.SettingsTabItemsQuantityFont)
+                settingsSetFloat                            (growth + 1                                         ,forKey:.SettingsTabItemsQuantityFontGrowth)
+                settingsSetColor                            (UIColor(hue:0.10,saturation:1.00,brightness:1.00)  ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.00,saturation:1.00,brightness:1.00)  ,forKey:.SettingsSelectionColor)
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsSelectionColorOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.30)  ,forKey:.SettingsBackgroundColor)
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.60)  ,forKey:.SettingsTabSettingsHeaderTextColor)
+                settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.60)  ,forKey:.SettingsTabSettingsFooterTextColor)
+                
+                settingsSave                                ("Charcoal")
+            }
+            
+            
+            do
+            {
+                let growth:Float = 0
+                
+                settingsUse                                 ("Default")
+                
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesEmphasize)
+                settingsSetString                           ("Helvetica-Bold"                                   ,forKey:.SettingsTabCategoriesFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabCategoriesFontGrowth)
+                settingsSetColor                            (UIColor(hue:0,saturation:1,brightness:1)           ,forKey:.SettingsTabCategoriesTextColor)
+                
+                settingsSetThemesSolidColor                 (UIColor(hue:0.14))
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabThemesSaturation)
+                settingsSetThemeWithName                    ("Solid")
+                
+                
+                settingsSetString                           ("Helvetica"                                        ,forKey:.SettingsTabItemsFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabItemsFontGrowth)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsUppercase)
+                settingsSetBool                             (false                                              ,forKey:.SettingsTabItemsEmphasize)
+                settingsSetColor                            (UIColor(hue:0.0,saturation:1,brightness:1)         ,forKey:.SettingsTabItemsTextColor)
+                settingsSetFloat                            (0.30                                               ,forKey:.SettingsTabItemsRowOddOpacity)
+                settingsSetFloat                            (0.70                                               ,forKey:.SettingsTabItemsRowEvenOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0,saturation:1,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorBackground)
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
+                settingsSetColor                            (UIColor(hue:0,saturation:0,brightness:1)           ,forKey:.SettingsTabItemsQuantityColorText)
+                settingsSetString                           ("Helvetica-Bold"                                   ,forKey:.SettingsTabItemsQuantityFont)
+                settingsSetFloat                            (growth                                             ,forKey:.SettingsTabItemsQuantityFontGrowth)
+                
+                settingsSetColor                            (UIColor(hue:0.30,saturation:1.00,brightness:1.00)  ,forKey:.SettingsSelectionColor)
+                settingsSetFloat                            (1.00                                               ,forKey:.SettingsSelectionColorOpacity)
+                
+                settingsSetColor                            (UIColor(hue:0.50,saturation:0.60,brightness:1.00)  ,forKey:.SettingsBackgroundColor)
+                settingsSetColor                            (UIColor(hue:0.55,saturation:0.70,brightness:0.75)  ,forKey:.SettingsTabSettingsHeaderTextColor)
+                settingsSetColor                            (UIColor(hue:0.55,saturation:0.70,brightness:0.75)  ,forKey:.SettingsTabSettingsFooterTextColor)
+
+                settingsSave                                ("Default")
+            }
+            
+
+            if 0 < settings0.length {
+                settingsUse(settings0)
+            }
         }
         
         class func reset()

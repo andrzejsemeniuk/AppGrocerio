@@ -130,7 +130,6 @@
 			isa = PBXGroup;
 			children = (
 				5715FC441CBEED3D00044118 /* Audio */,
-				5715FC4F1CBEFBAA00044118 /* Audio.swift */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -173,9 +172,9 @@
 		574880F11C89EEF000A3806F /* productGroceries */ = {
 			isa = PBXGroup;
 			children = (
-				5715FC431CBEED3700044118 /* Resources */,
 				574881001C89EEF100A3806F /* Info.plist */,
 				574880F21C89EEF100A3806F /* AppDelegate.swift */,
+				5715FC4F1CBEFBAA00044118 /* Audio.swift */,
 				57B215B11C91FB2C004B86A2 /* ControllerOfCategories.swift */,
 				57A159BB1C90981C0031036F /* ControllerOfItems.swift */,
 				5759A10F1C98BEC200C788A3 /* ControllerOfSettings.swift */,
@@ -185,6 +184,7 @@
 				574880FB1C89EEF100A3806F /* Assets.xcassets */,
 				5714B8611C9DC37900B4FEC7 /* LaunchScreen.storyboard */,
 				574880F81C89EEF100A3806F /* Main.storyboard */,
+				5715FC431CBEED3700044118 /* Resources */,
 				57B408C01CBC138C00FCD6FA /* TGFSwift */,
 			);
 			path = productGroceries;

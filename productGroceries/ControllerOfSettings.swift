@@ -450,7 +450,10 @@ class SettingsController : GenericControllerOfSettings
     
     override func viewWillAppear(animated: Bool)
     {
-        tableView.backgroundColor = Data.Manager.settingsGetBackgroundColor()
+        tableView.backgroundColor   = Data.Manager.settingsGetBackgroundColor()
+        
+        colorForHeaderText          = Data.Manager.settingsGetColorForKey(.SettingsTabSettingsHeaderTextColor,defaultValue:UIColor.grayColor())
+        colorForFooterText          = Data.Manager.settingsGetColorForKey(.SettingsTabSettingsFooterTextColor,defaultValue:UIColor.grayColor())
         
         super.viewWillAppear(animated)
     }

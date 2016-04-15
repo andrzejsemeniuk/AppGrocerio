@@ -13,6 +13,11 @@ public class Audio
 {
     static var player:AVAudioPlayer? = nil
     
+    class func initialize()
+    {
+        play("Beep short 07",ofType:"mp3")
+    }
+    
     class func play(filename:String, ofType type:String,volume:Float = 1, pan:Float = 0, rate:Float = 1) -> AVAudioPlayer?
     {
         if Data.Manager.settingsGetBoolForKey(.SettingsAudioOn,defaultValue:true) {
@@ -58,21 +63,21 @@ public class Audio
     
     class func playItemDecrement() -> AVAudioPlayer?
     {
-        player = play("Multimedia button click 193",ofType:"mp3")
+        player = play("Multimedia button click 194",ofType:"mp3")
         
         return player
     }
     
     class func playItemIncrement() -> AVAudioPlayer?
     {
-        player = play("Multimedia button click 194",ofType:"mp3")
+        player = play("Multimedia button click 158",ofType:"mp3")
         
         return player
     }
     
     class func playItemCrossOut() -> AVAudioPlayer?
     {
-        player = play("Multimedia button click 158",ofType:"mp3")
+        player = play("Multimedia button click 193",ofType:"mp3")
         
         return player
     }
