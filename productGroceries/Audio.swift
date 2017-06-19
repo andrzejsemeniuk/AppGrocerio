@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 
-public class Audio
+open class Audio
 {
     static var player:AVAudioPlayer? = nil
     
@@ -18,16 +18,16 @@ public class Audio
         play("Beep short 07",ofType:"mp3")
     }
     
-    class func play(filename:String, ofType type:String,volume:Float = 1, pan:Float = 0, rate:Float = 1) -> AVAudioPlayer?
+    class func play(_ filename:String, ofType type:String,volume:Float = 1, pan:Float = 0, rate:Float = 1) -> AVAudioPlayer?
     {
         if Data.Manager.settingsGetBoolForKey(.SettingsAudioOn,defaultValue:true) {
             do
             {
-                if let path             = NSBundle.mainBundle().pathForResource(filename,ofType:type) {
+                if let path             = Bundle.main.path(forResource: filename,ofType:type) {
                     
-                    let url             = NSURL.fileURLWithPath(path)
+                    let url             = URL(fileURLWithPath: path)
                     
-                    let player          = try AVAudioPlayer(contentsOfURL:url)
+                    let player          = try AVAudioPlayer(contentsOf:url)
                     
                     player.volume       = volume
                     player.pan          = pan
@@ -50,9 +50,9 @@ public class Audio
         return nil
     }
     
-    class func play(filename:String) -> AVAudioPlayer?
+    class func play(_ filename:String) -> AVAudioPlayer?
     {
-        let components          = filename.componentsSeparatedByString(".")
+        let components          = filename.components(separatedBy: ".")
         
         if let prefix = components.first, let suffix = components.last {
             return play(prefix,ofType:suffix)

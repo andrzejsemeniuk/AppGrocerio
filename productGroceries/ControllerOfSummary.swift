@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import TGF
 
 
 class ControllerOfSummary : UITableViewController, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate
@@ -27,7 +28,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         
         tableView.delegate      = self
         
-        tableView.separatorStyle = .None
+        tableView.separatorStyle = .none
 
         
         
@@ -40,7 +41,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
                 items = [UIBarButtonItem]()
             }
             
-            buttonLoad = UIBarButtonItem(title:"Add", style:.Plain, target:self, action: #selector(ControllerOfSummary.add))
+            buttonLoad = UIBarButtonItem(title:"Add", style:.plain, target:self, action: #selector(ControllerOfSummary.add))
             
             items! += [
                 buttonLoad
@@ -61,7 +62,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             }
             
             items! += [
-                UIBarButtonItem(barButtonSystemItem:.Save, target:self, action: #selector(ControllerOfSummary.save))
+                UIBarButtonItem(barButtonSystemItem:.save, target:self, action: #selector(ControllerOfSummary.save))
             ]
             
             navigationItem.rightBarButtonItems = items
@@ -109,9 +110,9 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
 
     func save()
     {
-        let alert = UIAlertController(title:"Save Grocery List", message:"Specify name of grocery list:", preferredStyle:.Alert)
+        let alert = UIAlertController(title:"Save Grocery List", message:"Specify name of grocery list:", preferredStyle:.alert)
         
-        alert.addTextFieldWithConfigurationHandler() {
+        alert.addTextField() {
             field in
             // called to configure text field before displayed
             if self.lastGroceryListName != nil {
@@ -122,10 +123,10 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             }
         }
         
-        let actionSave = UIAlertAction(title:"Save", style:.Default, handler: {
+        let actionSave = UIAlertAction(title:"Save", style:.default, handler: {
             action in
             
-            if let fields = alert.textFields, text = fields[0].text?.trimmed() {
+            if let fields = alert.textFields, let text = fields[0].text?.trimmed() {
                 if text != self.CLEAR {
                     if Data.Manager.summarySave(text) {
                         self.lastGroceryListName = text
@@ -134,14 +135,14 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             }
         })
         
-        let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
+        let actionCancel = UIAlertAction(title:"Cancel", style:.cancel, handler: {
             action in
         })
         
         alert.addAction(actionSave)
         alert.addAction(actionCancel)
         
-        AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
+        AppDelegate.rootViewController.present(alert, animated:true, completion: {
             print("completed showing add alert")
         })
     }
@@ -155,21 +156,21 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         let list    = GenericControllerOfList()
         
         list.items  = [CLEAR] + Data.Manager.summaryList()
-        list.items  = list.items.sort()
+        list.items  = list.items.sorted()
         
 //        list.tableView.separatorStyle   = .SingleLineEtched
 
-        list.handlerForDidSelectRowAtIndexPath = { (controller:GenericControllerOfList,indexPath:NSIndexPath) -> Void in
+        list.handlerForDidSelectRowAtIndexPath = { controller, indexPath in
             let row         = indexPath.row
             let selection   = list.items[row]
             if selection == self.CLEAR {
                 Data.Manager.summaryClear()
             }
             else {
-                Data.Manager.summaryAdd(selection)
+                _ = Data.Manager.summaryAdd(selection)
             }
 //            controller.dismissViewControllerAnimated(true, completion:nil)
-            controller.navigationController!.popViewControllerAnimated(true)
+            controller.navigationController!.popViewController(animated: true)
         }
 
         self.navigationController!.pushViewController(list,animated:true)
@@ -204,36 +205,36 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
 
     
     
-    func prepareForPopoverPresentation(popoverPresentationController: UIPopoverPresentationController)
+    func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController)
     {
         
     }
     
-    func adaptivePresentationStyleForPresentationController(controller:UIPresentationController) -> UIModalPresentationStyle
+    func adaptivePresentationStyle(for controller:UIPresentationController) -> UIModalPresentationStyle
     {
-        return .Popover
+        return .popover
     }
     
     
     
-    override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
+    override func numberOfSections   (in tableView: UITableView) -> Int
     {
         return items.count
     }
     
-    override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    override func tableView                     (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return items[section].count
     }
     
-    override func tableView                     (tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    override func tableView                     (_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
         let result                  = UILabel()
         
         let text                    = items[section][0].category
         
         if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
-            result.text                 = text.uppercaseString
+            result.text                 = text.uppercased()
         }
         else {
             result.text                 = text
@@ -243,32 +244,32 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         result.font                 = Data.Manager.settingsGetCategoriesFont()
 
         if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
-            result.font = result.font.fontWithSize(result.font.pointSize+2)
+            result.font = result.font.withSize(result.font.pointSize+2)
         }
         
 
-        result.textAlignment        = .Center
+        result.textAlignment        = .center
 //        result.font                 = UIFont.systemFontOfSize(12, weight:2.0)
-        result.backgroundColor      = ControllerOfCategories.instance.colorForCategory(text)
+        result.backgroundColor      = ControllerOfCategories.instance.colorForCategory(category: text)
 //        result.textColor            = UIColor.whiteColor()
         
         return result
     }
     
-    override func tableView                     (tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
+    override func tableView                     (_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
         return 50
     }
     
-    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    override func tableView                     (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let item = items[indexPath.section][indexPath.row]
         
-        let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
+        let cell = UITableViewCell(style:.default,reuseIdentifier:nil)
         
         ItemsController.styleCell(cell,item:item,indexPath:indexPath)
 
-        cell.selectionStyle = .None
+        cell.selectionStyle = .none
 
         if let label = cell.textLabel
         {
@@ -276,7 +277,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             {
                 let s = NSMutableAttributedString(string:label.text!)
                 
-                let range = NSRange(location:0,length:s.string.startIndex.distanceTo(s.string.endIndex))
+                let range = NSRange(location:0,length:s.string.characters.distance(from: s.string.startIndex, to: s.string.endIndex))
                 
                 s.addAttribute(NSStrikethroughStyleAttributeName,
                                value:2,
@@ -288,7 +289,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             }
             else
             {
-                let views = ControllerOfCategories.instance.styleQuantity(cell,indexPath:indexPath,quantity:item.quantity)
+                _ = ControllerOfCategories.instance.styleQuantity(cell: cell,indexPath:indexPath,quantity:item.quantity)
             }
         }
 
@@ -298,7 +299,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     
     
-    func reload(updateTable:Bool = true)
+    func reload(_ updateTable:Bool = true)
     {
         items = Data.Manager.summary()
 
@@ -309,7 +310,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     
     
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         reload(true)
         
@@ -325,21 +326,21 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.delete) {
             // handle delete (by removing the data from your array and updating the tableview)
             
             let section     = indexPath.section
             let row         = indexPath.row
             let item        = items[section][row]
             Data.Manager.itemReset(item)
-            items[section].removeAtIndex(row)
+            items[section].remove(at: row)
             if items[section].count < 1 {
-                items.removeAtIndex(section)
+                items.remove(at: section)
             }
             reload(true)
 
@@ -353,7 +354,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         let section     = indexPath.section
         let row         = indexPath.row
@@ -365,15 +366,15 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             if lastTap.point.x < tableView.bounds.width*0.3 {
                 
                 if item.quantity == -1 {
-                    Audio.playItemDisappear()
+                    _ = Audio.playItemDisappear()
                     item.quantity = 0
                 }
                 else if 1 < item.quantity {
-                    Audio.playItemDecrement()
+                    _ = Audio.playItemDecrement()
                     item.quantity -= 1
                 }
                 else {
-                    Audio.playItemCrossOut()
+                    _ = Audio.playItemCrossOut()
                     item.quantity = -1
                 }
                 
@@ -381,7 +382,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             }
             else if lastTap.point.x > tableView.bounds.width*0.7 {
                 
-                Audio.playItemIncrement()
+                _ = Audio.playItemIncrement()
 
                 if item.quantity == -1 {
                     item.quantity = 1
@@ -398,17 +399,17 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
                 AppDelegate.tabBarController.selectedIndex = 0
                 
                 if let categories = AppDelegate.navigatorForCategories.viewControllers[0] as? ControllerOfCategories {
-                    AppDelegate.navigatorForCategories.popToRootViewControllerAnimated(false)
-                    categories.openItemsForCategory(item.category,name:item.name)
+                    AppDelegate.navigatorForCategories.popToRootViewController(animated: false)
+                    categories.openItemsForCategory(category: item.category,name:item.name)
                 }
             }
             
             if update {
                 Data.Manager.itemPut(item)
                 if item.quantity == 0 {
-                    items[section].removeAtIndex(row)
+                    items[section].remove(at: row)
                     if items[section].count < 1 {
-                        items.removeAtIndex(section)
+                        items.remove(at: section)
                     }
                 }
                 else {
@@ -423,11 +424,11 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
 
     
     
-    func gestureRecognizerShouldBegin(recognizer: UIGestureRecognizer) -> Bool
+    func gestureRecognizerShouldBegin(_ recognizer: UIGestureRecognizer) -> Bool
     {
-        let point = recognizer.locationInView(tableView)
+        let point = recognizer.location(in: tableView)
         
-        if let path = tableView.indexPathForRowAtPoint(point)
+        if let path = tableView.indexPathForRow(at: point)
         {
             lastTap = UITableViewTap(path:path, point:point)
         }
@@ -436,7 +437,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     }
     
     
-    func handleTap(recognizer:UIGestureRecognizer)
+    func handleTap(_ recognizer:UIGestureRecognizer)
     {
         // unused - we're not interested
     }

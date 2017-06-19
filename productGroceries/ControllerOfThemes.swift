@@ -14,13 +14,13 @@ class ControllerOfThemes : GenericControllerOfSettings
     
     override func viewDidLoad()
     {
-        tableView               = UITableView(frame:tableView.frame,style:.Grouped)
+        tableView               = UITableView(frame:tableView.frame,style:.grouped)
         
         tableView.dataSource    = self
         
         tableView.delegate      = self
         
-        tableView.separatorStyle = .None
+        tableView.separatorStyle = .none
         
         self.title              = "Theme"
         
@@ -56,15 +56,15 @@ class ControllerOfThemes : GenericControllerOfSettings
             
             let count = ControllerOfCategories.instance.categories.count
             
-            for var row in 0..<count {
+            for row in 0..<count {
                 
                 let ROW = row
                 
                 CATEGORIES.append(
-                    { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                        ControllerOfCategories.instance.styleCell(cell,indexPath:NSIndexPath(forRow:ROW,inSection:0))
+                    { (cell:UITableViewCell, indexPath:IndexPath) in
+                        ControllerOfCategories.instance.styleCell(cell: cell,indexPath:IndexPath(row:ROW, section:0))
                         
-                        cell.selectionStyle = .None
+                        cell.selectionStyle = .none
                 })
             }
             
@@ -73,20 +73,20 @@ class ControllerOfThemes : GenericControllerOfSettings
         
         
         let definePredefinedThemeWithName = { (name:String) -> Any in
-            return { (cell:UITableViewCell, indexPath:NSIndexPath) in
+            return { (cell:UITableViewCell, indexPath:IndexPath) in
                 if let label = cell.textLabel {
-                    cell.selectionStyle = .Default
+                    cell.selectionStyle = .default
                     label.text          = name
-                    self.addAction(indexPath) {
+                    self.addAction(indexPath: indexPath) {
                         Data.Manager.settingsSetThemeWithName(name)
                         self.reload()
                     }
                 }
                 if Data.Manager.settingsGetThemeName() == name {
-                    cell.accessoryType = .Checkmark
+                    cell.accessoryType = .checkmark
                 }
                 else {
-                    cell.accessoryType = .None
+                    cell.accessoryType = .none
                 }
             }
         }
@@ -101,7 +101,7 @@ class ControllerOfThemes : GenericControllerOfSettings
             [
                 "", //"PREDEFINED THEME SATURATION",
                 
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
+                { (cell:UITableViewCell, indexPath:IndexPath) in
 //                    let slider = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
 //                        Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
 //                    })
@@ -111,11 +111,11 @@ class ControllerOfThemes : GenericControllerOfSettings
 //                    cell.addSubview(slider)
                     if let label = cell.textLabel {
                         label.text          = "Saturation"
-                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
+                        cell.accessoryView  = self.registerSlider(value: Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
                             Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
                         })
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
+                        cell.accessoryType  = .none
+                        cell.selectionStyle = .default
                     }
                 },
                 
@@ -145,16 +145,16 @@ class ControllerOfThemes : GenericControllerOfSettings
                 
                 definePredefinedThemeWithName("Solid"),
                 
-                createCellForColor(Data.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
+                createCellForColor(color0: Data.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
 //                        self.reload()
                 },
                 
                 definePredefinedThemeWithName("Range"),
                 
-                createCellForColor(Data.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
+                createCellForColor(color0: Data.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
 //                        self.reload()
                 },
-                createCellForColor(Data.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
+                createCellForColor(color0: Data.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
 //                        self.reload()
                 },
                 

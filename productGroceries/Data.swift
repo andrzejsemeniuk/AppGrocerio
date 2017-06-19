@@ -20,7 +20,7 @@ class Data : NSObject
         var quantity:   Int         = 0
         var note:       String      = ""
         
-        static func create(name name:String, category:String, quantity:Int = 0, note:String = "") -> Item {
+        static func create(name:String, category:String, quantity:Int = 0, note:String = "") -> Item {
             return Item(name:name,category:category,quantity:quantity,note:note)
         }
         
@@ -35,14 +35,14 @@ class Data : NSObject
         }
         
         func serialize() -> [AnyObject] {
-            return [quantity,note,name,category]
+            return [quantity as AnyObject,note as AnyObject,name as AnyObject,category as AnyObject]
         }
         
-        static func deserialize(name:String, category:String, from:[AnyObject]) -> Item {
+        static func deserialize(_ name:String, category:String, from:[AnyObject]) -> Item {
             return Item(name:name,category:category,quantity:from[0] as! Int,note:from[1] as! String)
         }
         
-        static func deserialize(from:[AnyObject]) -> Item {
+        static func deserialize(_ from:[AnyObject]) -> Item {
             return Item(name:from[2] as! String,category:from[3] as! String,quantity:from[0] as! Int,note:from[1] as! String)
         }
     }
@@ -101,14 +101,14 @@ class Data : NSObject
         
         
         
-        private class func itemsKey(category:String) -> String {
+        fileprivate class func itemsKey(_ category:String) -> String {
             return "category:"+category
         }
         
         
         
         
-        class func itemPut              (item:Item,addQuantity:Bool = false)
+        class func itemPut              (_ item:Item,addQuantity:Bool = false)
         {
             // if item does not exit
             //  insert
@@ -120,7 +120,7 @@ class Data : NSObject
             if true
             {
                 do {
-                    let entityDescription   = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
+                    let entityDescription   = NSEntityDescription.entity(forEntityName: "Item", in: AppDelegate.managedObjectContext)
                     
                     let set                 = { (newItem:NSManagedObject) in
                         newItem.setValue(item.name,         forKey:"name")
@@ -130,14 +130,14 @@ class Data : NSObject
                     }
                     
                     let create              = {
-                        let newItem             = NSManagedObject(entity: entityDescription!, insertIntoManagedObjectContext: AppDelegate.managedObjectContext)
+                        let newItem             = NSManagedObject(entity: entityDescription!, insertInto: AppDelegate.managedObjectContext)
                         set(newItem)
                         try newItem.managedObjectContext?.save()
                     }
                     
                     let update              = { (newItem:NSManagedObject) in
                         if addQuantity {
-                            var quantity = newItem.valueForKey("quantity") as? Int ?? 0
+                            var quantity = newItem.value(forKey: "quantity") as? Int ?? 0
                             if quantity < 0 {
                                 quantity = 0
                             }
@@ -150,14 +150,14 @@ class Data : NSObject
                         try newItem.managedObjectContext?.save()
                     }
                     
-                    let request             = NSFetchRequest()
+                    let request             = NSFetchRequest<NSFetchRequestResult>()
                     
                     request.entity          = entityDescription
                     
                     request.predicate       = NSPredicate(format:"(name = %@) AND (category = %@)", item.name, item.category)
                     
                     do {
-                        let result          = try AppDelegate.managedObjectContext.executeFetchRequest(request)
+                        let result          = try AppDelegate.managedObjectContext.fetch(request)
                         
                         if 0 < result.count {
                             try update(result[0] as! NSManagedObject)
@@ -177,11 +177,11 @@ class Data : NSObject
             }
             else
             {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
                 let key = itemsKey(item.category)
                 
-                var all = defaults.dictionaryForKey(key)
+                var all = defaults.dictionary(forKey: key)
                 
                 if all == nil {
                     all = [String:AnyObject]()
@@ -189,11 +189,11 @@ class Data : NSObject
                 
                 all![item.name] = item.serialize()
                 
-                defaults.setObject(all!,forKey:key)
+                defaults.set(all!,forKey:key)
             }
         }
         
-        class func itemReset           (item:Item)
+        class func itemReset           (_ item:Item)
         {
             // if item exists
             //  reset it
@@ -202,87 +202,89 @@ class Data : NSObject
                 itemPut(Item(name:item.name,category:item.category,quantity:0,note:""))
             }
             else {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
                 let key = itemsKey(item.category)
                 
-                if var all = defaults.dictionaryForKey(key) {
-                    all.removeValueForKey(item.name)
+                if var all = defaults.dictionary(forKey: key) {
+                    all.removeValue(forKey: item.name)
                     var item1 = item
                     item1.reset()
                     all[item.name] = item1.serialize()
-                    defaults.setObject(all,forKey:key)
+                    defaults.set(all,forKey:key)
                 }
             }
         }
         
-        class func itemRemove           (item:Item)
+        class func itemRemove           (_ item:Item)
         {
             // if item exists
             //  remove it
             
             if true {
-                let entityDescription   = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
-                let oldItem             = NSManagedObject(entity: entityDescription!, insertIntoManagedObjectContext: AppDelegate.managedObjectContext)
+                let entityDescription   = NSEntityDescription.entity(forEntityName: "Item", in: AppDelegate.managedObjectContext)
+                let oldItem             = NSManagedObject(entity: entityDescription!, insertInto: AppDelegate.managedObjectContext)
                 
                 oldItem.setValue(item.name,         forKey:"name")
                 oldItem.setValue(item.category,     forKey:"category")
 //                oldItem.setValue(item.quantity,     forKey:"quantity")
 //                oldItem.setValue(item.note,         forKey:"note")
 
-                AppDelegate.managedObjectContext.deleteObject(oldItem)
+                AppDelegate.managedObjectContext.delete(oldItem)
             }
             else {
                 let key = itemsKey(item.category)
                 
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
-                if var all = defaults.dictionaryForKey(key) {
-                    all.removeValueForKey(item.name)
-                    defaults.setObject(all,forKey:key)
+                if var all = defaults.dictionary(forKey: key) {
+                    all.removeValue(forKey: item.name)
+                    defaults.set(all,forKey:key)
                 }
             }
         }
         
         class func itemRemoveAll            ()
         {
-            let fetchRequest        = NSFetchRequest(entityName: "Item")
+            let fetchRequest        = NSFetchRequest<NSFetchRequestResult>(entityName: "Item")
             let deleteRequest       = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             
             do {
-                try AppDelegate.persistentStoreCoordinator.executeRequest(deleteRequest, withContext: AppDelegate.managedObjectContext)
+                try AppDelegate.persistentStoreCoordinator.execute(deleteRequest, with: AppDelegate.managedObjectContext)
             } catch let error as NSError {
                 print(error)
             }
         }
         
-        class func itemGetAllInCategory   (category:String, sorted:Bool = true) -> [Item]
+        class func itemGetAllInCategory   (_ category:String, sorted:Bool = true) -> [Item]
         {
             // return all items in category
             
             var results:[Item] = []
             
             if true {
-                let request             = NSFetchRequest()
+                let request             = NSFetchRequest<NSFetchRequestResult>()
                 
-                let entityDescription   = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
+                let entityDescription   = NSEntityDescription.entity(forEntityName: "Item", in: AppDelegate.managedObjectContext)
                 
                 request.entity          = entityDescription
 
                 request.predicate       = NSPredicate(format:"%K = %@", "category", category)
                 
                 do {
-                    let result          = try AppDelegate.managedObjectContext.executeFetchRequest(request)
+                    let result          = try AppDelegate.managedObjectContext.fetch(request)
 //                    print(result)
                     
                     var anItem:Item = Item(name:"",category:"",quantity:0,note:"")
                     
                     for object in result {
 //                        print("object=\(object)")
-                        anItem.name     = object.valueForKey("name") as! String
-                        anItem.category = object.valueForKey("category") as! String
-                        anItem.quantity = object.valueForKey("quantity") as! Int
-                        anItem.note     = object.valueForKey("note") as! String
+                        let object = object as AnyObject
+                        
+                        anItem.name     = object.value(forKey:"name") as! String
+                        anItem.category = object.value(forKey:"category") as! String
+                        anItem.quantity = object.value(forKey:"quantity") as! Int
+                        anItem.note     = object.value(forKey:"note") as! String
                         
                         results.append(anItem)
                     }
@@ -293,9 +295,9 @@ class Data : NSObject
                 }
             }
             else {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
-                if let all = defaults.dictionaryForKey(itemsKey(category)) {
+                if let all = defaults.dictionary(forKey: itemsKey(category)) {
                     for (key,value) in all {
                         if let array = value as? Array<AnyObject> {
                             results.append(Item.deserialize(key, category:category, from:array))
@@ -304,13 +306,13 @@ class Data : NSObject
                 }
             }
             
-            return sorted ? results.sort { $0.name < $1.name } : results
+            return sorted ? results.sorted { $0.name < $1.name } : results
         }
         
         
         
         
-        class func categoryAdd          (newCategory:String) -> Bool
+        class func categoryAdd          (_ newCategory:String) -> Bool
         {
             var result = false
             
@@ -320,8 +322,8 @@ class Data : NSObject
                 var categories = categoryGetAll()
                 if !categories.contains(category) {
                     categories.append(category)
-                    let defaults = NSUserDefaults.standardUserDefaults()
-                    defaults.setObject(categories, forKey:Key.Categories.rawValue)
+                    let defaults = UserDefaults.standard
+                    defaults.set(categories, forKey:Key.Categories.rawValue)
                     result = true
                 }
             }
@@ -329,14 +331,14 @@ class Data : NSObject
             return result
         }
         
-        class func categoryReset        (category:String)
+        class func categoryReset        (_ category:String)
         {
             for item in itemGetAllInCategory(category,sorted:false) {
                 itemReset(item)
             }
         }
         
-        class func categoryRemove       (oldCategory:String) -> Bool
+        class func categoryRemove       (_ oldCategory:String) -> Bool
         {
             var result = false
             
@@ -347,9 +349,9 @@ class Data : NSObject
                 let categories1 = categories0.filter({ $0 != category })
                 
                 if categories1.count < categories0.count {
-                    let defaults = NSUserDefaults.standardUserDefaults()
-                    defaults.setObject(categories1, forKey:Key.Categories.rawValue)
-                    defaults.removeObjectForKey(itemsKey(category))
+                    let defaults = UserDefaults.standard
+                    defaults.set(categories1, forKey:Key.Categories.rawValue)
+                    defaults.removeObject(forKey: itemsKey(category))
                     result = true
                 }
             }
@@ -360,23 +362,23 @@ class Data : NSObject
         class func categoryClearAll      ()
         {
             for category in categoryGetAll() {
-                categoryRemove(category)
+                _ = categoryRemove(category)
             }
         }
         
         class func categoryGetAll        () -> [String]
         {
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
             var result = [String]()
             
-            if let categories = defaults.arrayForKey(Key.Categories.rawValue) {
+            if let categories = defaults.array(forKey: Key.Categories.rawValue) {
                 for category in categories {
                     result.append(category as! String)
                 }
             }
             
-            return result.sort { return $0 < $1 }
+            return result.sorted { return $0 < $1 }
         }
         
         class func summary              () -> [[Item]]
@@ -403,13 +405,13 @@ class Data : NSObject
         
         class func settingsGetCurrent() -> [String:AnyObject]
         {
-            if let defaults = NSUserDefaults.standardUserDefaults().dictionaryForKey(Key.SettingsCurrent.rawValue) {
-                return defaults
+            if let defaults = UserDefaults.standard.dictionary(forKey: Key.SettingsCurrent.rawValue) {
+                return defaults as [String : AnyObject]
             }
             
             let defaults = [String:AnyObject]()
             
-            NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+            UserDefaults.standard.set(defaults,forKey:Key.SettingsCurrent.rawValue)
             
             return defaults
         }
@@ -417,7 +419,7 @@ class Data : NSObject
         
         
         
-        class func settingsGetBoolForKey(key:Key, defaultValue:Bool = false) -> Bool
+        class func settingsGetBoolForKey(_ key:Key, defaultValue:Bool = false) -> Bool
         {
             if let result = settingsGetCurrent()["b:"+key.rawValue] as? Bool {
                 return result
@@ -425,16 +427,16 @@ class Data : NSObject
             return defaultValue
         }
         
-        class func settingsSetBool(value:Bool, forKey:Key)
+        class func settingsSetBool(_ value:Bool, forKey:Key)
         {
             var defaults = settingsGetCurrent();
             
-            defaults["b:"+forKey.rawValue] = value
+            defaults["b:"+forKey.rawValue] = value as AnyObject
             
-            NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+            UserDefaults.standard.set(defaults,forKey:Key.SettingsCurrent.rawValue)
         }
         
-        class func settingsGetCGFloatForKey(key:Key, defaultValue:Float = 0) -> CGFloat
+        class func settingsGetCGFloatForKey(_ key:Key, defaultValue:Float = 0) -> CGFloat
         {
             if let result = settingsGetCurrent()["f:"+key.rawValue] as? Float {
                 return CGFloat(result)
@@ -442,7 +444,7 @@ class Data : NSObject
             return CGFloat(defaultValue)
         }
         
-        class func settingsGetFloatForKey(key:Key, defaultValue:Float = 0) -> Float
+        class func settingsGetFloatForKey(_ key:Key, defaultValue:Float = 0) -> Float
         {
             if let result = settingsGetCurrent()["f:"+key.rawValue] as? Float {
                 return result
@@ -450,16 +452,16 @@ class Data : NSObject
             return defaultValue
         }
         
-        class func settingsSetFloat(value:Float, forKey:Key)
+        class func settingsSetFloat(_ value:Float, forKey:Key)
         {
             var defaults = settingsGetCurrent();
             
-            defaults["f:"+forKey.rawValue] = value
+            defaults["f:"+forKey.rawValue] = value as AnyObject
             
-            NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+            UserDefaults.standard.set(defaults,forKey:Key.SettingsCurrent.rawValue)
         }
         
-        class func settingsGetStringForKey(key:Key, defaultValue:String = "") -> String
+        class func settingsGetStringForKey(_ key:Key, defaultValue:String = "") -> String
         {
             if let result = settingsGetCurrent()["s:"+key.rawValue] as? String {
                 return result
@@ -467,16 +469,16 @@ class Data : NSObject
             return defaultValue
         }
         
-        class func settingsSetString(value:String, forKey:Key)
+        class func settingsSetString(_ value:String, forKey:Key)
         {
             var defaults = settingsGetCurrent();
             
-            defaults["s:"+forKey.rawValue] = value
+            defaults["s:"+forKey.rawValue] = value as AnyObject
             
-            NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+            UserDefaults.standard.set(defaults,forKey:Key.SettingsCurrent.rawValue)
         }
         
-        class func settingsPackColor(value:UIColor) -> [Float]
+        class func settingsPackColor(_ value:UIColor) -> [Float]
         {
             let rgba = value.RGBA()
             
@@ -490,7 +492,7 @@ class Data : NSObject
             return RGBA
         }
         
-        class func settingsUnpackColor(value:[Float], defaultValue:UIColor) -> UIColor
+        class func settingsUnpackColor(_ value:[Float], defaultValue:UIColor) -> UIColor
         {
             if 3 < value.count
             {
@@ -502,7 +504,7 @@ class Data : NSObject
             }
         }
         
-        class func settingsGetColorForKey(key:Key, defaultValue:UIColor = UIColor.blackColor()) -> UIColor
+        class func settingsGetColorForKey(_ key:Key, defaultValue:UIColor = UIColor.black) -> UIColor
         {
             if let result = settingsGetCurrent()["c:"+key.rawValue] as? [Float] {
                 return settingsUnpackColor(result,defaultValue:defaultValue)
@@ -510,16 +512,16 @@ class Data : NSObject
             return defaultValue
         }
         
-        class func settingsSetColor(value:UIColor, forKey:Key)
+        class func settingsSetColor(_ value:UIColor, forKey:Key)
         {
             var defaults = settingsGetCurrent();
             
-            defaults["c:"+forKey.rawValue] = settingsPackColor(value)
+            defaults["c:"+forKey.rawValue] = settingsPackColor(value) as AnyObject
             
-            NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+            UserDefaults.standard.set(defaults,forKey:Key.SettingsCurrent.rawValue)
         }
         
-        class func settingsGetArrayForKey(key:Key, defaultValue:[AnyObject] = []) -> [AnyObject]
+        class func settingsGetArrayForKey(_ key:Key, defaultValue:[AnyObject] = []) -> [AnyObject]
         {
             if let result = settingsGetCurrent()["A:"+key.rawValue] as? [AnyObject] {
                 return result
@@ -527,17 +529,17 @@ class Data : NSObject
             return defaultValue
         }
         
-        class func settingsSetArray(value:[AnyObject], forKey:Key)
+        class func settingsSetArray(_ value:[AnyObject], forKey:Key)
         {
             var defaults = settingsGetCurrent();
             
-            defaults["A:"+forKey.rawValue] = value
+            defaults["A:"+forKey.rawValue] = value as AnyObject
             
-            NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+            UserDefaults.standard.set(defaults,forKey:Key.SettingsCurrent.rawValue)
         }
         
         
-        class func settingsGetDictionaryForKey(key:Key, defaultValue:[String:AnyObject] = [:]) -> [String:AnyObject]
+        class func settingsGetDictionaryForKey(_ key:Key, defaultValue:[String:AnyObject] = [:]) -> [String:AnyObject]
         {
             if let result = settingsGetCurrent()["D:"+key.rawValue] as? [String:AnyObject] {
                 return result
@@ -545,25 +547,25 @@ class Data : NSObject
             return defaultValue
         }
         
-        class func settingsSetDictionary(value:[String:AnyObject], forKey:Key)
+        class func settingsSetDictionary(_ value:[String:AnyObject], forKey:Key)
         {
             var defaults = settingsGetCurrent();
             
-            defaults["D:"+forKey.rawValue] = value
+            defaults["D:"+forKey.rawValue] = value as AnyObject
             
-            NSUserDefaults.standardUserDefaults().setObject(defaults,forKey:Key.SettingsCurrent.rawValue)
+            UserDefaults.standard.set(defaults,forKey:Key.SettingsCurrent.rawValue)
         }
         
         
         
         
         
-        class func settingsGetCategoriesFont(defaultValue:UIFont? = nil) -> UIFont
+        class func settingsGetCategoriesFont(_ defaultValue:UIFont? = nil) -> UIFont
         {
             var defaultValue = defaultValue
             
             if defaultValue == nil {
-                defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+                defaultValue = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
             }
             
             if let result = UIFont(name:settingsGetStringForKey(.SettingsTabCategoriesFont,defaultValue:defaultValue!.familyName),
@@ -575,7 +577,7 @@ class Data : NSObject
             return defaultValue!
         }
         
-        class func settingsGetItemsFont(defaultValue:UIFont? = nil) -> UIFont
+        class func settingsGetItemsFont(_ defaultValue:UIFont? = nil) -> UIFont
         {
             if settingsGetBoolForKey(.SettingsTabItemsFontSameAsCategories) {
                 return settingsGetCategoriesFont()
@@ -584,7 +586,7 @@ class Data : NSObject
             var defaultValue = defaultValue
             
             if defaultValue == nil {
-                defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                defaultValue = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
             }
             
             if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsFont,defaultValue:defaultValue!.familyName),
@@ -596,7 +598,7 @@ class Data : NSObject
             return defaultValue!
         }
         
-        class func settingsGetItemsQuantityFont(defaultValue:UIFont? = nil) -> UIFont
+        class func settingsGetItemsQuantityFont(_ defaultValue:UIFont? = nil) -> UIFont
         {
             if settingsGetBoolForKey(.SettingsTabItemsQuantityFontSameAsItems) {
                 return settingsGetItemsFont()
@@ -605,7 +607,7 @@ class Data : NSObject
             var defaultValue = defaultValue
             
             if defaultValue == nil {
-                defaultValue = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                defaultValue = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
             }
             
             if let result = UIFont(name:settingsGetStringForKey(.SettingsTabItemsQuantityFont,defaultValue:defaultValue!.familyName),
@@ -621,28 +623,28 @@ class Data : NSObject
         
         
         
-        class func settingsGetBackgroundColor(defaultValue:UIColor = UIColor(hue:0.9)) -> UIColor
+        class func settingsGetBackgroundColor(_ defaultValue:UIColor = UIColor(hue:0.9)) -> UIColor
         {
             return settingsGetColorForKey(.SettingsBackgroundColor,defaultValue:defaultValue)
         }
         
-        class func settingsGetSelectionColor(defaultValue:UIColor = UIColor(gray:1,alpha:0.2)) -> UIColor
+        class func settingsGetSelectionColor(_ defaultValue:UIColor = UIColor(white:1,alpha:0.2)) -> UIColor
         {
             let hsba    = settingsGetColorForKey(.SettingsSelectionColor,defaultValue:defaultValue).HSBA()
             
-            let opacity = settingsGetFloatForKey(.SettingsSelectionColorOpacity,defaultValue:Float(defaultValue.alpha()))
+            let opacity = settingsGetFloatForKey(.SettingsSelectionColorOpacity,defaultValue:Float(defaultValue.alpha))
             
             return UIColor(hue:hsba.hue,saturation:hsba.saturation,brightness:hsba.brightness,alpha:CGFloat(opacity))
         }
         
 
         
-        class func settingsGetCategoriesTextColor(defaultValue:UIColor = UIColor(hue:0.87)) -> UIColor
+        class func settingsGetCategoriesTextColor(_ defaultValue:UIColor = UIColor(hue:0.87)) -> UIColor
         {
             return settingsGetColorForKey(.SettingsTabCategoriesTextColor,defaultValue:defaultValue)
         }
         
-        class func settingsGetItemsTextColor(defaultValue:UIColor = UIColor(hue:0.95)) -> UIColor
+        class func settingsGetItemsTextColor(_ defaultValue:UIColor = UIColor(hue:0.95)) -> UIColor
         {
             if settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories) {
                 return settingsGetCategoriesTextColor()
@@ -651,18 +653,18 @@ class Data : NSObject
             return settingsGetColorForKey(.SettingsTabItemsTextColor,defaultValue:defaultValue)
         }
         
-        class func settingsGetItemsQuantityBackgroundColorWithOpacity(opacityOn:Bool) -> UIColor
+        class func settingsGetItemsQuantityBackgroundColorWithOpacity(_ opacityOn:Bool) -> UIColor
         {
-            let color0  = UIColor.redColor()
+            let color0  = UIColor.red
             
             let color1  = settingsGetColorForKey(.SettingsTabItemsQuantityColorBackground,defaultValue:color0)
             
             let alpha   = opacityOn ? settingsGetFloatForKey(.SettingsTabItemsQuantityColorBackgroundOpacity,defaultValue:0.8) : 0.8
             
-            return color1.colorWithAlphaComponent(CGFloat(alpha))
+            return color1.withAlphaComponent(CGFloat(alpha))
         }
         
-        class func settingsGetItemsQuantityTextColor(defaultValue:UIColor = UIColor.whiteColor()) -> UIColor
+        class func settingsGetItemsQuantityTextColor(_ defaultValue:UIColor = UIColor.white) -> UIColor
         {
             if settingsGetBoolForKey(.SettingsTabItemsQuantityColorTextSameAsItems) {
                 return settingsGetItemsTextColor()
@@ -677,7 +679,7 @@ class Data : NSObject
         
         
         
-        class func settingsSetThemeWithName(name:String)
+        class func settingsSetThemeWithName(_ name:String)
         {
             settingsSetString(name,forKey:Key.SettingsTabThemesName)
         }
@@ -688,7 +690,7 @@ class Data : NSObject
         
         
         
-        class func settingsGetThemeName(defaultValue:String = "Plain") -> String
+        class func settingsGetThemeName(_ defaultValue:String = "Plain") -> String
         {
             return settingsGetStringForKey(Key.SettingsTabThemesName,defaultValue:defaultValue)
         }
@@ -699,12 +701,12 @@ class Data : NSObject
         
         
         
-        class func settingsGetThemesSolidColor(defaultValue:UIColor = UIColor.redColor()) -> UIColor
+        class func settingsGetThemesSolidColor(_ defaultValue:UIColor = UIColor.red) -> UIColor
         {
             return settingsGetColorForKey(.SettingsTabThemesSolidColor,defaultValue:defaultValue)
         }
         
-        class func settingsGetThemesRangeFromColor(defaultValue:UIColor = UIColor.yellowColor()) -> UIColor
+        class func settingsGetThemesRangeFromColor(_ defaultValue:UIColor = UIColor.yellow) -> UIColor
         {
             return settingsGetColorForKey(.SettingsTabThemesRangeFromColor,defaultValue:defaultValue)
             //        let dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
@@ -716,7 +718,7 @@ class Data : NSObject
             //        return defaultValue
         }
         
-        class func settingsGetThemesRangeToColor(defaultValue:UIColor = UIColor.orangeColor()) -> UIColor
+        class func settingsGetThemesRangeToColor(_ defaultValue:UIColor = UIColor.orange) -> UIColor
         {
             return settingsGetColorForKey(.SettingsTabThemesRangeToColor,defaultValue:defaultValue)
             //        let dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
@@ -730,12 +732,12 @@ class Data : NSObject
         
         
         
-        class func settingsSetThemesSolidColor(color:UIColor)
+        class func settingsSetThemesSolidColor(_ color:UIColor)
         {
             settingsSetColor(color,forKey:.SettingsTabThemesSolidColor)
         }
         
-        class func settingsSetThemesRangeFromColor(color:UIColor)
+        class func settingsSetThemesRangeFromColor(_ color:UIColor)
         {
             settingsSetColor(color,forKey:.SettingsTabThemesRangeFromColor)
             //        var dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
@@ -743,7 +745,7 @@ class Data : NSObject
             //        settingsSetDictionary(dictionary,forKey:.SettingsTabThemesRangeColors)
         }
         
-        class func settingsSetThemesRangeToColor(color:UIColor)
+        class func settingsSetThemesRangeToColor(_ color:UIColor)
         {
             settingsSetColor(color,forKey:.SettingsTabThemesRangeToColor)
             //        var dictionary = settingsGetDictionaryForKey(.SettingsTabThemesRangeColors)
@@ -756,49 +758,49 @@ class Data : NSObject
         
         
         
-        class func displayHelpPageForCategories(controller:ControllerOfCategories)
+        class func displayHelpPageForCategories(_ controller:ControllerOfCategories)
         {
             let key = "display-help-categories"
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if false && !defaults.boolForKey(key) {
-                defaults.setBool(true,forKey:key)
+            if false && !defaults.bool(forKey: key) {
+                defaults.set(true,forKey:key)
                 
                 let alert = UIAlertController(title:"Categories", message:"Welcome!  Add new categories by tapping on the plus button "
-                    + "in the top right corner.  Remove categories by swiping from right to left.", preferredStyle:.Alert)
+                    + "in the top right corner.  Remove categories by swiping from right to left.", preferredStyle:.alert)
                 
-                let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
+                let actionOK = UIAlertAction(title:"OK", style:.cancel, handler: {
                     action in
                 })
                 
                 alert.addAction(actionOK)
                 
-                controller.presentViewController(alert, animated:true, completion: {
+                controller.present(alert, animated:true, completion: {
                     print("completed showing add alert")
                 })
             }
         }
         
         
-        class func displayHelpPageForItems(controller:ItemsController)
+        class func displayHelpPageForItems(_ controller:ItemsController)
         {
             let key = "display-help-items"
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if !defaults.boolForKey(key) {
-                defaults.setBool(true,forKey:key)
+            if !defaults.bool(forKey: key) {
+                defaults.set(true,forKey:key)
                 
-                let alert = UIAlertController(title:"Items", message:"Tap on the right side of an item to add quantity.  Tap on the left side to subtract quantity.", preferredStyle:.Alert)
+                let alert = UIAlertController(title:"Items", message:"Tap on the right side of an item to add quantity.  Tap on the left side to subtract quantity.", preferredStyle:.alert)
                 
-                let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
+                let actionOK = UIAlertAction(title:"OK", style:.cancel, handler: {
                     action in
                 })
                 
                 alert.addAction(actionOK)
                 
-                controller.presentViewController(alert, animated:true, completion: {
+                controller.present(alert, animated:true, completion: {
                     print("completed showing add alert")
                 })
                 
@@ -806,24 +808,24 @@ class Data : NSObject
         }
         
         
-        class func displayHelpPageForSummary(controller:ControllerOfSummary)
+        class func displayHelpPageForSummary(_ controller:ControllerOfSummary)
         {
             let key = "display-help-summary"
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if false && !defaults.boolForKey(key) {
-                defaults.setBool(true,forKey:key)
+            if false && !defaults.bool(forKey: key) {
+                defaults.set(true,forKey:key)
                 
-                let alert = UIAlertController(title:"Summary", message:"This page presents a list of items you selected in categories.  Remove an item by swiping from right to left.", preferredStyle:.Alert)
+                let alert = UIAlertController(title:"Summary", message:"This page presents a list of items you selected in categories.  Remove an item by swiping from right to left.", preferredStyle:.alert)
                 
-                let actionOK = UIAlertAction(title:"OK", style:.Cancel, handler: {
+                let actionOK = UIAlertAction(title:"OK", style:.cancel, handler: {
                     action in
                 })
                 
                 alert.addAction(actionOK)
                 
-                controller.presentViewController(alert, animated:true, completion: {
+                controller.present(alert, animated:true, completion: {
                     print("completed showing add alert")
                 })
                 
@@ -832,21 +834,21 @@ class Data : NSObject
         
         class func clearHelpFlags()
         {
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            defaults.removeObjectForKey("display-help-categories")
-            defaults.removeObjectForKey("display-help-items")
-            defaults.removeObjectForKey("display-help-summary")
+            defaults.removeObject(forKey: "display-help-categories")
+            defaults.removeObject(forKey: "display-help-items")
+            defaults.removeObject(forKey: "display-help-summary")
         }
         
         class func migrateItemsIfRequired()
         {
-            let request             = NSFetchRequest()
+            let request             = NSFetchRequest<NSFetchRequestResult>()
             
-            request.entity          = NSEntityDescription.entityForName("Item", inManagedObjectContext: AppDelegate.managedObjectContext)
+            request.entity          = NSEntityDescription.entity(forEntityName: "Item", in: AppDelegate.managedObjectContext)
             
             do {
-                let result          = try AppDelegate.managedObjectContext.executeFetchRequest(request)
+                let result          = try AppDelegate.managedObjectContext.fetch(request)
                 
                 if result.count == 0 {
                     createCategories()
@@ -882,10 +884,10 @@ class Data : NSObject
             
             do
             {
-                settingsUse                                 ("Chalkboard")
+                _ = settingsUse                             ("Chalkboard")
                 
-                settingsSetThemesRangeFromColor             (UIColor(hue:0.40,brightness:0.73))
-                settingsSetThemesRangeToColor               (UIColor(hue:0.40,brightness:0.75))
+                settingsSetThemesRangeFromColor             (UIColor(white:0.40,alpha:0.73))
+                settingsSetThemesRangeToColor               (UIColor(white:0.40,alpha:0.75))
                 settingsSetFloat                            (0.90                                               ,forKey:.SettingsTabThemesSaturation)
                 settingsSetThemeWithName                    ("Range")
                 
@@ -910,20 +912,20 @@ class Data : NSObject
                 settingsSetColor                            (UIColor(hue:0.30,saturation:0.80,brightness:1.00)  ,forKey:.SettingsSelectionColor)
                 settingsSetFloat                            (0.50                                               ,forKey:.SettingsSelectionColorOpacity)
 
-                settingsSetColor                            (UIColor(hue:0.40,brightness:0.60)                  ,forKey:.SettingsBackgroundColor)
+                settingsSetColor                            (UIColor(white:0.40,alpha:0.60)                  ,forKey:.SettingsBackgroundColor)
                 settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
                 settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
 
-                settingsSave                                ("Chalkboard")
+                _ = settingsSave                            ("Chalkboard")
             }
             
 
             do
             {
-                settingsUse                                 ("Honey")
+                _ = settingsUse                             ("Honey")
                 
-                settingsSetThemesRangeFromColor             (UIColor(hue:0.10,brightness:1.00))
-                settingsSetThemesRangeToColor               (UIColor(hue:0.13,brightness:1.00))
+                settingsSetThemesRangeFromColor             (UIColor(white:0.10,alpha:1.00))
+                settingsSetThemesRangeToColor               (UIColor(white:0.13,alpha:1.00))
                 settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabThemesSaturation)
                 settingsSetThemeWithName                    ("Range")
                 
@@ -948,11 +950,11 @@ class Data : NSObject
                 settingsSetColor                            (UIColor(hue:0.00,saturation:0.80,brightness:1.00)  ,forKey:.SettingsSelectionColor)
                 settingsSetFloat                            (0.50                                               ,forKey:.SettingsSelectionColorOpacity)
                 
-                settingsSetColor                            (UIColor(hue:0.08,brightness:1.00)                  ,forKey:.SettingsBackgroundColor)
+                settingsSetColor                            (UIColor(white:0.08,alpha:1.00)                  ,forKey:.SettingsBackgroundColor)
                 settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
                 settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
 
-                settingsSave                                ("Honey")
+                _ = settingsSave                            ("Honey")
             }
             
             
@@ -960,10 +962,10 @@ class Data : NSObject
             {
                 let growth:Float = 4
                 
-                settingsUse                                 ("Pink")
+                _ = settingsUse                             ("Pink")
                 
-                settingsSetThemesRangeFromColor             (UIColor(hue:0.90,brightness:1.00))
-                settingsSetThemesRangeToColor               (UIColor(hue:0.93,brightness:1.00))
+                settingsSetThemesRangeFromColor             (UIColor(white:0.90,alpha:1.00))
+                settingsSetThemesRangeToColor               (UIColor(white:0.93,alpha:1.00))
                 settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabThemesSaturation)
                 settingsSetThemeWithName                    ("Range")
                 
@@ -995,7 +997,7 @@ class Data : NSObject
                 settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
                 settingsSetColor                            (UIColor(hue:0.85,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
                 
-                settingsSave                                ("Pink")
+                _ = settingsSave                            ("Pink")
             }
             
 
@@ -1003,10 +1005,10 @@ class Data : NSObject
             {
                 let growth:Float = 4
                 
-                settingsUse                                 ("Sky")
+                _ = settingsUse                             ("Sky")
                 
-                settingsSetThemesRangeFromColor             (UIColor(hue:0.57,brightness:1.00))
-                settingsSetThemesRangeToColor               (UIColor(hue:0.60,brightness:1.00))
+                settingsSetThemesRangeFromColor             (UIColor(white:0.57,alpha:1.00))
+                settingsSetThemesRangeToColor               (UIColor(white:0.60,alpha:1.00))
                 settingsSetFloat                            (1.00                                               ,forKey:.SettingsTabThemesSaturation)
                 settingsSetThemeWithName                    ("Range")
                 
@@ -1038,7 +1040,7 @@ class Data : NSObject
                 settingsSetColor                            (UIColor(hue:0.65,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsHeaderTextColor)
                 settingsSetColor                            (UIColor(hue:0.65,saturation:0.00,brightness:1.00)  ,forKey:.SettingsTabSettingsFooterTextColor)
                 
-                settingsSave                                ("Sky")
+                _ = settingsSave                            ("Sky")
             }
             
             
@@ -1046,7 +1048,7 @@ class Data : NSObject
             {
                 let growth:Float = 1
                 
-                settingsUse                                 ("Charcoal")
+                _ = settingsUse                             ("Charcoal")
                 
                 settingsSetFloat                            (0.00                                               ,forKey:.SettingsTabThemesSaturation)
                 settingsSetThemeWithName                    ("Charcoal")
@@ -1079,7 +1081,7 @@ class Data : NSObject
                 settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.60)  ,forKey:.SettingsTabSettingsHeaderTextColor)
                 settingsSetColor                            (UIColor(hue:0.00,saturation:0.00,brightness:0.60)  ,forKey:.SettingsTabSettingsFooterTextColor)
                 
-                settingsSave                                ("Charcoal")
+                _ = settingsSave                            ("Charcoal")
             }
             
             
@@ -1087,7 +1089,7 @@ class Data : NSObject
             {
                 let growth:Float = 0
                 
-                settingsUse                                 ("Default")
+                _ = settingsUse                             ("Default")
                 
                 settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesUppercase)
                 settingsSetBool                             (false                                              ,forKey:.SettingsTabCategoriesEmphasize)
@@ -1121,12 +1123,12 @@ class Data : NSObject
                 settingsSetColor                            (UIColor(hue:0.55,saturation:0.70,brightness:0.75)  ,forKey:.SettingsTabSettingsHeaderTextColor)
                 settingsSetColor                            (UIColor(hue:0.55,saturation:0.70,brightness:0.75)  ,forKey:.SettingsTabSettingsFooterTextColor)
 
-                settingsSave                                ("Default")
+                _ = settingsSave                            ("Default")
             }
             
 
             if 0 < settings0.length {
-                settingsUse(settings0)
+                _ = settingsUse(settings0)
             }
         }
         
@@ -1142,7 +1144,7 @@ class Data : NSObject
             
             
             for category in categories {
-                categoryRemove(category)
+                _ = categoryRemove(category)
             }
             
             createCategories()
@@ -1153,7 +1155,7 @@ class Data : NSObject
         
         class func synchronize()
         {
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
             defaults.synchronize()
         }
@@ -1162,33 +1164,34 @@ class Data : NSObject
         
         
         
-        class func settingsGetLastName(defaultValue:String = "") -> String
+        class func settingsGetLastName(_ defaultValue:String = "") -> String
         {
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if let result = defaults.stringForKey(Key.SettingsLastName.rawValue) {
+            if let result = defaults.string(forKey: Key.SettingsLastName.rawValue) {
                 return result
             }
             
             return defaultValue
         }
         
-        private class func settingsKeyForName(name:String) -> String {
+        fileprivate class func settingsKeyForName(_ name:String) -> String {
             return "settings="+name
         }
         
         
-        class func settingsExist    (var name:String) -> Bool
+        class func settingsExist    (_ name:String) -> Bool
         {
+            var name = name
             var result = false
             
             name = name.trimmed()
             
             if 0 < name.length
             {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
-                if let settings = defaults.dictionaryForKey(settingsKeyForName(name))
+                if defaults.dictionary(forKey: settingsKeyForName(name)) != nil
                 {
                     result = true
                 }
@@ -1197,21 +1200,22 @@ class Data : NSObject
             return result
         }
         
-        class func settingsUse      (var name:String) -> Bool
+        class func settingsUse  (_ name:String) -> Bool
         {
+            var name = name
             var result = false
             
             name = name.trimmed()
             
             if 0 < name.length
             {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
-                if let settings = defaults.dictionaryForKey(settingsKeyForName(name))
+                if let settings = defaults.dictionary(forKey: settingsKeyForName(name))
                 {
-                    defaults.setObject(settings,forKey:Key.SettingsCurrent.rawValue)
+                    defaults.set(settings,forKey:Key.SettingsCurrent.rawValue)
                     
-                    defaults.setObject(name,forKey:Key.SettingsLastName.rawValue)
+                    defaults.set(name,forKey:Key.SettingsLastName.rawValue)
                     
                     result = true
                 }
@@ -1220,17 +1224,18 @@ class Data : NSObject
             return result
         }
         
-        class func settingsRemove    (var name:String) -> Bool
+        class func settingsRemove    (_ name:String) -> Bool
         {
+            var name = name
             var result = false
             
             name = name.trimmed()
             
             if 0 < name.length
             {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
-                defaults.removeObjectForKey(settingsKeyForName(name))
+                defaults.removeObject(forKey: settingsKeyForName(name))
                 
                 do
                 {
@@ -1240,7 +1245,7 @@ class Data : NSObject
                     
                     let array = Array(list)
                     
-                    defaults.setObject(array,forKey:Key.SettingsList.rawValue)
+                    defaults.set(array,forKey:Key.SettingsList.rawValue)
                 }
                 
                 result = true
@@ -1249,21 +1254,22 @@ class Data : NSObject
             return result
         }
         
-        class func settingsSave     (var name:String) -> Bool
+        class func settingsSave (_ name:String) -> Bool
         {
+            var name = name
             var result = false
             
             name = name.trimmed()
             
             if 0 < name.length
             {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
-                if let settings = defaults.dictionaryForKey(Key.SettingsCurrent.rawValue)
+                if let settings = defaults.dictionary(forKey: Key.SettingsCurrent.rawValue)
                 {
-                    defaults.setObject(settings,forKey:settingsKeyForName(name))
+                    defaults.set(settings,forKey:settingsKeyForName(name))
                     
-                    defaults.setObject(name,forKey:Key.SettingsLastName.rawValue)
+                    defaults.set(name,forKey:Key.SettingsLastName.rawValue)
                     
                     do
                     {
@@ -1273,7 +1279,7 @@ class Data : NSObject
                         
                         let array = Array(list)
                         
-                        defaults.setObject(array,forKey:Key.SettingsList.rawValue)
+                        defaults.set(array,forKey:Key.SettingsList.rawValue)
                     }
                     
                     result = true
@@ -1285,9 +1291,9 @@ class Data : NSObject
         
         class func settingsListIsEmpty() -> Bool
         {
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            let array = defaults.arrayForKey(Key.SettingsList.rawValue)
+            let array = defaults.array(forKey: Key.SettingsList.rawValue)
             
             return array == nil || 0 == array!.count
         }
@@ -1296,9 +1302,9 @@ class Data : NSObject
         {
             var result:[String] = []
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if let array = defaults.arrayForKey(Key.SettingsList.rawValue) {
+            if let array = defaults.array(forKey: Key.SettingsList.rawValue) {
                 
                 for element in array {
                     
@@ -1314,7 +1320,7 @@ class Data : NSObject
         
         
         
-        private class func summaryKeyForName(name:String) -> String {
+        fileprivate class func summaryKeyForName(_ name:String) -> String {
             return "summary="+name
         }
         
@@ -1340,13 +1346,13 @@ class Data : NSObject
             return array
         }
         
-        class func summaryAdd       (name:String) -> Bool
+        class func summaryAdd       (_ name:String) -> Bool
         {
             var result = false
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if let summary = defaults.arrayForKey(summaryKeyForName(name)) {
+            if let summary = defaults.array(forKey: summaryKeyForName(name)) {
                 
                 for element in summary {
                     
@@ -1363,13 +1369,13 @@ class Data : NSObject
             return result
         }
         
-        class func summaryUse       (name:String) -> Bool
+        class func summaryUse       (_ name:String) -> Bool
         {
             var result = false
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if let summary = defaults.arrayForKey(summaryKeyForName(name)) {
+            if let summary = defaults.array(forKey: summaryKeyForName(name)) {
                 
                 summaryClear()
                 
@@ -1388,21 +1394,21 @@ class Data : NSObject
             return result
         }
         
-        class func summarySave      (name:String) -> Bool
+        class func summarySave      (_ name:String) -> Bool
         {
             var result = false
             
             if 0 < name.length
             {
-                let defaults = NSUserDefaults.standardUserDefaults()
+                let defaults = UserDefaults.standard
                 
                 var items = [AnyObject]()
                 
                 for item in summaryGet() {
-                    items.append(item.serialize())
+                    items.append(item.serialize() as AnyObject)
                 }
                 
-                defaults.setObject(items,forKey:summaryKeyForName(name))
+                defaults.set(items,forKey:summaryKeyForName(name))
                 
                 do
                 {
@@ -1412,7 +1418,7 @@ class Data : NSObject
                     
                     let array = Array(list)
                     
-                    defaults.setObject(array,forKey:Key.SummaryList.rawValue)
+                    defaults.set(array,forKey:Key.SummaryList.rawValue)
                 }
                 
                 result = true
@@ -1425,9 +1431,9 @@ class Data : NSObject
         {
             var result:[String] = []
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
-            if let array = defaults.arrayForKey(Key.SummaryList.rawValue) {
+            if let array = defaults.array(forKey: Key.SummaryList.rawValue) {
                 
                 for element in array {
                     
@@ -1435,7 +1441,7 @@ class Data : NSObject
                 }
             }
             
-            return result.sort()
+            return result.sorted()
         }
         
         
@@ -1447,7 +1453,7 @@ class Data : NSObject
             let createCategory = { (name:String, items:[String]) in
                 let category = name.trimmed()
                 if 0 < category.length {
-                    categoryAdd(category)
+                    _ = categoryAdd(category)
                     for item in items {
                         itemPut(Item.create(name:item.trimmed(),category:category))
                     }

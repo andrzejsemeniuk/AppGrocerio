@@ -30,9 +30,9 @@ class ControllerOfCategories : UITableViewController {
         
         tableView.delegate          = self
         
-        tableView.autoresizingMask  = [.FlexibleHeight, .FlexibleWidth]
+        tableView.autoresizingMask  = [.flexibleHeight, .flexibleWidth]
         
-        tableView.separatorStyle = .None
+        tableView.separatorStyle = .none
 
         
         
@@ -50,7 +50,7 @@ class ControllerOfCategories : UITableViewController {
             }
             
             items! += [
-                UIBarButtonItem(barButtonSystemItem:.Add, target:self, action: #selector(ControllerOfCategories.add)),
+                UIBarButtonItem(barButtonSystemItem:.add, target:self, action: #selector(ControllerOfCategories.add)),
             ]
 
             navigationItem.rightBarButtonItems = items
@@ -112,7 +112,7 @@ class ControllerOfCategories : UITableViewController {
         case "Orange":
             return UIColor(hue:mark.lerp01(0.04,0.1), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Plain":
-            return UIColor.whiteColor()
+            return UIColor.white
         case "Rainbow":
             return UIColor(hue:mark.lerp01(0.0,0.9), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Range":
@@ -130,23 +130,23 @@ class ControllerOfCategories : UITableViewController {
         default:
             break
         }
-        return UIColor.whiteColor()
+        return UIColor.white
     }
     
     
     func colorForCategory(category:String) -> UIColor
     {
-        if let index = categories.indexOf(category) {
-            return colorForCategoryIndex(index)
+        if let index = categories.index(of: category) {
+            return colorForCategoryIndex(index: index)
         }
         else {
-            return colorForCategoryIndex(-1)
+            return colorForCategoryIndex(index: -1)
         }
     }
     
     
-    func colorForItem(item:Data.Item,onRow:Int) -> UIColor {
-        let categoryColor = colorForCategory(item.category)
+    func colorForItem(item:Data.Item, onRow:Int) -> UIColor {
+        let categoryColor = colorForCategory(category: item.category)
             
         let HSBA = categoryColor.HSBA()
         
@@ -169,18 +169,18 @@ class ControllerOfCategories : UITableViewController {
 
     }
     
-    func styleCell(cell:UITableViewCell,indexPath:NSIndexPath)
+    func styleCell(cell:UITableViewCell, indexPath:IndexPath)
     {
         cell.selectedBackgroundView = UIView.createWithBackgroundColor(Data.Manager.settingsGetSelectionColor())
 
-        cell.backgroundColor        = colorForCategoryIndex(indexPath.row)
+        cell.backgroundColor        = colorForCategoryIndex(index: indexPath.row)
         
         print("styleCell: indexPath.row=\(indexPath.row), section=\(indexPath.section)")
         
         if let label = cell.textLabel {
             
             if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
-                label.text = categories[indexPath.row].uppercaseString
+                label.text = categories[indexPath.row].uppercased()
             }
             else {
                 label.text = categories[indexPath.row]
@@ -190,7 +190,7 @@ class ControllerOfCategories : UITableViewController {
             label.font      = Data.Manager.settingsGetCategoriesFont()
             
             if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
-                label.font = label.font.fontWithSize(label.font.pointSize+2)
+                label.font = label.font.withSize(label.font.pointSize+2)
             }
             
             var white:CGFloat = 0
@@ -202,17 +202,17 @@ class ControllerOfCategories : UITableViewController {
             //            label.textColor = white < 0.5 ? UIColor.lightTextColor() : UIColor.darkTextColor()
         }
         
-        cell.selectionStyle     = UITableViewCellSelectionStyle.Default
+        cell.selectionStyle     = UITableViewCellSelectionStyle.default
         
-        cell.accessoryType      = .None//.DisclosureIndicator        
+        cell.accessoryType      = .none//.DisclosureIndicator        
     }
     
-    func styleQuantity(cell:UITableViewCell,indexPath:NSIndexPath,quantity:Int) -> (fill:UIView,label:UILabel)
+    func styleQuantity(cell:UITableViewCell,indexPath:IndexPath,quantity:Int) -> (fill:UIView,label:UILabel)
     {
         
         let fill = UIView()
         
-        fill.frame                  = CGRectMake(0,0,cell.bounds.height*1.2,cell.bounds.height)
+        fill.frame                  = CGRect(x:0,y:0,width:cell.bounds.height*1.2,height:cell.bounds.height)
         fill.frame.origin.x         = AppDelegate.rootViewController.view.bounds.width-fill.frame.size.width
         fill.backgroundColor        = Data.Manager.settingsGetItemsQuantityBackgroundColorWithOpacity(true)
         
@@ -221,11 +221,11 @@ class ControllerOfCategories : UITableViewController {
         
         let label = UILabel()
         
-        label.frame                 = CGRectMake(0,0,cell.bounds.height*2,cell.bounds.height)
+        label.frame                 = CGRect(x:0,y:0,width:cell.bounds.height*2,height:cell.bounds.height)
         label.font                  = Data.Manager.settingsGetItemsQuantityFont()
         label.textColor             = Data.Manager.settingsGetItemsQuantityTextColor()
         label.text                  = String(quantity)
-        label.textAlignment         = .Right
+        label.textAlignment         = .right
         
         cell.accessoryView          = label
         cell.editingAccessoryView   = label
@@ -234,25 +234,25 @@ class ControllerOfCategories : UITableViewController {
     }
     
     
-    override func numberOfSectionsInTableView   (tableView: UITableView) -> Int
+    override func numberOfSections              (in: UITableView) -> Int
     {
         return 1
     }
     
-    override func tableView                     (tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    override func tableView                     (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return categories.count
     }
     
-    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    override func tableView                     (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = UITableViewCell(style:.Default,reuseIdentifier:nil)
+        let cell = UITableViewCell(style:.default,reuseIdentifier:nil)
         
-        styleCell(cell,indexPath:indexPath)
+        styleCell(cell: cell,indexPath:indexPath)
         
         if 0 < quantities[indexPath.row]
         {
-            let views = ControllerOfCategories.instance.styleQuantity(cell,indexPath:indexPath,quantity:quantities[indexPath.row])
+            _ = ControllerOfCategories.instance.styleQuantity(cell: cell,indexPath:indexPath,quantity:quantities[indexPath.row])
         }
         
         return cell
@@ -274,7 +274,7 @@ class ControllerOfCategories : UITableViewController {
             var count = 0
             for item in items {
                 if 0 < item.quantity {
-                    count++
+                    count += 1
                 }
             }
             quantities += [ count ]
@@ -289,30 +289,30 @@ class ControllerOfCategories : UITableViewController {
     
     func add()
     {
-        let alert = UIAlertController(title:"Add a new Category", message:"Specify new category name:", preferredStyle:.Alert)
+        let alert = UIAlertController(title:"Add a new Category", message:"Specify new category name:", preferredStyle:.alert)
         
-        alert.addTextFieldWithConfigurationHandler() {
+        alert.addTextField() {
             field in
         }
         
-        let actionAdd = UIAlertAction(title:"Add", style:.Default, handler: {
+        let actionAdd = UIAlertAction(title:"Add", style:.default, handler: {
             action in
             
-            if let fields = alert.textFields, text = fields[0].text {
+            if let fields = alert.textFields, let text = fields[0].text {
                 if Data.Manager.categoryAdd(text) {
                     self.reload()
                 }
             }
         })
         
-        let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
+        let actionCancel = UIAlertAction(title:"Cancel", style:.cancel, handler: {
             action in
         })
         
         alert.addAction(actionAdd)
         alert.addAction(actionCancel)
         
-        AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
+        AppDelegate.rootViewController.present(alert, animated:true, completion: {
             print("completed showing add alert")
         })
     }
@@ -321,27 +321,27 @@ class ControllerOfCategories : UITableViewController {
     
     // NOTE: THIS IS A TABLE-DATA-SOURCE-DELEGATE METHOD
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
-    {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
         switch editingStyle
         {
-        case .None:
+        case .none:
             print("None")
-        case .Delete:
+        case .delete:
             let category = categories[indexPath.row]
-            Data.Manager.categoryRemove(category)
-            categories.removeAtIndex(indexPath.row)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:.Left)
+            _ = Data.Manager.categoryRemove(category)
+            categories.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath as IndexPath], with:.left)
             self.reload()
-        case .Insert:
+        case .insert:
             add()
         }
     }
     
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        openItemsForRow(indexPath.row)
+        _ = openItemsForRow(row: indexPath.row)
     }
 
 
@@ -351,7 +351,7 @@ class ControllerOfCategories : UITableViewController {
         
         let items       = ItemsController()
         
-        items.colorOfCategory = colorForCategoryIndex(row)
+        items.colorOfCategory = colorForCategoryIndex(index: row)
         
         items.category  = category
         items.items     = Data.Manager.itemGetAllInCategory(category)
@@ -363,8 +363,8 @@ class ControllerOfCategories : UITableViewController {
 
     func openItemsForCategory(category:String,name:String? = nil)
     {
-        if let index = categories.indexOf(category) {
-            let items = openItemsForRow(index)
+        if let index = categories.index(of: category) {
+            let items = openItemsForRow(row: index)
             
             if let item = name {
                 items.scrollToItem(item,select:true)
@@ -373,7 +373,7 @@ class ControllerOfCategories : UITableViewController {
     }
     
     
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         reload()
 
