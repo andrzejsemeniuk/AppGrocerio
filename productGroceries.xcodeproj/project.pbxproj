@@ -202,8 +202,8 @@
 		574880F11C89EEF000A3806F /* productGroceries */ = {
 			isa = PBXGroup;
 			children = (
-				574881001C89EEF100A3806F /* Info.plist */,
 				574880F21C89EEF100A3806F /* AppDelegate.swift */,
+				574880FB1C89EEF100A3806F /* Assets.xcassets */,
 				5715FC4F1CBEFBAA00044118 /* Audio.swift */,
 				57B215B11C91FB2C004B86A2 /* ControllerOfCategories.swift */,
 				57A159BB1C90981C0031036F /* ControllerOfItems.swift */,
@@ -211,11 +211,11 @@
 				57A159BF1C90B1C90031036F /* ControllerOfSummary.swift */,
 				5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */,
 				57A159C31C90F4CE0031036F /* Data.swift */,
-				574880FB1C89EEF100A3806F /* Assets.xcassets */,
+				57B408C01CBC138C00FCD6FA /* Generic */,
+				574881001C89EEF100A3806F /* Info.plist */,
 				5714B8611C9DC37900B4FEC7 /* LaunchScreen.storyboard */,
 				574880F81C89EEF100A3806F /* Main.storyboard */,
 				5715FC431CBEED3700044118 /* Resources */,
-				57B408C01CBC138C00FCD6FA /* TGFSwift */,
 			);
 			path = productGroceries;
 			sourceTree = "<group>";
@@ -248,7 +248,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		57B408C01CBC138C00FCD6FA /* TGFSwift */ = {
+		57B408C01CBC138C00FCD6FA /* Generic */ = {
 			isa = PBXGroup;
 			children = (
 				57692ADB1EF4135C00C3370C /* GenericControllerOfList.swift */,
@@ -256,7 +256,7 @@
 				57692ADD1EF4135C00C3370C /* GenericControllerOfPickerOfFont.swift */,
 				57692ADE1EF4135C00C3370C /* GenericControllerOfSettings.swift */,
 			);
-			name = TGFSwift;
+			name = Generic;
 			path = ../TGF;
 			sourceTree = SOURCE_ROOT;
 		};
