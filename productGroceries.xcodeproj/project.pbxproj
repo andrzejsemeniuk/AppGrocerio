@@ -37,7 +37,8 @@
 		57692AE01EF4135C00C3370C /* GenericControllerOfPickerOfColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57692ADC1EF4135C00C3370C /* GenericControllerOfPickerOfColor.swift */; };
 		57692AE11EF4135C00C3370C /* GenericControllerOfPickerOfFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57692ADD1EF4135C00C3370C /* GenericControllerOfPickerOfFont.swift */; };
 		57692AE21EF4135C00C3370C /* GenericControllerOfSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57692ADE1EF4135C00C3370C /* GenericControllerOfSettings.swift */; };
-		57692AF11EF413B200C3370C /* TGF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57692AEA1EF4139C00C3370C /* TGF.framework */; };
+		57810E731F1983F200C3C612 /* TGF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57692AEA1EF4139C00C3370C /* TGF.framework */; };
+		57810E741F1983F200C3C612 /* TGF.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57692AEA1EF4139C00C3370C /* TGF.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57A159BC1C90981C0031036F /* ControllerOfItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159BB1C90981C0031036F /* ControllerOfItems.swift */; };
 		57A159BD1C90981C0031036F /* ControllerOfItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159BB1C90981C0031036F /* ControllerOfItems.swift */; };
 		57A159BE1C90981C0031036F /* ControllerOfItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159BB1C90981C0031036F /* ControllerOfItems.swift */; };
@@ -47,6 +48,7 @@
 		57A159C41C90F4CE0031036F /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159C31C90F4CE0031036F /* Data.swift */; };
 		57A159C51C90F4CE0031036F /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57A159C31C90F4CE0031036F /* Data.swift */; };
 		57B215B21C91FB2C004B86A2 /* ControllerOfCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B215B11C91FB2C004B86A2 /* ControllerOfCategories.swift */; };
+		57E4F8C21F19582900CB92AD /* image-launch-1242x2208.png in Resources */ = {isa = PBXBuildFile; fileRef = 57E4F8C11F19582900CB92AD /* image-launch-1242x2208.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +87,7 @@
 			remoteGlobalIDString = 5766D37B1EBA1C58002BA898;
 			remoteInfo = UIViewShowcase;
 		};
-		57692AEF1EF413AB00C3370C /* PBXContainerItemProxy */ = {
+		57810E751F1983F200C3C612 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 57692AE31EF4139C00C3370C /* TGF.xcodeproj */;
 			proxyType = 1;
@@ -93,6 +95,20 @@
 			remoteInfo = TGF;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		57810E771F1983F200C3C612 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				57810E741F1983F200C3C612 /* TGF.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5714B8621C9DC37900B4FEC7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = productGroceries/Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -105,7 +121,7 @@
 		5715FC531CBEFD7C00044118 /* Multimedia button click 158.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 158.mp3"; path = "Resources/Audio/Multimedia button click 158.mp3"; sourceTree = "<group>"; };
 		5715FC571CBEFDDA00044118 /* Multimedia button click 54.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 54.mp3"; path = "Resources/Audio/Multimedia button click 54.mp3"; sourceTree = "<group>"; };
 		5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerOfThemes.swift; sourceTree = "<group>"; };
-		574880EF1C89EEF000A3806F /* Groceries.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Groceries.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		574880EF1C89EEF000A3806F /* Grocerio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Grocerio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		574880F21C89EEF100A3806F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		574880F91C89EEF100A3806F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		574880FB1C89EEF100A3806F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -127,6 +143,7 @@
 		57A159BF1C90B1C90031036F /* ControllerOfSummary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ControllerOfSummary.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		57A159C31C90F4CE0031036F /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Data.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		57B215B11C91FB2C004B86A2 /* ControllerOfCategories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ControllerOfCategories.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		57E4F8C11F19582900CB92AD /* image-launch-1242x2208.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "image-launch-1242x2208.png"; path = "productGroceries/Resources/App/image-launch-1242x2208.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +151,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57692AF11EF413B200C3370C /* TGF.framework in Frameworks */,
+				57810E731F1983F200C3C612 /* TGF.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +197,7 @@
 		574880E61C89EEF000A3806F = {
 			isa = PBXGroup;
 			children = (
+				57E4F8C11F19582900CB92AD /* image-launch-1242x2208.png */,
 				57692AE31EF4139C00C3370C /* TGF.xcodeproj */,
 				574AD0BD1CBC6A6F0008A580 /* productGroceries.xcdatamodeld */,
 				574880F11C89EEF000A3806F /* productGroceries */,
@@ -192,7 +210,7 @@
 		574880F01C89EEF000A3806F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				574880EF1C89EEF000A3806F /* Groceries.app */,
+				574880EF1C89EEF000A3806F /* Grocerio.app */,
 				574881051C89EEF100A3806F /* productGroceriesTests.xctest */,
 				574881101C89EEF100A3806F /* productGroceriesUITests.xctest */,
 			);
@@ -270,15 +288,16 @@
 				574880EB1C89EEF000A3806F /* Sources */,
 				574880EC1C89EEF000A3806F /* Frameworks */,
 				574880ED1C89EEF000A3806F /* Resources */,
+				57810E771F1983F200C3C612 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				57692AF01EF413AB00C3370C /* PBXTargetDependency */,
+				57810E761F1983F200C3C612 /* PBXTargetDependency */,
 			);
 			name = productGroceries;
 			productName = productGroceries;
-			productReference = 574880EF1C89EEF000A3806F /* Groceries.app */;
+			productReference = 574880EF1C89EEF000A3806F /* Grocerio.app */;
 			productType = "com.apple.product-type.application";
 		};
 		574881041C89EEF100A3806F /* productGroceriesTests */ = {
@@ -402,6 +421,7 @@
 				5715FC4E1CBEFB6C00044118 /* Multimedia button click 194.mp3 in Resources */,
 				5714B8631C9DC37900B4FEC7 /* LaunchScreen.storyboard in Resources */,
 				5715FC4D1CBEFB6C00044118 /* Multimedia button click 193.mp3 in Resources */,
+				57E4F8C21F19582900CB92AD /* image-launch-1242x2208.png in Resources */,
 				574880FC1C89EEF100A3806F /* Assets.xcassets in Resources */,
 				5715FC491CBEED5400044118 /* Beep short 14.mp3 in Resources */,
 				5715FC481CBEED5400044118 /* Beep short 07.mp3 in Resources */,
@@ -490,10 +510,10 @@
 			target = 574880EE1C89EEF000A3806F /* productGroceries */;
 			targetProxy = 574881111C89EEF100A3806F /* PBXContainerItemProxy */;
 		};
-		57692AF01EF413AB00C3370C /* PBXTargetDependency */ = {
+		57810E761F1983F200C3C612 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = TGF;
-			targetProxy = 57692AEF1EF413AB00C3370C /* PBXContainerItemProxy */;
+			targetProxy = 57810E751F1983F200C3C612 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -521,6 +541,7 @@
 		574881171C89EEF100A3806F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -565,6 +586,7 @@
 		574881181C89EEF100A3806F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -602,8 +624,8 @@
 		5748811A1C89EEF100A3806F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 5AKM62S97F;
@@ -611,7 +633,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tinygamefactory.groceries;
-				PRODUCT_NAME = Groceries;
+				PRODUCT_NAME = Grocerio;
 				PROVISIONING_PROFILE = "";
 				SWIFT_VERSION = 3.0;
 			};
@@ -620,8 +642,8 @@
 		5748811B1C89EEF100A3806F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 5AKM62S97F;
@@ -629,7 +651,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tinygamefactory.groceries;
-				PRODUCT_NAME = Groceries;
+				PRODUCT_NAME = Grocerio;
 				PROVISIONING_PROFILE = "";
 				SWIFT_VERSION = 3.0;
 			};

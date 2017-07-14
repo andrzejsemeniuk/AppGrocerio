@@ -164,9 +164,9 @@ class SettingsController : GenericControllerOfSettings
             [
                 "CATEGORIES",
                 
-                createCellForFont(font0: Data.Manager.settingsGetCategoriesFont(),title:"Categories",key:.SettingsTabCategoriesFont),
+                createCellForFont(Data.Manager.settingsGetCategoriesFont(),title:"Categories",key:.SettingsTabCategoriesFont),
                 
-                createCellForColor(color0: Data.Manager.settingsGetCategoriesTextColor(),title:"Categories",key:.SettingsTabCategoriesTextColor),
+                createCellForColor(Data.Manager.settingsGetCategoriesTextColor(),title:"Categories",key:.SettingsTabCategoriesTextColor),
                 
                 { (cell:UITableViewCell, indexPath:IndexPath) in
                     if let label = cell.textLabel {
@@ -227,7 +227,7 @@ class SettingsController : GenericControllerOfSettings
             [
                 "ITEM TEXT",
 
-                createCellForFont(font0: Data.Manager.settingsGetItemsFont(),title:"Items",key:.SettingsTabItemsFont),
+                createCellForFont(Data.Manager.settingsGetItemsFont(),title:"Items",key:.SettingsTabItemsFont),
                 
 //                { (cell:UITableViewCell, indexPath:IndexPath) in
 //                    if let label = cell.textLabel {
@@ -241,7 +241,7 @@ class SettingsController : GenericControllerOfSettings
 //                    }
 //                },
                 
-                createCellForColor(color0: Data.Manager.settingsGetItemsTextColor(),title:"Items Text",key:.SettingsTabItemsTextColor),
+                createCellForColor(Data.Manager.settingsGetItemsTextColor(),title:"Items Text",key:.SettingsTabItemsTextColor),
                 
 //                { (cell:UITableViewCell, indexPath:IndexPath) in
 //                    if let label = cell.textLabel {
@@ -311,7 +311,7 @@ class SettingsController : GenericControllerOfSettings
             [
                 "ITEM QUANTITY",
                 
-                createCellForFont(font0: Data.Manager.settingsGetItemsQuantityFont(),title:"Quantity",key:.SettingsTabItemsQuantityFont),
+                createCellForFont(Data.Manager.settingsGetItemsQuantityFont(),title:"Quantity",key:.SettingsTabItemsQuantityFont),
                 
 //                { (cell:UITableViewCell, indexPath:IndexPath) in
 //                    if let label = cell.textLabel {
@@ -325,9 +325,9 @@ class SettingsController : GenericControllerOfSettings
 //                    }
 //                },
                 
-                createCellForColor(color0: Data.Manager.settingsGetItemsQuantityTextColor(),title:"Quantity Text",key:.SettingsTabItemsQuantityColorText),
+                createCellForColor(Data.Manager.settingsGetItemsQuantityTextColor(),title:"Quantity Text",key:.SettingsTabItemsQuantityColorText),
                 
-                createCellForColor(color0: Data.Manager.settingsGetItemsQuantityBackgroundColorWithOpacity(false),name:"Background", title:"Quantity Background",key:.SettingsTabItemsQuantityColorBackground),
+                createCellForColor(Data.Manager.settingsGetItemsQuantityBackgroundColorWithOpacity(false),name:"Background", title:"Quantity Background",key:.SettingsTabItemsQuantityColorBackground),
                 
                 { (cell:UITableViewCell, indexPath:IndexPath) in
                     if let label = cell.textLabel {
@@ -346,7 +346,7 @@ class SettingsController : GenericControllerOfSettings
             [
                 "SELECTION",
                 
-                createCellForColor(color0: Data.Manager.settingsGetColorForKey(.SettingsSelectionColor),title:"Selection",key:.SettingsSelectionColor) {
+                createCellForColor(Data.Manager.settingsGetColorForKey(.SettingsSelectionColor),title:"Selection",key:.SettingsSelectionColor) {
                 },
                 
                 { (cell:UITableViewCell, indexPath:IndexPath) in
@@ -366,7 +366,7 @@ class SettingsController : GenericControllerOfSettings
             [
                 "APP",
                 
-                createCellForColor(color0: Data.Manager.settingsGetBackgroundColor(),name:"Background",title:"Background",key:.SettingsBackgroundColor) {
+                createCellForColor(Data.Manager.settingsGetBackgroundColor(),name:"Background",title:"Background",key:.SettingsBackgroundColor) {
                     AppDelegate.rootViewController.view.backgroundColor     = Data.Manager.settingsGetBackgroundColor()
                     self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
                 },

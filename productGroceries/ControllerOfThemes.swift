@@ -145,16 +145,16 @@ class ControllerOfThemes : GenericControllerOfSettings
                 
                 definePredefinedThemeWithName("Solid"),
                 
-                createCellForColor(color0: Data.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
+                createCellForColor(Data.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
 //                        self.reload()
                 },
                 
                 definePredefinedThemeWithName("Range"),
                 
-                createCellForColor(color0: Data.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
+                createCellForColor(Data.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
 //                        self.reload()
                 },
-                createCellForColor(color0: Data.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
+                createCellForColor(Data.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
 //                        self.reload()
                 },
                 
