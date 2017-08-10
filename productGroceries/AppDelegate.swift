@@ -9,6 +9,9 @@
 import UIKit
 import CoreData
 
+// TODO: ADD ANIMATED TRANSITIONS BETWEEN TAB SWITCHING
+// TODO: ADD SEARCH ON CATEGORIES AND SUMMARY PAGES
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

@@ -128,6 +128,9 @@ class SettingsController : GenericControllerOfSettings
                     
                     guard let `self` = self else { return }
 
+                    // TODO: ADD SPECIAL CHARACTER TO DELIMIT CLASSIC AND CUSTOM THEMES, EX: |
+                    //       AND THEN LIST CUSTOM THEMES FIRST AND LET THEM BE DELETABLE
+                    
                     let list = self.preferences.settingList.value.split(",")
                     
                     print("settings list =\(list)")
@@ -137,6 +140,8 @@ class SettingsController : GenericControllerOfSettings
                         let controller = GenericControllerOfList()
                         
                         controller.items = list.sorted()
+                        
+                        controller.selected = self.preferences.settingCurrent.value
                         
                         controller.handlerForDidSelectRowAtIndexPath = { [weak self] controller, indexPath in
                             guard let `self` = self else { return }
