@@ -15,12 +15,12 @@ open class Audio
     
     class func initialize()
     {
-        _ = play("Beep short 07",ofType:"mp3")
+        _ = play("Beep short 07", ofType:"mp3")
     }
     
     class func play(_ filename:String, ofType type:String,volume:Float = 1, pan:Float = 0, rate:Float = 1) -> AVAudioPlayer?
     {
-        if Data.Manager.settingsGetBoolForKey(.SettingsAudioOn,defaultValue:true) {
+        if AppDelegate.instance.preferences.settingAudioOn.value {
             do
             {
                 if let path             = Bundle.main.path(forResource: filename,ofType:type) {

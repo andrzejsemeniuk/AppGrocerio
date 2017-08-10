@@ -9,14 +9,14 @@
 import Foundation
 import AVFoundation
 import UIKit
-import TGF
+import ASToolkit
 
 
 
 
 class ItemsController : UITableViewController, UIGestureRecognizerDelegate
 {
-    var items:[Data.Item]           = []
+    var items:[Store.Item]           = []
     
     var category:String             = ""
     
@@ -24,7 +24,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     var lastTap:UITableViewTap!
     
-    
+
     
     
     override func viewDidLoad()
@@ -76,9 +76,13 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     
     
-    class func styleCell(_ cell:UITableViewCell, item:Data.Item, indexPath:IndexPath)
+    class func styleCell(_ cell:UITableViewCell, item:Store.Item, indexPath:IndexPath)
     {
-        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Data.Manager.settingsGetSelectionColor())
+        var preferences                 : Preferences {
+            return AppDelegate.instance.preferences
+        }
+        
+        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Store.Manager.settingsGetSelectionColor())
         
         do
         {
@@ -86,7 +90,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             
             //            let rgba  = color.RGBA()
             
-            let alpha = Data.Manager.settingsGetFloatForKey(indexPath.row.isEven ? .SettingsTabItemsRowEvenOpacity : .SettingsTabItemsRowOddOpacity, defaultValue:0.8)
+            let alpha = indexPath.row.isEven ? preferences.settingTabItemsRowEvenOpacity.value : preferences.settingTabItemsRowOddOpacity.value
             
             color = color.withAlphaComponent(CGFloat(alpha))
             
@@ -94,16 +98,38 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         }
         
         if let label = cell.textLabel {
-            if Data.Manager.settingsGetBoolForKey(.SettingsTabItemsUppercase) {
+            
+            if preferences.settingTabItemsUppercase.value {
                 label.text = item.name.uppercased()
             }
             else {
                 label.text = item.name
             }
-            label.textColor = Data.Manager.settingsGetItemsTextColor()
-            label.font      = Data.Manager.settingsGetItemsFont()
+            
+            if preferences.settingTabItemsTextColorSameAsCategories.value {
+                label.textColor = preferences.settingTabCategoriesTextColor.value
+            }
+            else {
+                label.textColor = preferences.settingTabItemsTextColor.value
+            }
+            
 
-            if Data.Manager.settingsGetBoolForKey(.SettingsTabItemsEmphasize) {
+            if preferences.settingTabItemsFontSameAsCategories.value {
+                // TODO: REFACTOR
+                let defaultFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
+                label.font      = UIFont(name:preferences.settingTabCategoriesFont.value,
+                                         size:defaultFont.pointSize + preferences.settingTabCategoriesFontGrowth.value)
+                    ?? defaultFont
+            }
+            else {
+                // TODO: REFACTOR
+                let defaultFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
+                label.font      = UIFont(name:preferences.settingTabItemsFont.value,
+                                         size:defaultFont.pointSize + preferences.settingTabItemsFontGrowth.value)
+                    ?? defaultFont
+            }
+
+            if preferences.settingTabItemsEmphasize.value {
                 label.font = label.font.withSize(label.font.pointSize+1)
             }
         }
@@ -146,7 +172,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     
     func reload()
     {
-        items = Data.Manager.itemGetAllInCategory(category)
+        items = Store.Manager.itemGetAllInCategory(category)
         
         self.title = category
 
@@ -168,7 +194,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             action in
             
             if let fields = alert.textFields, let text = fields[0].text {
-                Data.Manager.itemPut(Data.Item.create(name:text.trimmed(),category:self.category))
+                Store.Manager.itemPut(Store.Item.create(name:text.trimmed(),category:self.category))
                 self.reload()
             }
         })
@@ -196,7 +222,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             print("None")
         case .delete:
             let item = items[indexPath.row]
-            Data.Manager.itemRemove(item)
+            Store.Manager.itemRemove(item)
             items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with:.left)
         case .insert:
@@ -238,7 +264,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             }
             
             if update {
-                Data.Manager.itemPut(item)
+                Store.Manager.itemPut(item)
                 items[indexPath.row] = item
                 self.reload()
             }
@@ -273,10 +299,10 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         reload()
 
         
-        tableView.backgroundColor = Data.Manager.settingsGetBackgroundColor()
+        tableView.backgroundColor = AppDelegate.instance.preferences.settingBackgroundColor.value
         
 
-        Data.Manager.displayHelpPageForItems(self)
+        Store.Manager.displayHelpPageForItems(self)
 
         super.viewWillAppear(animated)
     }

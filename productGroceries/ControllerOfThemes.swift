@@ -8,10 +8,15 @@
 
 import Foundation
 import UIKit
+import ASToolkit
 
 class ControllerOfThemes : GenericControllerOfSettings
 {
+    var preferences             : Preferences {
+        return AppDelegate.instance.preferences
+    }
     
+
     override func viewDidLoad()
     {
         tableView               = UITableView(frame:tableView.frame,style:.grouped)
@@ -73,16 +78,16 @@ class ControllerOfThemes : GenericControllerOfSettings
         
         
         let definePredefinedThemeWithName = { (name:String) -> Any in
-            return { (cell:UITableViewCell, indexPath:IndexPath) in
+            return { [weak self] (cell:UITableViewCell, indexPath:IndexPath) in
                 if let label = cell.textLabel {
                     cell.selectionStyle = .default
                     label.text          = name
-                    self.addAction(indexPath: indexPath) {
-                        Data.Manager.settingsSetThemeWithName(name)
-                        self.reload()
+                    self?.addAction(indexPath: indexPath) {
+                        self?.preferences.settingTabThemesName.value = name
+                        self?.reload()
                     }
                 }
-                if Data.Manager.settingsGetThemeName() == name {
+                if self?.preferences.settingTabThemesName.value == name {
                     cell.accessoryType = .checkmark
                 }
                 else {
@@ -101,24 +106,7 @@ class ControllerOfThemes : GenericControllerOfSettings
             [
                 "", //"PREDEFINED THEME SATURATION",
                 
-                { (cell:UITableViewCell, indexPath:IndexPath) in
-//                    let slider = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
-//                        Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
-//                    })
-//                    let W:CGFloat = AppDelegate.rootViewController.view.bounds.width
-//                    let w:CGFloat = W/2.0
-//                    cell.frame  = CGRectMake(W/2.0-w,0,w,cell.bounds.height)
-//                    cell.addSubview(slider)
-                    if let label = cell.textLabel {
-                        label.text          = "Saturation"
-                        cell.accessoryView  = self.registerSlider(value: Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
-                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
-                        })
-                        cell.accessoryType  = .none
-                        cell.selectionStyle = .default
-                    }
-                },
-                
+                createCellForUISlider(AppDelegate.instance.preferences.settingTabThemesSaturation, title: "Saturation"),                
                 
                 ""
             ])
@@ -145,18 +133,15 @@ class ControllerOfThemes : GenericControllerOfSettings
                 
                 definePredefinedThemeWithName("Solid"),
                 
-                createCellForColor(Data.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
-//                        self.reload()
-                },
+//                createCellForUIColor(Store.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
+//                },
                 
                 definePredefinedThemeWithName("Range"),
                 
-                createCellForColor(Data.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
-//                        self.reload()
-                },
-                createCellForColor(Data.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
-//                        self.reload()
-                },
+//                createCellForUIColor(Store.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
+//                },
+//                createCellForUIColor(Store.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
+//                },
                 
                 ""
             ])

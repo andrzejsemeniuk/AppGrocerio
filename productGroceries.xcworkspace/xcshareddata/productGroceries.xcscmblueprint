@@ -1,0 +1,44 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "647B618CDF6E9FC41654DA3106F11AC43DD91832",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "B480A179126404E5119EFE07705B316B4678730A" : 9223372036854775807,
+    "647B618CDF6E9FC41654DA3106F11AC43DD91832" : 9223372036854775807,
+    "B61467CADB1DD4CAD9EAF83768F805F9000E2788" : 9223372036854775807,
+    "35453BFA2261476D3F394C70DE44A8C33A5C12BF" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "75164ABB-1F9A-4760-AC57-187681A46812",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "B480A179126404E5119EFE07705B316B4678730A" : "TGF\/TGF\/Euler\/",
+    "647B618CDF6E9FC41654DA3106F11AC43DD91832" : "AppGrocerio\/",
+    "B61467CADB1DD4CAD9EAF83768F805F9000E2788" : "TGF\/",
+    "35453BFA2261476D3F394C70DE44A8C33A5C12BF" : "ASToolkit\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "productGroceries",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "productGroceries.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/andrzejsemeniuk\/ASToolkit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "35453BFA2261476D3F394C70DE44A8C33A5C12BF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/andrzejsemeniuk\/TGFGroceryList.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "647B618CDF6E9FC41654DA3106F11AC43DD91832"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mattt\/Euler.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B480A179126404E5119EFE07705B316B4678730A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/andrzejsemeniuk\/TGFSwift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B61467CADB1DD4CAD9EAF83768F805F9000E2788"
+    }
+  ]
+}

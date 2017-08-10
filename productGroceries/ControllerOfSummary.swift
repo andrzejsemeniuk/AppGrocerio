@@ -8,17 +8,22 @@
 
 import Foundation
 import UIKit
-import TGF
+import ASToolkit
+
 
 
 class ControllerOfSummary : UITableViewController, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate
 {
-    var items:[[Data.Item]] = [[]]
+    var items                   : [[Store.Item]] = [[]]
     
-    var lastTap:UITableViewTap!
+    var lastTap                 : UITableViewTap!
     
-    var buttonLoad:UIBarButtonItem!
+    var buttonLoad              : UIBarButtonItem!
     
+    var preferences             : Preferences {
+        return AppDelegate.instance.preferences
+    }
+
     
     
     
@@ -128,7 +133,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             
             if let fields = alert.textFields, let text = fields[0].text?.trimmed() {
                 if text != self.CLEAR {
-                    if Data.Manager.summarySave(text) {
+                    if Store.Manager.summarySave(text) {
                         self.lastGroceryListName = text
                     }
                 }
@@ -155,7 +160,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     {
         let list    = GenericControllerOfList()
         
-        list.items  = [CLEAR] + Data.Manager.summaryList()
+        list.items  = [CLEAR] + Store.Manager.summaryList()
         list.items  = list.items.sorted()
         
 //        list.tableView.separatorStyle   = .SingleLineEtched
@@ -164,10 +169,10 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             let row         = indexPath.row
             let selection   = list.items[row]
             if selection == self.CLEAR {
-                Data.Manager.summaryClear()
+                Store.Manager.summaryClear()
             }
             else {
-                _ = Data.Manager.summaryAdd(selection)
+                _ = Store.Manager.summaryAdd(selection)
             }
 //            controller.dismissViewControllerAnimated(true, completion:nil)
             controller.navigationController!.popViewController(animated: true)
@@ -177,7 +182,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         
 //        let list = GenericListController()
 //        
-//        list.items                          = ["Clear",""] + Data.Manager.summaryList()
+//        list.items                          = ["Clear",""] + Store.Manager.summaryList()
 //        list.modalPresentationStyle         = UIModalPresentationStyle.Popover
 //        list.preferredContentSize           = CGSizeMake(400, 400)
 ////        list.tableView.frame = CGRectMake(0,0,200,200)
@@ -193,10 +198,10 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
 //            let row         = indexPath.row
 //            let selection   = list.items[row]
 //            if selection == "Clear" {
-//                Data.Manager.summaryClear()
+//                Store.Manager.summaryClear()
 //            }
 //            else {
-//                Data.Manager.summaryUse(selection)
+//                Store.Manager.summaryUse(selection)
 //            }
 //            controller.dismissViewControllerAnimated(true, completion:nil)
 //        }
@@ -233,17 +238,28 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         
         let text                    = items[section][0].category
         
-        if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase) {
-            result.text                 = text.uppercased()
+        if preferences.settingTabCategoriesUppercase.value {
+            result.text             = text.uppercased()
         }
         else {
-            result.text                 = text
+            result.text             = text
         }
 
-        result.textColor            = Data.Manager.settingsGetCategoriesTextColor()
-        result.font                 = Data.Manager.settingsGetCategoriesFont()
+        // TODO: REFACTOR
+        let defaultFont             = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
+        result.font                 = UIFont(name: preferences.settingTabItemsQuantityFont.value,
+                                             size: defaultFont.pointSize + preferences.settingTabItemsQuantityFontGrowth.value)
+            ?? defaultFont
 
-        if Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize) {
+        // TODO: REFACTOR
+        if preferences.settingTabItemsQuantityColorTextSameAsItems.value {
+            result.textColor        = preferences.settingTabItemsTextColor.value
+        }
+        else {
+            result.textColor        = preferences.settingTabItemsQuantityColorText.value
+        }
+
+        if preferences.settingTabCategoriesEmphasize.value {
             result.font = result.font.withSize(result.font.pointSize+2)
         }
         
@@ -301,7 +317,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     
     func reload(_ updateTable:Bool = true)
     {
-        items = Data.Manager.summary()
+        items = Store.Manager.summary()
 
         if updateTable {
             tableView.reloadData()
@@ -315,10 +331,10 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         reload(true)
         
         
-        tableView.backgroundColor = Data.Manager.settingsGetBackgroundColor()
+        tableView.backgroundColor = preferences.settingBackgroundColor.value
 
         
-        Data.Manager.displayHelpPageForSummary(self)
+        Store.Manager.displayHelpPageForSummary(self)
 
         super.viewWillAppear(animated)
     }
@@ -337,7 +353,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             let section     = indexPath.section
             let row         = indexPath.row
             let item        = items[section][row]
-            Data.Manager.itemReset(item)
+            Store.Manager.itemReset(item)
             items[section].remove(at: row)
             if items[section].count < 1 {
                 items.remove(at: section)
@@ -405,7 +421,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             }
             
             if update {
-                Data.Manager.itemPut(item)
+                Store.Manager.itemPut(item)
                 if item.quantity == 0 {
                     items[section].remove(at: row)
                     if items[section].count < 1 {
