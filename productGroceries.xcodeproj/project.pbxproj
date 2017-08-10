@@ -31,7 +31,6 @@
 		5730C8641C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */; };
 		5730C8651C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */; };
 		5730C8661C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */; };
-		574345361F3B6A9C00E576A2 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574345351F3B6A9C00E576A2 /* Theme.swift */; };
 		574880F31C89EEF100A3806F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574880F21C89EEF100A3806F /* AppDelegate.swift */; };
 		574880FA1C89EEF100A3806F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 574880F81C89EEF100A3806F /* Main.storyboard */; };
 		574880FC1C89EEF100A3806F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 574880FB1C89EEF100A3806F /* Assets.xcassets */; };
@@ -119,7 +118,6 @@
 		5715FC531CBEFD7C00044118 /* Multimedia button click 158.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 158.mp3"; path = "Resources/Audio/Multimedia button click 158.mp3"; sourceTree = "<group>"; };
 		5715FC571CBEFDDA00044118 /* Multimedia button click 54.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Multimedia button click 54.mp3"; path = "Resources/Audio/Multimedia button click 54.mp3"; sourceTree = "<group>"; };
 		5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerOfThemes.swift; sourceTree = "<group>"; };
-		574345351F3B6A9C00E576A2 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		574880EF1C89EEF000A3806F /* Grocerio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Grocerio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		574880F21C89EEF100A3806F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		574880F91C89EEF100A3806F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -249,7 +247,6 @@
 				5730C8631C9BA4B7009145B2 /* ControllerOfThemes.swift */,
 				5708C67D1F3120A20029DE65 /* Preferences.swift */,
 				57A159C31C90F4CE0031036F /* Store.swift */,
-				574345351F3B6A9C00E576A2 /* Theme.swift */,
 				574880FB1C89EEF100A3806F /* Assets.xcassets */,
 				5714B8611C9DC37900B4FEC7 /* LaunchScreen.storyboard */,
 				574880F81C89EEF100A3806F /* Main.storyboard */,
@@ -616,7 +613,6 @@
 				57A159C41C90F4CE0031036F /* Store.swift in Sources */,
 				5708C67E1F3120A20029DE65 /* Preferences.swift in Sources */,
 				5715FC501CBEFBAA00044118 /* Audio.swift in Sources */,
-				574345361F3B6A9C00E576A2 /* Theme.swift in Sources */,
 				57A159BC1C90981C0031036F /* ControllerOfItems.swift in Sources */,
 				574880F31C89EEF100A3806F /* AppDelegate.swift in Sources */,
 				5730C8641C9BA4B7009145B2 /* ControllerOfThemes.swift in Sources */,

@@ -100,12 +100,11 @@ class ControllerOfCategories : UITableViewController {
 
     func colorForCategoryIndex(index:Int) -> UIColor
     {
-        /*
-        let saturation = CGFloat(Store.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4))
+        let saturation = preferences.settingTabThemesSaturation.value
         
         let mark:CGFloat = CGFloat(Float(index)/Float(categories.count)).clampedTo01
         
-        switch Store.Manager.settingsGetThemeName()
+        switch preferences.settingCurrent.value
         {
         case "Apple":
             return UIColor(hue:mark.lerp01(from:0.15, to:0.35), saturation:saturation, brightness:1.0, alpha:1.0)
@@ -122,8 +121,8 @@ class ControllerOfCategories : UITableViewController {
         case "Rainbow":
             return UIColor(hue:mark.lerp01(from:0.0, to:0.9), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Range":
-            let color0  = Store.Manager.settingsGetColorForKey(.SettingsTabThemesRangeFromColor).HSBA
-            let color1  = Store.Manager.settingsGetColorForKey(.SettingsTabThemesRangeToColor).HSBA
+            let color0  = preferences.settingTabThemesRangeFromColor.value.HSBA
+            let color1  = preferences.settingTabThemesRangeToColor.value.HSBA
             return UIColor(hue:mark.lerp01(from:color0.hue, to:color1.hue),
                            saturation:mark.lerp01(from:color0.saturation, to:color1.saturation)*saturation,
                            brightness:mark.lerp01(from:color0.brightness, to:color1.brightness),
@@ -131,12 +130,12 @@ class ControllerOfCategories : UITableViewController {
         case "Strawberry":
             return UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
         case "Solid":
-            let HSBA = Store.Manager.settingsGetColorForKey(.SettingsTabThemesSolidColor).HSBA
+            let HSBA = preferences.settingTabThemesSolidColor.value.HSBA
             return UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
         default:
             break
         }
- */
+
         return UIColor.white
     }
     

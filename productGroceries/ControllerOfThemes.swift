@@ -15,7 +15,7 @@ class ControllerOfThemes : GenericControllerOfSettings
     var preferences             : Preferences {
         return AppDelegate.instance.preferences
     }
-    
+
 
     override func viewDidLoad()
     {

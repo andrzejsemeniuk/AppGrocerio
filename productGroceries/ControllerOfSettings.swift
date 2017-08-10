@@ -121,47 +121,53 @@ class SettingsController : GenericControllerOfSettings
 //                    }
 //                },
                 
-//                { (cell:UITableViewCell, indexPath:IndexPath) in
-//                    if let label = cell.textLabel {
-//                        label.text          = "Load"
-//                        if Store.Manager.settingsListIsEmpty() {
-//                            cell.selectionStyle = .none
-//                            cell.accessoryType  = .none
-//                        }
-//                        else {
-//                            cell.selectionStyle = .default
-//                            cell.accessoryType  = .disclosureIndicator
-//                        }
-//                        self.registerCellSelection(indexPath: indexPath) {
-//                            let list = Store.Manager.settingsList()
-//                            
-//                            print("settings list =\(list)")
-//                            
-//                            if 0 < list.count {
-//                                let controller = GenericControllerOfList()
-//                                
-//                                controller.items = Store.Manager.settingsList().sorted()
-//                                controller.handlerForDidSelectRowAtIndexPath = { controller, indexPath in
-//                                    let selected = controller.items[indexPath.row]
-//                                    _ = Store.Manager.settingsUse(selected)
-//                                    AppDelegate.rootViewController.view.backgroundColor = Store.Manager.settingsGetBackgroundColor()
-//                                    //                                    AppDelegate.controllerOfPages.view.backgroundColor  = Store.Manager.settingsGetBackgroundColor()
-//                                    controller.navigationController!.popViewController(animated: true)
-//                                }
-//                                controller.handlerForCommitEditingStyle = { controller, commitEditingStyle, indexPath in
-//                                    if commitEditingStyle == .delete {
-//                                        let selected = controller.items[indexPath.row]
-//                                        _ = Store.Manager.settingsRemove(selected)
-//                                        return true
-//                                    }
-//                                    return false
-//                                }
-//                                
-//                                self.navigationController?.pushViewController(controller, animated:true)
-//                            }
-//                        }
-//                    }
-//                },
+                createCellForTap(title: "Load", detail:preferences.settingCurrent.value ,setup: { cell,indexpath in
+                    cell.selectionStyle = .default
+                    cell.accessoryType  = .disclosureIndicator
+                }) { [weak self] in
+                    
+                    guard let `self` = self else { return }
+
+                    let list = self.preferences.settingList.value.split(",")
+                    
+                    print("settings list =\(list)")
+                    
+                    if 0 < list.count {
+                        
+                        let controller = GenericControllerOfList()
+                        
+                        controller.items = list.sorted()
+                        
+                        controller.handlerForDidSelectRowAtIndexPath = { [weak self] controller, indexPath in
+                            guard let `self` = self else { return }
+                            let selected = controller.items[indexPath.row]
+                            self.preferences.theme(loadWithName:selected)
+                            AppDelegate.rootViewController.view.backgroundColor = self.preferences.settingBackgroundColor.value
+                            controller.navigationController?.popViewController(animated: true)
+                        }
+                        
+                        controller.handlerForCommitEditingStyle = { [weak self] controller, commitEditingStyle, indexPath in
+                            guard
+                                let `self` = self,
+                                commitEditingStyle == .delete
+                                else {
+                                    return false
+                            }
+                            // TODO: TEST
+                            let selected = controller.items[indexPath.row]
+                            var newlist = list
+                            if let index = newlist.index(where: { $0 == selected }) {
+                                newlist.remove(at:index)
+                                self.preferences.settingList.value = newlist.joined(separator:",")
+                                return true
+                            }
+                            return false
+                        }
+                        
+                        self.navigationController?.pushViewController(controller, animated:true)
+                    }
+
+                },
                 
                 "Save current settings, or load previously saved settings"
             ],
@@ -171,7 +177,7 @@ class SettingsController : GenericControllerOfSettings
                 
                 createCellForUIFontName (preferences.settingTabCategoriesFont, title: "Font"),
                 
-                createCellForUIColor(preferences.settingTabCategoriesTextColor, title: "Text Color"),
+                createCellForUIColor(preferences.settingTabCategoriesTextColor, title: "Color"),
                 
                 createCellForUISwitch(preferences.settingTabCategoriesUppercase, title: "Uppercase"),
                 
@@ -228,9 +234,9 @@ class SettingsController : GenericControllerOfSettings
             [
                 "ITEM QUANTITY",
 
-                createCellForUIFontName(preferences.settingTabItemsQuantityFont, title: "Quantity"),
+                createCellForUIFontName(preferences.settingTabItemsQuantityFont, title: "Font"),
                 
-                createCellForUIColor(preferences.settingTabItemsQuantityColorText, title: "Quantity Text"),
+                createCellForUIColor(preferences.settingTabItemsQuantityColorText, title: "Color"),
                 
                 createCellForUIColor(preferences.settingTabItemsQuantityColorBackground , title: "Background"),
                 
@@ -242,7 +248,7 @@ class SettingsController : GenericControllerOfSettings
             [
                 "SELECTION",
                 
-                createCellForUIColor(preferences.settingSelectionColor, title: "Selection"),
+                createCellForUIColor(preferences.settingSelectionColor, title: "Background"),
                 
                 createCellForUISlider(preferences.settingSelectionColorOpacity, title: "Opacity"),
                 
