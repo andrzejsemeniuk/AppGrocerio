@@ -13,23 +13,30 @@ import ASToolkit
 class SettingsController : GenericControllerOfSettings
 {
     
-    var preferences:Preferences {
+    
+    var preferences                 : Preferences {
         return AppDelegate.instance.preferences
     }
     
+    
+    
     override func viewDidLoad()
     {
-        tableView               = UITableView(frame:tableView.frame,style:.grouped)
+        tableView                   = UITableView(frame:tableView.frame,style:.grouped)
         
-        tableView.dataSource    = self
+        tableView.dataSource        = self
         
-        tableView.delegate      = self
+        tableView.delegate          = self
         
         
-        tableView.separatorStyle = .none
+        tableView.separatorStyle    = .none
         
+        tableView.showsVerticalScrollIndicator = false
+
         super.viewDidLoad()
     }
+    
+    
     
     override func didReceiveMemoryWarning()
     {
@@ -72,6 +79,25 @@ class SettingsController : GenericControllerOfSettings
         return [
             [
                 "SETTINGS",
+                
+                createCellForTapOnInput(title    : "Save",
+                                        message  : "Specify name for current settings.",
+                                        setup    : { [weak self] cell,indexpath in
+                                            cell.selectionStyle = .default
+                                            cell.accessoryType  = .none
+                }, value:{ [weak self] in
+                    return self?.preferences.settingCurrent.value ?? ""
+                }) { [weak self] text in
+                    
+                    if 0 < text.length {
+                        self?.preferences.theme(saveWithName:text)
+                        self?.preferences.settingCurrent.value = text
+                        
+                        print(UserDefaults.standard.dictionaryRepresentation())
+                        
+                        self?.tableView.reloadData()
+                    }
+                },
                 
 //                { (cell:UITableViewCell, indexPath:IndexPath) in
 //                    if let label = cell.detailTextLabel {
@@ -128,9 +154,6 @@ class SettingsController : GenericControllerOfSettings
                     
                     guard let `self` = self else { return }
 
-                    // TODO: ADD SPECIAL CHARACTER TO DELIMIT CLASSIC AND CUSTOM THEMES, EX: |
-                    //       AND THEN LIST CUSTOM THEMES FIRST AND LET THEM BE DELETABLE
-                    
                     let list = self.preferences.settingList.value.split(",")
                     
                     print("settings list =\(list)")
@@ -175,6 +198,20 @@ class SettingsController : GenericControllerOfSettings
                 },
                 
                 "Save current settings, or load previously saved settings"
+            ],
+            
+            [
+                "APP",
+                
+                createCellForUIColor(preferences.settingBackgroundColor, title: "Background") { [weak self] in
+                    guard let `self` = self else { return }
+                    AppDelegate.rootViewController.view.backgroundColor     = self.preferences.settingBackgroundColor.value
+                    self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
+                },
+                
+                createCellForUISwitch(preferences.settingAudioOn, title: "Audio"),
+                
+                "Set app properties"
             ],
             
             [
@@ -241,7 +278,11 @@ class SettingsController : GenericControllerOfSettings
 
                 createCellForUIFontName(preferences.settingTabItemsQuantityFont, title: "Font"),
                 
+                createCellForUISwitch(preferences.settingTabItemsQuantityFontSameAsItems, title: "  Same as Items"),
+                
                 createCellForUIColor(preferences.settingTabItemsQuantityColorText, title: "Color"),
+                
+                createCellForUISwitch(preferences.settingTabItemsQuantityColorTextSameAsItems, title: "  Same as Items"),
                 
                 createCellForUIColor(preferences.settingTabItemsQuantityColorBackground , title: "Background"),
                 
@@ -258,20 +299,6 @@ class SettingsController : GenericControllerOfSettings
                 createCellForUISlider(preferences.settingSelectionColorOpacity, title: "Opacity"),
                 
                 "Set selection properties for rows on all tabs"
-            ],
-            
-            [
-                "APP",
-                
-                createCellForUIColor(preferences.settingBackgroundColor, title: "Background") { [weak self] in
-                    guard let `self` = self else { return }
-                    AppDelegate.rootViewController.view.backgroundColor     = self.preferences.settingBackgroundColor.value
-                    self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
-                },
-                
-                createCellForUISwitch(preferences.settingAudioOn, title: "Audio"),
-
-                "Set app properties"
             ],
             
 //            [
@@ -343,6 +370,8 @@ class SettingsController : GenericControllerOfSettings
         
         colorForHeaderText          = preferences.settingTabSettingsHeaderTextColor.value
         colorForFooterText          = preferences.settingTabSettingsFooterTextColor.value
+        
+        tableView.reloadData()
         
         super.viewWillAppear(animated)
     }

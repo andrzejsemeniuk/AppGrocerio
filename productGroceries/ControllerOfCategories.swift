@@ -39,6 +39,9 @@ class ControllerOfCategories : UITableViewController {
         
         tableView.separatorStyle = .none
 
+        tableView.showsVerticalScrollIndicator = false
+        
+        tableView.showsHorizontalScrollIndicator = false
         
         
         
@@ -98,7 +101,7 @@ class ControllerOfCategories : UITableViewController {
         return defaultColor
     }
 
-    func colorForCategoryIndex(index:Int) -> UIColor
+    func cellColorOfBackgroundForCategory(at index:Int) -> UIColor
     {
         let saturation = preferences.settingTabThemesSaturation.value
         
@@ -136,23 +139,23 @@ class ControllerOfCategories : UITableViewController {
             break
         }
 
-        return UIColor.white
+        return UIColor.clear
     }
     
     
-    func colorForCategory(category:String) -> UIColor
+    func cellColorOfBackgroundForCategory(category:String) -> UIColor
     {
         if let index = categories.index(of: category) {
-            return colorForCategoryIndex(index: index)
+            return cellColorOfBackgroundForCategory(at: index)
         }
         else {
-            return colorForCategoryIndex(index: -1)
+            return cellColorOfBackgroundForCategory(at: -1)
         }
     }
     
     
-    func colorForItem(item:Store.Item, onRow:Int) -> UIColor {
-        let categoryColor = colorForCategory(category: item.category)
+    func cellColorOfBackgroundFor(item:Store.Item, onRow:Int) -> UIColor {
+        let categoryColor = cellColorOfBackgroundForCategory(category: item.category)
             
         let HSBA = categoryColor.HSBA
         
@@ -179,7 +182,7 @@ class ControllerOfCategories : UITableViewController {
     {
         cell.selectedBackgroundView = UIView.createWithBackgroundColor(Store.Manager.settingsGetSelectionColor())
 
-        cell.backgroundColor        = colorForCategoryIndex(index: indexPath.row)
+        cell.backgroundColor        = cellColorOfBackgroundForCategory(at: indexPath.row)
         
         print("styleCell: indexPath.row=\(indexPath.row), section=\(indexPath.section)")
         
@@ -194,7 +197,7 @@ class ControllerOfCategories : UITableViewController {
             
             label.textColor = preferences.settingTabCategoriesTextColor.value
             
-            // TODO: REFACTOR
+            // TODO: REFACTOR INTO SHARED AREA
             let defaultFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
             label.font      = UIFont(name:preferences.settingTabCategoriesFont.value,
                                      size:defaultFont.pointSize + preferences.settingTabCategoriesFontGrowth.value)
@@ -309,6 +312,7 @@ class ControllerOfCategories : UITableViewController {
     
     
     // NOTE: THIS METHOD IS REFERENCED IN APPDELEGTE 
+    // TODO: REFACTOR: REFERENCE FROM APPDELEGATE?
     
     func add()
     {
@@ -340,10 +344,6 @@ class ControllerOfCategories : UITableViewController {
         })
     }
     
-    
-    
-    // NOTE: THIS IS A TABLE-DATA-SOURCE-DELEGATE METHOD
-    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         switch editingStyle
@@ -374,7 +374,7 @@ class ControllerOfCategories : UITableViewController {
         
         let items       = ItemsController()
         
-        items.colorOfCategory = colorForCategoryIndex(index: row)
+        items.colorOfCategory = cellColorOfBackgroundForCategory(at: row)
         
         items.category  = category
         items.items     = Store.Manager.itemGetAllInCategory(category)
@@ -399,19 +399,14 @@ class ControllerOfCategories : UITableViewController {
     override func viewWillAppear(_ animated: Bool)
     {
         reload()
-
         
         tableView.backgroundColor = preferences.settingBackgroundColor.value
-
         
         Store.Manager.displayHelpPageForCategories(self)
         
         super.viewWillAppear(animated)
     }
     
-    
-    
-
 }
 
 

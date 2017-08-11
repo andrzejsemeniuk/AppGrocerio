@@ -61,6 +61,9 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         recognizer.delegate = self
         
         tableView.addGestureRecognizer(recognizer)
+        
+        tableView.showsVerticalScrollIndicator = false
+
     }
     
     
@@ -86,7 +89,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         
         do
         {
-            var color = ControllerOfCategories.instance.colorForItem(item: item,onRow:indexPath.row)
+            var color = ControllerOfCategories.instance.cellColorOfBackgroundFor(item: item,onRow:indexPath.row)
             
             //            let rgba  = color.RGBA()
             
@@ -115,14 +118,12 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             
 
             if preferences.settingTabItemsFontSameAsCategories.value {
-                // TODO: REFACTOR
                 let defaultFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
                 label.font      = UIFont(name:preferences.settingTabCategoriesFont.value,
                                          size:defaultFont.pointSize + preferences.settingTabCategoriesFontGrowth.value)
                     ?? defaultFont
             }
             else {
-                // TODO: REFACTOR
                 let defaultFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
                 label.font      = UIFont(name:preferences.settingTabItemsFont.value,
                                          size:defaultFont.pointSize + preferences.settingTabItemsFontGrowth.value)

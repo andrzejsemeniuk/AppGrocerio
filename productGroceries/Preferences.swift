@@ -95,8 +95,8 @@ class Preferences : GenericManagerOfSettings {
     
     var settingCurrent                                  = GenericSetting<String>        (key:"settings:current", first:"Default")
     var settingList                                     = GenericSetting<String>        (key:"settings-list", first:"Default,Apple,Charcoal,Grape,Gray,Honey,Orange,Plain,Pink,Rainbow,Sky,Strawberry,Chalkboard")
+    var settingListCustom                               = GenericSetting<String>        (key:"settings-list", first:"")
     // Red White and Blue,Clear,Clean,Country,Paper,Shakespeare,Poet,Princess,School,Blueprint,Draft,Plastik")
-    var settingLastName                                 = GenericSetting<String>        (key:"settings-last-name", first:"Default")
 
 }
 
@@ -392,7 +392,7 @@ extension Preferences {
             settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.10,saturation:1.00,brightness:1.00)
             settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
             settingTabItemsQuantityColorText                .value = UIColor(hue:0.00,saturation:0.00,brightness:0.00)
-            settingTabItemsQuantityColorTextSameAsItems     .value = true
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
             settingTabItemsQuantityFont                     .value = "GillSans"
             settingTabItemsQuantityFontGrowth               .value = 2
             settingTabItemsQuantityFontSameAsItems          .value = true
@@ -406,11 +406,21 @@ extension Preferences {
             synchronize()
             
         default:
+            
+            // load custom theme with name if it is stored
+            // get dictionary for theme name
+            // extract dictionary values related to style and find corresponding setting and set its value
+            
             break
         }
     }
     
     func theme(saveWithName name:String) {
+        // remove name from custom list
+        // add name to custom list
+        // create a dictionary from settings
+        // store dictionary under settings
+        
         
     }
 

@@ -12,6 +12,8 @@ import ASToolkit
 
 class ControllerOfThemes : GenericControllerOfSettings
 {
+    
+    
     var preferences             : Preferences {
         return AppDelegate.instance.preferences
     }
@@ -31,6 +33,7 @@ class ControllerOfThemes : GenericControllerOfSettings
         
         super.viewDidLoad()
     }
+    
     
     override func didReceiveMemoryWarning()
     {
@@ -110,6 +113,23 @@ class ControllerOfThemes : GenericControllerOfSettings
                 
                 ""
             ])
+        
+        let customThemeNames = preferences.settingListCustom.value.split(",")
+        
+        if 0 < customThemeNames.count {
+            
+            var section = [Any]()
+            
+            section.append("CUSTOM THEMES")
+            
+            for customThemeName in customThemeNames {
+                section.append(definePredefinedThemeWithName(customThemeName))
+            }
+            
+            section.append("")
+            
+            rows.append(section)
+        }
         
         rows.append(
             [

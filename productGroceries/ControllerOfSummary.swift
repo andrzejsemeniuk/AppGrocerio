@@ -35,7 +35,8 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         
         tableView.separatorStyle = .none
 
-        
+        tableView.showsVerticalScrollIndicator = false
+
         
         
         do
@@ -110,7 +111,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     var lastGroceryListName:String?
     
     
-    let CLEAR   = "<< Clear >>"
+    let CLEAR   = "<< CLEAR >>"
     
 
     func save()
@@ -165,7 +166,8 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         
 //        list.tableView.separatorStyle   = .SingleLineEtched
 
-        list.handlerForDidSelectRowAtIndexPath = { controller, indexPath in
+        list.handlerForDidSelectRowAtIndexPath = { [weak list] controller, indexPath in
+            guard let `list` = list else { return }
             let row         = indexPath.row
             let selection   = list.items[row]
             if selection == self.CLEAR {
@@ -174,38 +176,10 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             else {
                 _ = Store.Manager.summaryAdd(selection)
             }
-//            controller.dismissViewControllerAnimated(true, completion:nil)
-            controller.navigationController!.popViewController(animated: true)
+            controller.navigationController?.popViewController(animated: true)
         }
 
-        self.navigationController!.pushViewController(list,animated:true)
-        
-//        let list = GenericListController()
-//        
-//        list.items                          = ["Clear",""] + Store.Manager.summaryList()
-//        list.modalPresentationStyle         = UIModalPresentationStyle.Popover
-//        list.preferredContentSize           = CGSizeMake(400, 400)
-////        list.tableView.frame = CGRectMake(0,0,200,200)
-//
-//        self.presentViewController(list, animated: true, completion: nil)
-//
-//        let popover = list.popoverPresentationController
-////        popover?.delegate                   = self
-//        popover?.barButtonItem              = buttonLoad
-//        popover?.popoverLayoutMargins       = UIEdgeInsetsMake(60,60,60,60)
-
-//        list.handlerForDidSelectRowAtIndexPath = { (controller:GenericListController,indexPath:NSIndexPath) -> Void in
-//            let row         = indexPath.row
-//            let selection   = list.items[row]
-//            if selection == "Clear" {
-//                Store.Manager.summaryClear()
-//            }
-//            else {
-//                Store.Manager.summaryUse(selection)
-//            }
-//            controller.dismissViewControllerAnimated(true, completion:nil)
-//        }
-
+        self.navigationController?.pushViewController(list,animated:true)
     }
 
     
@@ -245,19 +219,12 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
             result.text             = text
         }
 
-        // TODO: REFACTOR
-        let defaultFont             = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
-        result.font                 = UIFont(name: preferences.settingTabItemsQuantityFont.value,
-                                             size: defaultFont.pointSize + preferences.settingTabItemsQuantityFontGrowth.value)
+        let defaultFont             = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
+        
+        result.font                 = UIFont(name: preferences.settingTabCategoriesFont.value, size: defaultFont.pointSize + preferences.settingTabCategoriesFontGrowth.value)
             ?? defaultFont
 
-        // TODO: REFACTOR
-        if preferences.settingTabItemsQuantityColorTextSameAsItems.value {
-            result.textColor        = preferences.settingTabItemsTextColor.value
-        }
-        else {
-            result.textColor        = preferences.settingTabItemsQuantityColorText.value
-        }
+        result.textColor            = preferences.settingTabCategoriesTextColor.value
 
         if preferences.settingTabCategoriesEmphasize.value {
             result.font = result.font.withSize(result.font.pointSize+2)
@@ -265,9 +232,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
         
 
         result.textAlignment        = .center
-//        result.font                 = UIFont.systemFontOfSize(12, weight:2.0)
-        result.backgroundColor      = ControllerOfCategories.instance.colorForCategory(category: text)
-//        result.textColor            = UIColor.whiteColor()
+        result.backgroundColor      = ControllerOfCategories.instance.cellColorOfBackgroundForCategory(category: text)
         
         return result
     }
@@ -330,9 +295,7 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
     {
         reload(true)
         
-        
         tableView.backgroundColor = preferences.settingBackgroundColor.value
-
         
         Store.Manager.displayHelpPageForSummary(self)
 
@@ -341,10 +304,11 @@ class ControllerOfSummary : UITableViewController, UIPopoverPresentationControll
 
     
     
-    
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
+    
+    
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
