@@ -50,13 +50,11 @@ class ControllerOfThemes : GenericControllerOfSettings
     
     
     
-    override func createRows() -> [[Any]]
+    override func createSections() -> [Section]
     {
-        var rows = [[Any]]()
+        var sections = [Section]()
         
-        var CATEGORIES = [Any]()
-        
-        let definePredefinedThemeWithName = { (name:String) -> Any in
+        let definePredefinedThemeWithName = { (name:String) -> FunctionOnCell in
             return { [weak self] (cell:UITableViewCell, indexPath:IndexPath) in
                 if let label = cell.textLabel {
                     cell.selectionStyle = .default
@@ -75,74 +73,61 @@ class ControllerOfThemes : GenericControllerOfSettings
             }
         }
         
-        rows    = []
+        sections    = []
         
-        if 0 < CATEGORIES.count {
-            rows.append(CATEGORIES)
-        }
-
-        rows.append(
-            [
-                "", //"PREDEFINED THEME SATURATION",
-                
-                createCellForUISlider(AppDelegate.instance.preferences.settingTabThemesSaturation, title: "Saturation"),                
-                
-                ""
-            ])
+        sections.append(Section(
+            header : "",
+            footer : "",
+            cells  : [
+                createCellForUISlider(AppDelegate.instance.preferences.settingTabThemesSaturation, title: "Saturation"),
+            ]))
         
         
-        rows.append(
-            [
-                "DYNAMIC THEMES",
+        sections.append(
+            Section(header : "DYNAMIC THEMES",
+                    footer : "",
+                    cells  : [
                 
                 definePredefinedThemeWithName("Solid"),
                 
                 //                createCellForUIColor(Store.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
                 //                },
                 
-                definePredefinedThemeWithName("Range"),
+                definePredefinedThemeWithName("Range")
                 
                 //                createCellForUIColor(Store.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
                 //                },
                 //                createCellForUIColor(Store.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
                 //                },
-                
-                ""
-            ])
+            ]))
 
         let customThemeNames = preferences.themeArrayOfNamesCustom
         
         if 0 < customThemeNames.count {
             
-            var section = [Any]()
-            
-            section.append("CUSTOM THEMES")
+            var section = Section(header : "CUSTOM THEMES",
+                                  footer : "")
             
             for themeName in customThemeNames {
-                section.append(definePredefinedThemeWithName(themeName))
+                section.cells.append(definePredefinedThemeWithName(themeName))
             }
             
-            section.append("")
-            
-            rows.append(section)
+            sections.append(section)
         }
         
         if true {
         
-            var section = [Any]()
-            
-            section.append("PREDEFINED THEMES")
+            var section = Section(header : "PREDEFINED THEMES",
+                                  footer : "")
             
             for themeName in preferences.themeArrayOfNamesPredefined {
-                section.append(definePredefinedThemeWithName(themeName))
+                section.cells.append(definePredefinedThemeWithName(themeName))
             }
             
-            section.append("")
-            
-            rows.append(section)
+            sections.append(section)
         }
         
-        return rows
+        return sections
     }
     
 }

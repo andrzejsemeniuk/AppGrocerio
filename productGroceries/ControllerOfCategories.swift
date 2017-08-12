@@ -15,7 +15,7 @@ class ControllerOfCategories : UITableViewController {
     var preferences                 : Preferences {
         return AppDelegate.instance.preferences
     }
-
+    
     var categories                  : [String]      = []
     var quantities                  : [Int]         = []
     
@@ -38,7 +38,7 @@ class ControllerOfCategories : UITableViewController {
         tableView.autoresizingMask  = [.flexibleHeight, .flexibleWidth]
         
         tableView.separatorStyle = .none
-
+        
         tableView.showsVerticalScrollIndicator = false
         
         tableView.showsHorizontalScrollIndicator = false
@@ -60,10 +60,10 @@ class ControllerOfCategories : UITableViewController {
             items! += [
                 UIBarButtonItem(barButtonSystemItem:.add, target:self, action: #selector(ControllerOfCategories.add)),
             ]
-
+            
             navigationItem.rightBarButtonItems = items
         }
-
+        
         
         
         
@@ -78,7 +78,7 @@ class ControllerOfCategories : UITableViewController {
         // tableView.reloadData()
     }
     
-
+    
     
     
     class func settingsGetThemeColorForRow(row:Int,count:Int,defaultColor:UIColor) -> UIColor
@@ -100,45 +100,47 @@ class ControllerOfCategories : UITableViewController {
         //        }
         return defaultColor
     }
-
+    
     func cellColorOfBackgroundForCategory(at index:Int) -> UIColor
     {
-        let saturation = preferences.settingTabThemesSaturation.value
+        let saturation  = preferences.settingTabThemesSaturation.value
         
-        let mark:CGFloat = CGFloat(Float(index)/Float(categories.count)).clampedTo01
+        let mark        = CGFloat(Float(index)/Float(categories.count)).clampedTo01
         
-        switch preferences.themeCurrent.value
-        {
-        case "Apple":
+        let current     = preferences.themeCurrent.value
+        
+        let startsWith : (String)->Bool = { string in
+            return current.hasPrefix(string)
+        }
+        
+        if startsWith("Apple") {
             return UIColor(hue:mark.lerp01(from:0.15, to:0.35), saturation:saturation, brightness:1.0, alpha:1.0)
-        case "Charcoal":
+        } else if startsWith("Charcoal") {
             return index.isEven ? UIColor(white:0.2,alpha:1.0) : UIColor(white:0.17,alpha:1.0)
-        case "Grape":
+        } else if startsWith("Grape") {
             return UIColor(hue:mark.lerp01(from:0.75, to:0.90), saturation:saturation, brightness:mark.lerp01(from:0.65, to:0.80), alpha:1.0)
-        case "Gray":
+        } else if startsWith("Gray") {
             return UIColor(white:0.4, alpha:1.0)
-        case "Orange":
+        } else if startsWith("Orange") {
             return UIColor(hue:mark.lerp01(from:0.04, to:0.1), saturation:saturation, brightness:1.0, alpha:1.0)
-        case "Plain":
+        } else if startsWith("Plain") {
             return UIColor.white
-        case "Rainbow":
+        } else if startsWith("Rainbow") {
             return UIColor(hue:mark.lerp01(from:0.0, to:0.9), saturation:saturation, brightness:1.0, alpha:1.0)
-        case "Range":
+        } else if startsWith("Range") {
             let color0  = preferences.settingTabThemesRangeFromColor.value.HSBA
             let color1  = preferences.settingTabThemesRangeToColor.value.HSBA
             return UIColor(hue:mark.lerp01(from:color0.hue, to:color1.hue),
                            saturation:mark.lerp01(from:color0.saturation, to:color1.saturation)*saturation,
                            brightness:mark.lerp01(from:color0.brightness, to:color1.brightness),
                            alpha:1.0)
-        case "Strawberry":
+        } else if startsWith("Strawberry") {
             return UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
-        case "Solid":
+        } else if startsWith("Solid") {
             let HSBA = preferences.settingTabThemesSolidColor.value.HSBA
             return UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
-        default:
-            break
         }
-
+        
         return UIColor.clear
     }
     
@@ -156,7 +158,7 @@ class ControllerOfCategories : UITableViewController {
     
     func cellColorOfBackgroundFor(item:Store.Item, onRow:Int) -> UIColor {
         let categoryColor = cellColorOfBackgroundForCategory(category: item.category)
-            
+        
         let HSBA = categoryColor.HSBA
         
         if 0 < HSBA.saturation {
@@ -175,13 +177,13 @@ class ControllerOfCategories : UITableViewController {
             let brightness1 = HSBA.brightness < 1.0 ? (HSBA.brightness+0.05).clampedTo01 : (HSBA.brightness-0.05).clampedTo01
             return UIColor(hue:HSBA.hue,saturation:0.0,brightness:brightness1,alpha:1.0)
         }
-
+        
     }
     
     func styleCell(cell:UITableViewCell, indexPath:IndexPath)
     {
         cell.selectedBackgroundView = UIView.createWithBackgroundColor(Store.Manager.settingsGetSelectionColor())
-
+        
         cell.backgroundColor        = cellColorOfBackgroundForCategory(at: indexPath.row)
         
         print("styleCell: indexPath.row=\(indexPath.row), section=\(indexPath.section)")
@@ -218,7 +220,7 @@ class ControllerOfCategories : UITableViewController {
         
         cell.selectionStyle     = UITableViewCellSelectionStyle.default
         
-        cell.accessoryType      = .none//.DisclosureIndicator        
+        cell.accessoryType      = .none//.DisclosureIndicator
     }
     
     func styleQuantity(cell:UITableViewCell,indexPath:IndexPath,quantity:Int) -> (fill:UIView,label:UILabel)
@@ -242,7 +244,7 @@ class ControllerOfCategories : UITableViewController {
         label.font      = UIFont(name:preferences.settingTabItemsQuantityFont.value,
                                  size:defaultFont.pointSize + preferences.settingTabItemsQuantityFontGrowth.value)
             ?? defaultFont
-
+        
         // TODO: REFACTOR
         if preferences.settingTabItemsQuantityColorTextSameAsItems.value {
             label.textColor         = preferences.settingTabItemsTextColor.value
@@ -283,7 +285,7 @@ class ControllerOfCategories : UITableViewController {
         
         return cell
     }
-
+    
     
     
     
@@ -305,13 +307,13 @@ class ControllerOfCategories : UITableViewController {
             }
             quantities += [ count ]
         }
-
+        
         tableView.reloadData()
     }
     
     
     
-    // NOTE: THIS METHOD IS REFERENCED IN APPDELEGTE 
+    // NOTE: THIS METHOD IS REFERENCED IN APPDELEGTE
     // TODO: REFACTOR: REFERENCE FROM APPDELEGATE?
     
     func add()
@@ -366,8 +368,8 @@ class ControllerOfCategories : UITableViewController {
     {
         _ = openItemsForRow(row: indexPath.row)
     }
-
-
+    
+    
     func openItemsForRow(row:Int) -> ItemsController
     {
         let category    = categories[row]
@@ -383,7 +385,7 @@ class ControllerOfCategories : UITableViewController {
         
         return items
     }
-
+    
     func openItemsForCategory(category:String,name:String? = nil)
     {
         if let index = categories.index(of: category) {
