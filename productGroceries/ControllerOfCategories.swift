@@ -107,7 +107,7 @@ class ControllerOfCategories : UITableViewController {
         
         let mark:CGFloat = CGFloat(Float(index)/Float(categories.count)).clampedTo01
         
-        switch preferences.settingCurrent.value
+        switch preferences.themeCurrent.value
         {
         case "Apple":
             return UIColor(hue:mark.lerp01(from:0.15, to:0.35), saturation:saturation, brightness:1.0, alpha:1.0)

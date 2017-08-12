@@ -1,5 +1,5 @@
 //
-//  SettingsController.swift
+//  ControllerOfSettings.swift
 //  productGroceries
 //
 //  Created by Andrzej Semeniuk on 3/9/16.
@@ -21,7 +21,7 @@ class ControllerOfThemes : GenericControllerOfSettings
 
     override func viewDidLoad()
     {
-        tableView               = UITableView(frame:tableView.frame,style:.grouped)
+        super.viewDidLoad()
         
         tableView.dataSource    = self
         
@@ -30,8 +30,6 @@ class ControllerOfThemes : GenericControllerOfSettings
         tableView.separatorStyle = .none
         
         self.title              = "Theme"
-        
-        super.viewDidLoad()
     }
     
     
@@ -57,28 +55,6 @@ class ControllerOfThemes : GenericControllerOfSettings
         var rows = [[Any]]()
         
         var CATEGORIES = [Any]()
-        
-        if false
-        {
-            CATEGORIES.append(" ")
-            
-            let count = ControllerOfCategories.instance.categories.count
-            
-            for row in 0..<count {
-                
-                let ROW = row
-                
-                CATEGORIES.append(
-                    { (cell:UITableViewCell, indexPath:IndexPath) in
-                        ControllerOfCategories.instance.styleCell(cell: cell,indexPath:IndexPath(row:ROW, section:0))
-                        
-                        cell.selectionStyle = .none
-                })
-            }
-            
-            CATEGORIES.append(" ")
-        }
-        
         
         let definePredefinedThemeWithName = { (name:String) -> Any in
             return { [weak self] (cell:UITableViewCell, indexPath:IndexPath) in
@@ -114,38 +90,6 @@ class ControllerOfThemes : GenericControllerOfSettings
                 ""
             ])
         
-        let customThemeNames = preferences.settingListCustom.value.split(",")
-        
-        if 0 < customThemeNames.count {
-            
-            var section = [Any]()
-            
-            section.append("CUSTOM THEMES")
-            
-            for customThemeName in customThemeNames {
-                section.append(definePredefinedThemeWithName(customThemeName))
-            }
-            
-            section.append("")
-            
-            rows.append(section)
-        }
-        
-        rows.append(
-            [
-                "PREDEFINED THEMES",
-                
-                definePredefinedThemeWithName("Apple"),
-                definePredefinedThemeWithName("Charcoal"),
-                definePredefinedThemeWithName("Grape"),
-                definePredefinedThemeWithName("Gray"),
-                definePredefinedThemeWithName("Orange"),
-                definePredefinedThemeWithName("Plain"),
-                definePredefinedThemeWithName("Rainbow"),
-                definePredefinedThemeWithName("Strawberry"),
-                
-                ""
-            ])
         
         rows.append(
             [
@@ -153,18 +97,50 @@ class ControllerOfThemes : GenericControllerOfSettings
                 
                 definePredefinedThemeWithName("Solid"),
                 
-//                createCellForUIColor(Store.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
-//                },
+                //                createCellForUIColor(Store.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
+                //                },
                 
                 definePredefinedThemeWithName("Range"),
                 
-//                createCellForUIColor(Store.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
-//                },
-//                createCellForUIColor(Store.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
-//                },
+                //                createCellForUIColor(Store.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
+                //                },
+                //                createCellForUIColor(Store.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
+                //                },
                 
                 ""
             ])
+
+        let customThemeNames = preferences.themeArrayOfNamesCustom
+        
+        if 0 < customThemeNames.count {
+            
+            var section = [Any]()
+            
+            section.append("CUSTOM THEMES")
+            
+            for themeName in customThemeNames {
+                section.append(definePredefinedThemeWithName(themeName))
+            }
+            
+            section.append("")
+            
+            rows.append(section)
+        }
+        
+        if true {
+        
+            var section = [Any]()
+            
+            section.append("PREDEFINED THEMES")
+            
+            for themeName in preferences.themeArrayOfNamesPredefined {
+                section.append(definePredefinedThemeWithName(themeName))
+            }
+            
+            section.append("")
+            
+            rows.append(section)
+        }
         
         return rows
     }

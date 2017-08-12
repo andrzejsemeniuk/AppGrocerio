@@ -21,7 +21,6 @@ func object<Type>(_ object:Any, dataMembersOfType type:Type) -> [Type] {
     
 }
 
-// TODO: EXPAND CONTROLLER OF LIST TO SUPPORT MULTIPLE SECTIONS
 // TODO: MODIFY GENERIC CONTROLLER OF SETTINGS TO USE SECTION/ROW/CELL STRUCTS?
 // TODO: ADD SQUARE|CIRCLE|ROUNDED OPTION FOR QUANTITY BACKGROUND SHAPE
 // TODO: CUSTOM-THEME NAMING-CONVENTION AT DISPLAY? [OLD-THEME-NAME]+[NEW-THEME-NAME]
@@ -50,7 +49,7 @@ class Preferences : GenericManagerOfSettings {
         for o in object(self, dataMembersOfType: Int(0)) {
             print("\(o)")
         }
-        settingList.reset()
+        themeListPredefined.reset()
     }
     
     
@@ -93,10 +92,17 @@ class Preferences : GenericManagerOfSettings {
     var settingTabThemesName                            = GenericSetting<String>        (key:"settings-themes-name", first:"Default")
     var settingTabThemesSaturation                      = GenericSetting<CGFloat>       (key:"settings-themes-saturation", first:1.0)
     
-    var settingCurrent                                  = GenericSetting<String>        (key:"settings:current", first:"Default")
-    var settingList                                     = GenericSetting<String>        (key:"settings-list", first:"Default,Apple,Charcoal,Grape,Gray,Honey,Orange,Plain,Pink,Rainbow,Sky,Strawberry,Chalkboard")
-    var settingListCustom                               = GenericSetting<String>        (key:"settings-list", first:"")
+    var themeCurrent                                    = GenericSetting<String>        (key:"settings:current", first:"Default")
+    var themeListPredefined                             = GenericSetting<String>        (key:"settings-list", first:"Default,Apple,Charcoal,Grape,Gray,Honey,Orange,Plain,Pink,Rainbow,Sky,Strawberry,Chalkboard")
     // Red White and Blue,Clear,Clean,Country,Paper,Shakespeare,Poet,Princess,School,Blueprint,Draft,Plastik")
+    var themeCustomStorage                     = GenericSetting<Dictionary<String,Dictionary<String,Any>>> (key:"settings-storage", first:[:])
+    
+    var themeArrayOfNamesPredefined                     : [String] {
+        return themeListPredefined.value.split(",").sorted()
+    }
+    var themeArrayOfNamesCustom                         : [String] {
+        return themeCustomStorage.value.keys.sorted()
+    }
 
 }
 
@@ -105,10 +111,7 @@ extension Preferences {
     func theme(loadWithName name:String) {
         
         let clear = {
-            self.reset(withPrefix:"settingTab")
-            self.reset(withPrefix:"settingSelection")
-            self.settingAudioOn.reset()
-            self.settingBackgroundColor.reset()
+            self.reset(withPrefix:"setting")
         }
         
         let name = name.trimmed()
@@ -119,7 +122,7 @@ extension Preferences {
             
                 clear()
                 
-                settingCurrent                                  .value = name
+                themeCurrent                                    .value = name
                 
                 settingBackgroundColor                          .value = UIColor(hue:0.50,saturation:0.60,brightness:1.00)
                 
@@ -169,7 +172,7 @@ extension Preferences {
 
             clear()
             
-            settingCurrent                                  .value = name
+            themeCurrent                                    .value = name
             
             settingBackgroundColor                          .value = UIColor(hue:0.40,saturation:1.00,brightness:0.55)
             
@@ -217,7 +220,7 @@ extension Preferences {
             
             clear()
             
-            settingCurrent                                  .value = name
+            themeCurrent                                    .value = name
             
             settingBackgroundColor                          .value = UIColor(white:0.08,alpha:1.00)
             
@@ -265,7 +268,7 @@ extension Preferences {
             
             clear()
             
-            settingCurrent                                  .value = name
+            themeCurrent                                    .value = name
             
             settingBackgroundColor                          .value = UIColor(hue:0.90,saturation:1.00,brightness:1.00)
             
@@ -313,7 +316,7 @@ extension Preferences {
             
             clear()
             
-            settingCurrent                                  .value = name
+            themeCurrent                                    .value = name
             
             settingBackgroundColor                          .value = UIColor(hue:0.60,saturation:0.80,brightness:1.00)
             
@@ -361,7 +364,7 @@ extension Preferences {
             
             clear()
             
-            settingCurrent                                  .value = name
+            themeCurrent                                    .value = name
             
             settingBackgroundColor                          .value = UIColor(hue:0.00,saturation:0.00,brightness:0.30)
             
@@ -407,21 +410,47 @@ extension Preferences {
             
         default:
             
-            // load custom theme with name if it is stored
-            // get dictionary for theme name
-            // extract dictionary values related to style and find corresponding setting and set its value
+            if let dictionary = themeCustomStorage.value[name] {
+                print(dictionary)
+                clear()
+                themeCurrent.value = name
+                decode(dictionary: dictionary, withPrefix:"setting") // only interested in 'setting' variables
+                synchronize()
+            }
             
             break
         }
     }
     
-    func theme(saveWithName name:String) {
-        // remove name from custom list
-        // add name to custom list
-        // create a dictionary from settings
-        // store dictionary under settings
+    func theme(saveWithCustomName name:String) -> Bool {
         
+        if !themeArrayOfNamesPredefined.contains(name) {
+            var dictionary = [String:Any]()
+            encode(dictionary: &dictionary, withPrefix:"setting") // only interested in 'setting' variables
+            print(dictionary)
+            var current = themeCustomStorage.value
+            current[name] = dictionary
+            themeCustomStorage.value = current
+            
+            synchronize()
+            
+            return true
+        }
+        return false
+    }
+    
+    func theme(removeCustomWithName name:String) -> Bool {
         
+        if themeArrayOfNamesCustom.contains(name) {
+            var current = themeCustomStorage.value
+            current.removeValue(forKey: name)
+            themeCustomStorage.value = current
+            
+            synchronize()
+            
+            return true
+        }
+        return false
     }
 
 }

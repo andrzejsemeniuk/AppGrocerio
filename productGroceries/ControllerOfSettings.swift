@@ -1,5 +1,5 @@
 //
-//  SettingsController.swift
+//  ControllerOfSettings.swift
 //  productGroceries
 //
 //  Created by Andrzej Semeniuk on 3/9/16.
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import ASToolkit
 
-class SettingsController : GenericControllerOfSettings
+class ControllerOfSettings : GenericControllerOfSettings
 {
     
     
@@ -22,7 +22,7 @@ class SettingsController : GenericControllerOfSettings
     
     override func viewDidLoad()
     {
-        tableView                   = UITableView(frame:tableView.frame,style:.grouped)
+        super.viewDidLoad()
         
         tableView.dataSource        = self
         
@@ -32,8 +32,6 @@ class SettingsController : GenericControllerOfSettings
         tableView.separatorStyle    = .none
         
         tableView.showsVerticalScrollIndicator = false
-
-        super.viewDidLoad()
     }
     
     
@@ -82,118 +80,80 @@ class SettingsController : GenericControllerOfSettings
                 
                 createCellForTapOnInput(title    : "Save",
                                         message  : "Specify name for current settings.",
-                                        setup    : { [weak self] cell,indexpath in
+                                        setup    : { cell,indexpath in
                                             cell.selectionStyle = .default
                                             cell.accessoryType  = .none
                 }, value:{ [weak self] in
-                    return self?.preferences.settingCurrent.value ?? ""
+                    return self?.preferences.themeCurrent.value ?? ""
                 }) { [weak self] text in
                     
+                    guard let `self` = self else { return }
+                    
                     if 0 < text.length {
-                        self?.preferences.theme(saveWithName:text)
-                        self?.preferences.settingCurrent.value = text
-                        
-                        print(UserDefaults.standard.dictionaryRepresentation())
-                        
-                        self?.tableView.reloadData()
+                        if self.preferences.theme(saveWithCustomName:text) {
+                            self.preferences.themeCurrent.value = text
+                            self.tableView.reloadData()
+                        }
                     }
                 },
                 
-//                { (cell:UITableViewCell, indexPath:IndexPath) in
-//                    if let label = cell.detailTextLabel {
-//                        label.text = Store.Manager.settingsGetLastName()
-//                    }
-//                    if let label = cell.textLabel {
-//                        label.text          = "Save"
-//                        cell.selectionStyle = .default
-//                        self.registerCellSelection(indexPath: indexPath) {
-//                            let alert = UIAlertController(title:"Save Settings", message:"Specify name for current settings.", preferredStyle:.alert)
-//                            
-//                            alert.addTextField() {
-//                                field in
-//                                // called to configure text field before displayed
-//                                field.text = Store.Manager.settingsGetLastName()
-//                            }
-//                            
-//                            let actionSave = UIAlertAction(title:"Save", style:.default, handler: {
-//                                action in
-//                                
-//                                if let fields = alert.textFields, let text = fields[0].text {
-//                                    if 0 < text.length {
-//                                        _ = Store.Manager.settingsSave(text)
-//                                        
-//                                        print(UserDefaults.standard.dictionaryRepresentation())
-//                                        
-//                                        self.tableView.reloadRows(at: [
-//                                            indexPath,
-//                                            IndexPath(row:indexPath.row+1,section:indexPath.section) as IndexPath
-//                                            ],
-//                                                                  with: .left)
-//                                    }
-//                                }
-//                            })
-//                            
-//                            let actionCancel = UIAlertAction(title:"Cancel", style:.cancel, handler: {
-//                                action in
-//                            })
-//                            
-//                            alert.addAction(actionSave)
-//                            alert.addAction(actionCancel)
-//                            
-//                            AppDelegate.rootViewController.present(alert, animated:true, completion: {
-//                                print("completed showing add alert")
-//                            })
-//                        }
-//                    }
-//                },
-                
-                createCellForTap(title: "Load", detail:preferences.settingCurrent.value ,setup: { cell,indexpath in
+                createCellForTap(title: "Load", setup: { [weak self] cell,indexpath in
                     cell.selectionStyle = .default
                     cell.accessoryType  = .disclosureIndicator
+                    if let detail = cell.detailTextLabel {
+                        detail.text = self?.preferences.themeCurrent.value
+                    }
                 }) { [weak self] in
                     
                     guard let `self` = self else { return }
 
-                    let list = self.preferences.settingList.value.split(",")
+                    let controller = GenericControllerOfList()
                     
-                    print("settings list =\(list)")
+                    controller.style = .grouped
                     
-                    if 0 < list.count {
-                        
-                        let controller = GenericControllerOfList()
-                        
-                        controller.items = list.sorted()
-                        
-                        controller.selected = self.preferences.settingCurrent.value
-                        
-                        controller.handlerForDidSelectRowAtIndexPath = { [weak self] controller, indexPath in
-                            guard let `self` = self else { return }
-                            let selected = controller.items[indexPath.row]
+                    controller.sections = [
+                        GenericControllerOfList.Section.init(
+                            header  : "Custom Themes",
+                            footer  : "A list of themes created by you",
+                            items   : self.preferences.themeArrayOfNamesCustom
+                        ),
+                        GenericControllerOfList.Section(
+                            header  : "Predefined Themes",
+                            footer  : "A list of standard themes",
+                            items   : self.preferences.themeArrayOfNamesPredefined
+                        )
+                    ]
+                    
+                    controller.handlerForIsEditableAtIndexPath = { controller,path in
+                        return path.section == 0
+                    }
+                    
+                    controller.selected = self.preferences.themeCurrent.value
+                    
+                    controller.handlerForDidSelectRowAtIndexPath = { [weak self] controller, indexPath in
+                        guard let `self` = self else { return }
+                        if let selected = controller.item(at:indexPath) {
                             self.preferences.theme(loadWithName:selected)
                             AppDelegate.rootViewController.view.backgroundColor = self.preferences.settingBackgroundColor.value
                             controller.navigationController?.popViewController(animated: true)
                         }
-                        
-                        controller.handlerForCommitEditingStyle = { [weak self] controller, commitEditingStyle, indexPath in
-                            guard
-                                let `self` = self,
-                                commitEditingStyle == .delete
-                                else {
-                                    return false
-                            }
-                            // TODO: TEST
-                            let selected = controller.items[indexPath.row]
-                            var newlist = list
-                            if let index = newlist.index(where: { $0 == selected }) {
-                                newlist.remove(at:index)
-                                self.preferences.settingList.value = newlist.joined(separator:",")
-                                return true
-                            }
-                            return false
-                        }
-                        
-                        self.navigationController?.pushViewController(controller, animated:true)
                     }
+                    
+                    controller.handlerForCommitEditingStyle = { [weak self] controller, commitEditingStyle, indexPath in
+                        guard
+                            let `self` = self,
+                            commitEditingStyle == .delete
+                            else {
+                                return false
+                        }
+                        // TODO: TEST
+                        if let selected = controller.item(at:indexPath), indexPath.section == 0 {
+                            return self.preferences.theme(removeCustomWithName:selected)
+                        }
+                        return false
+                    }
+                    
+                    self.navigationController?.pushViewController(controller, animated:true)
 
                 },
                 
@@ -225,9 +185,12 @@ class SettingsController : GenericControllerOfSettings
                 
                 createCellForUISwitch(preferences.settingTabCategoriesEmphasize, title: "Emphasize"),
 
-                createCellForTap(title: "Background", detail:preferences.settingTabThemesName.value) {
-                    let controller = ControllerOfThemes()
-                    AppDelegate.navigatorForSettings.pushViewController(controller, animated:true)
+                createCellForTap(title: "Background", setup: { [weak self] cell,path in
+                    if let detail = cell.detailTextLabel {
+                        detail.text = self?.preferences.settingTabThemesName.value
+                    }
+                }) {
+                    AppDelegate.navigatorForSettings.pushViewController(ControllerOfThemes(), animated:true)
                 },
 
                 ""

@@ -93,7 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         
-        let settings                = SettingsController()
+        let settings                = ControllerOfSettings()
         settings.title              = "Settings"
         
         let SETTINGS                = UINavigationController(rootViewController:settings)
