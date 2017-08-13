@@ -250,8 +250,19 @@ class ControllerOfSettings : GenericControllerOfSettings
                         
                         createCellForUISlider(preferences.settingTabItemsQuantityColorBackgroundOpacity, title: "  Opacity"),
 
-                        createCellForUISwitch(preferences.settingTabItemsQuantityCircle, title: "  Circle"),
-                        
+                        createCellForTapOnChoice(title:"  Shape", message:"Choose a quantity background shape.", choices:{ ["Square","Circle"] }, setup:{ [weak self] cell,path in
+                            if let detail = cell.detailTextLabel, let `self` = self {
+                                detail.text = self.preferences.settingTabItemsQuantityCircle.value ? "Circle" : "Square"
+                            }
+                        }) { [weak self] choice in
+                            switch choice {
+                                case "Square":
+                                    self?.preferences.settingTabItemsQuantityCircle.value = false
+                                default:
+                                    self?.preferences.settingTabItemsQuantityCircle.value = true
+                            }
+                            self?.tableView.reloadData()
+                        }
                 ]),
             
             Section(header  : "SELECTION",
