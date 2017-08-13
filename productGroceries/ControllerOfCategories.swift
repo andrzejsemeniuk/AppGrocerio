@@ -262,9 +262,9 @@ class ControllerOfCategories : UITableViewController {
         }
         else {
             var frame       = CGRect(x        : 0,
-                                     y        : 1,
-                                     width    : cell.bounds.height - 2,
-                                     height   : cell.bounds.height - 2)
+                                     y        : 0,
+                                     width    : cell.bounds.height,
+                                     height   : cell.bounds.height)
             
             frame.origin.x          = AppDelegate.rootViewController.view.bounds.width - frame.size.width
             

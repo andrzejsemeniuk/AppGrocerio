@@ -156,7 +156,14 @@ class ControllerOfSettings : GenericControllerOfSettings
                             
                             self.navigationController?.pushViewController(controller, animated:true)
                             
+                        },
+                        
+                        createCellForUIColor(preferences.settingTabSettingsHeaderTextColor, title: "Header/Footer") { [weak self] in
+                            if let `self` = self {
+                                self.preferences.settingTabSettingsFooterTextColor.value = self.preferences.settingTabSettingsHeaderTextColor.value
+                            }
                         }
+
                 ]),
             
             Section(header  : "APP",
