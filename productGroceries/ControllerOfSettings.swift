@@ -1,5 +1,5 @@
 //
-//  SettingsController.swift
+//  ControllerOfSettings.swift
 //  productGroceries
 //
 //  Created by Andrzej Semeniuk on 3/9/16.
@@ -8,23 +8,33 @@
 
 import Foundation
 import UIKit
+import ASToolkit
 
-class SettingsController : GenericControllerOfSettings
+class ControllerOfSettings : GenericControllerOfSettings
 {
+    
+    
+    var preferences                 : Preferences {
+        return AppDelegate.instance.preferences
+    }
+    
+    
     
     override func viewDidLoad()
     {
-        tableView               = UITableView(frame:tableView.frame,style:.Grouped)
-        
-        tableView.dataSource    = self
-        
-        tableView.delegate      = self
-        
-        
-        tableView.separatorStyle = .None
-        
         super.viewDidLoad()
+        
+        tableView.dataSource        = self
+        
+        tableView.delegate          = self
+        
+        
+        tableView.separatorStyle    = .none
+        
+        tableView.showsVerticalScrollIndicator = false
     }
+    
+    
     
     override func didReceiveMemoryWarning()
     {
@@ -36,393 +46,280 @@ class SettingsController : GenericControllerOfSettings
     
     func rebuild()
     {
-        let alert = UIAlertController(title:"Rebuild Categories", message:"This action will re-add any missing categories and items.", preferredStyle:.Alert)
+        let alert = UIAlertController(title:"Rebuild Categories", message:"This action will re-add any missing categories and items.", preferredStyle:.alert)
         
-        let actionOK = UIAlertAction(title:"OK", style:.Default, handler: {
+        let actionOK = UIAlertAction(title:"OK", style:.default, handler: {
             action in
             
-            Data.Manager.createCategories()
+            Store.Manager.createCategories()
             self.reload()
         })
         
-        let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
+        let actionCancel = UIAlertAction(title:"Cancel", style:.cancel, handler: {
             action in
         })
         
         alert.addAction(actionOK)
         alert.addAction(actionCancel)
         
-        AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
+        AppDelegate.rootViewController.present(alert, animated:true, completion: {
             print("completed showing add alert")
         })
     }
     
-
     
     
     
     
-    override func createRows() -> [[Any]]
+    
+    override func createSections() -> [Section]
     {
         return [
-            [
-                "SETTINGS",
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.detailTextLabel {
-                        label.text = Data.Manager.settingsGetLastName()
-                    }
-                    if let label = cell.textLabel {
-                        label.text          = "Save"
-                        cell.selectionStyle = .Default
-                        self.registerCellSelection(indexPath) {
-                            let alert = UIAlertController(title:"Save Settings", message:"Specify name for current settings.", preferredStyle:.Alert)
+            Section(header  : "SETTINGS",
+                    footer  : "Save current settings, or load previously saved settings",
+                    cells   : [
+                        
+                        createCellForTapOnInput(title    : "Save",
+                                                message  : "Specify name for current settings.",
+                                                setup    : { cell,indexpath in
+                                                    cell.selectionStyle = .default
+                                                    cell.accessoryType  = .none
+                        }, value:{ [weak self] in
+                            return (self?.preferences.themeCurrent.value ?? "") + "+"
+                        }) { [weak self] text in
                             
-                            alert.addTextFieldWithConfigurationHandler() {
-                                field in
-                                // called to configure text field before displayed
-                                field.text = Data.Manager.settingsGetLastName()
+                            guard let `self` = self else { return }
+                            
+                            if 0 < text.length {
+                                if self.preferences.theme(saveWithCustomName:text) {
+                                    self.preferences.themeCurrent.value = text
+                                    self.tableView.reloadData()
+                                }
+                            }
+                        },
+                        
+                        createCellForTap(title: "Load", setup: { [weak self] cell,indexpath in
+                            cell.selectionStyle = .default
+                            cell.accessoryType  = .disclosureIndicator
+                            if let detail = cell.detailTextLabel {
+                                detail.text = self?.preferences.themeCurrent.value
+                            }
+                        }) { [weak self] in
+                            
+                            guard let `self` = self else { return }
+                            
+                            let controller = GenericControllerOfList()
+                            
+                            controller.style = .grouped
+                            
+                            controller.sections = [
+                                GenericControllerOfList.Section(
+                                    header  : "Custom Themes",
+                                    footer  : "A list of themes created by you",
+                                    items   : self.preferences.themeArrayOfNamesCustom
+                                ),
+                                GenericControllerOfList.Section(
+                                    header  : "Predefined Themes",
+                                    footer  : "A list of standard themes",
+                                    items   : self.preferences.themeArrayOfNamesPredefined
+                                )
+                            ]
+                            
+                            controller.handlerForIsEditableAtIndexPath = { controller,path in
+                                return path.section == 0
                             }
                             
-                            let actionSave = UIAlertAction(title:"Save", style:.Default, handler: {
-                                action in
-                                
-                                if let fields = alert.textFields, text = fields[0].text {
-                                    if 0 < text.length {
-                                        Data.Manager.settingsSave(text)
-                                        
-                                        print(NSUserDefaults.standardUserDefaults().dictionaryRepresentation())
-                                        
-                                        self.tableView.reloadRowsAtIndexPaths([
-                                            indexPath,
-                                            NSIndexPath(forRow:indexPath.row+1,inSection:indexPath.section)
-                                            ],
-                                            withRowAnimation: .Left)
-                                    }
+                            controller.selected = self.preferences.themeCurrent.value
+                            
+                            controller.handlerForDidSelectRowAtIndexPath = { [weak self] controller, indexPath in
+                                guard let `self` = self else { return }
+                                if let selected = controller.item(at:indexPath) {
+                                    self.preferences.theme(loadWithName:selected)
+                                    AppDelegate.rootViewController.view.backgroundColor = self.preferences.settingBackgroundColor.value
+                                    controller.navigationController?.popViewController(animated: true)
                                 }
-                            })
+                            }
                             
-                            let actionCancel = UIAlertAction(title:"Cancel", style:.Cancel, handler: {
-                                action in
-                            })
-                            
-                            alert.addAction(actionSave)
-                            alert.addAction(actionCancel)
-                            
-                            AppDelegate.rootViewController.presentViewController(alert, animated:true, completion: {
-                                print("completed showing add alert")
-                            })
-                        }
-                    }
-                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "Load"
-                        if Data.Manager.settingsListIsEmpty() {
-                            cell.selectionStyle = .None
-                            cell.accessoryType  = .None
-                        }
-                        else {
-                            cell.selectionStyle = .Default
-                            cell.accessoryType  = .DisclosureIndicator
-                        }
-                        self.registerCellSelection(indexPath) {
-                            let list = Data.Manager.settingsList()
-                            
-                            print("settings list =\(list)")
-                            
-                            if 0 < list.count {
-                                let controller = GenericControllerOfList()
-                                
-                                controller.items = Data.Manager.settingsList().sort()
-                                controller.handlerForDidSelectRowAtIndexPath = { (controller:GenericControllerOfList,indexPath:NSIndexPath) -> Void in
-                                    let selected = controller.items[indexPath.row]
-                                    Data.Manager.settingsUse(selected)
-                                    AppDelegate.rootViewController.view.backgroundColor = Data.Manager.settingsGetBackgroundColor()
-                                    //                                    AppDelegate.controllerOfPages.view.backgroundColor  = Data.Manager.settingsGetBackgroundColor()
-                                    controller.navigationController!.popViewControllerAnimated(true)
+                            controller.handlerForCommitEditingStyle = { [weak self] controller, commitEditingStyle, indexPath in
+                                guard
+                                    let `self` = self,
+                                    commitEditingStyle == .delete
+                                    else {
+                                        return false
                                 }
-                                controller.handlerForCommitEditingStyle = { (controller:GenericControllerOfList,commitEditingStyle:UITableViewCellEditingStyle,indexPath:NSIndexPath) -> Bool in
-                                    if commitEditingStyle == .Delete {
-                                        let selected = controller.items[indexPath.row]
-                                        Data.Manager.settingsRemove(selected)
-                                        return true
-                                    }
-                                    return false
+                                // TODO: TEST
+                                if let selected = controller.item(at:indexPath), indexPath.section == 0 {
+                                    return self.preferences.theme(removeCustomWithName:selected)
                                 }
-                                
-                                self.navigationController?.pushViewController(controller, animated:true)
+                                return false
+                            }
+                            
+                            self.navigationController?.pushViewController(controller, animated:true)
+                            
+                        },
+                        
+                        createCellForUIColor(preferences.settingTabSettingsHeaderTextColor, title: "Header/Footer") { [weak self] in
+                            if let `self` = self {
+                                self.preferences.settingTabSettingsFooterTextColor.value = self.preferences.settingTabSettingsHeaderTextColor.value
                             }
                         }
-                    }
-                },
-                
-                "Save current settings, or load previously saved settings"
-            ],
+
+                ]),
             
-            [
-                "CATEGORIES",
-                
-                createCellForFont(Data.Manager.settingsGetCategoriesFont(),title:"Categories",key:.SettingsTabCategoriesFont),
-                
-                createCellForColor(Data.Manager.settingsGetCategoriesTextColor(),title:"Categories",key:.SettingsTabCategoriesTextColor),
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        cell.selectionStyle = .Default
-                        label.text          = "Uppercase"
-                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesUppercase), update: { (myswitch:UISwitch) in
-                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsTabCategoriesUppercase)
-                        })
-                    }
-                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        cell.selectionStyle = .Default
-                        label.text          = "Emphasize"
-                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsTabCategoriesEmphasize), update: { (myswitch:UISwitch) in
-                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsTabCategoriesEmphasize)
-                        })
-                    }
-                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.detailTextLabel {
-                        label.text = Data.Manager.settingsGetThemeName()
-                    }
-                    if let label = cell.textLabel {
-                        label.text          = "Background"
-                        cell.accessoryType  = .DisclosureIndicator
-                        cell.selectionStyle = .Default
-                        self.registerCellSelection(indexPath) {
-                            let controller = ControllerOfThemes()
-                            AppDelegate.navigatorForSettings.pushViewController(controller, animated:true)
+            Section(header  : "APP",
+                    footer  : "Set app properties",
+                    cells   : [
+                        
+                        createCellForUIColor(preferences.settingBackgroundColor, title: "Background") { [weak self] in
+                            guard let `self` = self else { return }
+                            AppDelegate.rootViewController.view.backgroundColor     = self.preferences.settingBackgroundColor.value
+                            self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
+                        },
+                        
+                        createCellForUISwitch(preferences.settingAudioOn, title: "Audio"),
+                        
+                        ]),
+            
+            Section(header  : "CATEGORIES",
+                    footer  : "",
+                    cells   : [
+                        
+                        createCellForUIFontName (preferences.settingTabCategoriesFont, title: "Font"),
+                        
+                        createCellForUIColor(preferences.settingTabCategoriesTextColor, title: "Color"),
+                        
+                        createCellForUISwitch(preferences.settingTabCategoriesUppercase, title: "Uppercase"),
+                        
+                        createCellForUISwitch(preferences.settingTabCategoriesEmphasize, title: "Emphasize"),
+                        
+                        createCellForTap(title: "Background", setup: { [weak self] cell,path in
+                            if let detail = cell.detailTextLabel {
+                                detail.text = self?.preferences.settingTabThemesName.value
+                            }
+                        }) {
+                            AppDelegate.navigatorForSettings.pushViewController(ControllerOfThemes(), animated:true)
                         }
-                    }
-                },
-                
-                ""
-            ],
+                        
+                ]),
             
-            [
-             
-                "",
-
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "Rebuild"
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-                        self.registerCellSelection(indexPath) {
-                            self.rebuild()
+            Section(header  : "",
+                    footer  : "If you deleted any categories manually, you can re-add them all with Rebuild",
+                    cells   : [
+                        
+                        createCellForTap(title: "Rebuild") { [weak self] in
+                            self?.rebuild()
                         }
-                    }
-                },
-                
-                "If you deleted any categories manually, you can re-add them all with Rebuild"
-            ],
+                        
+                ]),
             
-            [
-                "ITEM TEXT",
+            Section(header  : "ITEM TEXT",
+                    footer  : "",
+                    cells   : [
+                        
+                        createCellForUIFontName(preferences.settingTabItemsFont, title: "Font"),
+                        
+                        createCellForUISwitch(preferences.settingTabItemsFontSameAsCategories, title: "  Same as Categories"),
+                        
+                        createCellForUIColor(preferences.settingTabItemsTextColor, title:"Color"),
+                        
+                        createCellForUISwitch(preferences.settingTabItemsTextColorSameAsCategories, title: "  Same as Categories"),
+                        
+                        createCellForUISwitch(preferences.settingTabItemsUppercase, title: "Uppercase"),
+                        
+                        createCellForUISwitch(preferences.settingTabItemsEmphasize, title: "Emphasize"),
+                        
+                        ]),
+            
+            Section(header  : "ITEM ROW OPACITY",
+                    footer  : "Make the background color of an item row stand out or fade.",
+                    cells   : [
+                        
+                        createCellForUISlider(preferences.settingTabItemsRowEvenOpacity, title: "Even"),
+                        
+                        createCellForUISlider(preferences.settingTabItemsRowOddOpacity, title: "Odd"),
+                        
+                        ]),
+            
+            
+            Section(header  : "ITEM QUANTITY",
+                    footer  : "",
+                    cells   : [
+                        
+                        createCellForUIFontName(preferences.settingTabItemsQuantityFont, title: "Font"),
+                        
+                        createCellForUISwitch(preferences.settingTabItemsQuantityFontSameAsItems, title: "  Same as Items"),
+                        
+                        createCellForUIColor(preferences.settingTabItemsQuantityColorText, title: "Color"),
+                        
+                        createCellForUISwitch(preferences.settingTabItemsQuantityColorTextSameAsItems, title: "  Same as Items"),
+                        
+                        createCellForUIColor(preferences.settingTabItemsQuantityColorBackground , title: "Background"),
+                        
+                        createCellForUISlider(preferences.settingTabItemsQuantityColorBackgroundOpacity, title: "  Opacity"),
 
-                createCellForFont(Data.Manager.settingsGetItemsFont(),title:"Items",key:.SettingsTabItemsFont),
-                
-//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    if let label = cell.textLabel {
-//                        label.text          = "  Same as Categories"
-//                        cell.accessoryType  = .None
-//                        cell.selectionStyle = .Default
-//                        
-//                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsTabItemsFontSameAsCategories), update: { (myswitch:UISwitch) in
-//                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsFontSameAsCategories)
-//                        })
-//                    }
-//                },
-                
-                createCellForColor(Data.Manager.settingsGetItemsTextColor(),title:"Items Text",key:.SettingsTabItemsTextColor),
-                
-//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    if let label = cell.textLabel {
-//                        label.text          = "  Same as Categories"
-//                        cell.accessoryType  = .None
-//                        cell.selectionStyle = .Default
-//                        
-//                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsTabItemsTextColorSameAsCategories), update: { (myswitch:UISwitch) in
-//                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsTextColorSameAsCategories)
-//                        })
-//                    }
-//                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        cell.selectionStyle = .Default
-                        label.text          = "Uppercase"
-                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsTabItemsUppercase), update: { (myswitch:UISwitch) in
-                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsUppercase)
-                        })
-                    }
-                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        cell.selectionStyle = .Default
-                        label.text          = "Emphasize"
-                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsTabItemsEmphasize), update: { (myswitch:UISwitch) in
-                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsEmphasize)
-                        })
-                    }
-                },
-                
-
-                ""
-            ],
-
-            [
-                "ITEM ROW OPACITY",
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "Even"
-                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabItemsRowEvenOpacity, defaultValue:1), update: { (myslider:UISlider) in
-                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsRowEvenOpacity)
-                        })
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-                    }
-                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "Odd"
-                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabItemsRowOddOpacity, defaultValue:1), update: { (myslider:UISlider) in
-                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsRowOddOpacity)
-                        })
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-                    }
-                },
-                
-                "Make the background color of an item row stand out or fade."
-            ],
+                        createCellForTapOnChoice(title:"  Shape", message:"Choose a quantity background shape.", choices:{ ["Square","Circle"] }, setup:{ [weak self] cell,path in
+                            if let detail = cell.detailTextLabel, let `self` = self {
+                                detail.text = self.preferences.settingTabItemsQuantityCircle.value ? "Circle" : "Square"
+                            }
+                        }) { [weak self] choice in
+                            switch choice {
+                                case "Square":
+                                    self?.preferences.settingTabItemsQuantityCircle.value = false
+                                default:
+                                    self?.preferences.settingTabItemsQuantityCircle.value = true
+                            }
+                            self?.tableView.reloadData()
+                        }
+                ]),
             
+            Section(header  : "SELECTION",
+                    footer  : "Set selection properties for rows on all tabs",
+                    cells   : [
+                        
+                        createCellForUIColor(preferences.settingSelectionColor, title: "Background"),
+                        
+                        createCellForUISlider(preferences.settingSelectionColorOpacity, title: "Opacity"),
+                        
+                        ]),
             
-            [
-                "ITEM QUANTITY",
-                
-                createCellForFont(Data.Manager.settingsGetItemsQuantityFont(),title:"Quantity",key:.SettingsTabItemsQuantityFont),
-                
-//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    if let label = cell.textLabel {
-//                        label.text          = "  Same as Items"
-//                        cell.accessoryType  = .None
-//                        cell.selectionStyle = .Default
-//
-//                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsTabItemsQuantityFontSameAsItems), update: { (myswitch:UISwitch) in
-//                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsTabItemsQuantityFontSameAsItems)
-//                        })
-//                    }
-//                },
-                
-                createCellForColor(Data.Manager.settingsGetItemsQuantityTextColor(),title:"Quantity Text",key:.SettingsTabItemsQuantityColorText),
-                
-                createCellForColor(Data.Manager.settingsGetItemsQuantityBackgroundColorWithOpacity(false),name:"Background", title:"Quantity Background",key:.SettingsTabItemsQuantityColorBackground),
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "  Opacity"
-                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabItemsQuantityColorBackgroundOpacity, defaultValue:1), update: { (myslider:UISlider) in
-                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabItemsQuantityColorBackgroundOpacity)
-                        })
-                        cell.accessoryType  = .DisclosureIndicator
-                        cell.selectionStyle = .Default
-                    }
-                },
-                
-                ""
-            ],
+            //            [
+            //                "ITEM QUANTITY SOUNDS",
+            //
+            //                { (cell:UITableViewCell, indexPath:IndexPath) in
+            //                    if let label = cell.textLabel {
+            //                        label.text          = "Add"
+            //                        cell.selectionStyle = .default
+            //                        cell.accessoryType  = .disclosureIndicator
+            //                        self.registerCellSelection(indexPath) {
+            //                            // None,Default,Zap,Pop,Crackle
+            //                        }
+            //                    }
+            //                },
+            //
+            //                { (cell:UITableViewCell, indexPath:IndexPath) in
+            //                    if let label = cell.textLabel {
+            //                        label.text          = "Subtract"
+            //                        cell.selectionStyle = .default
+            //                        cell.accessoryType  = .disclosureIndicator
+            //                        self.registerCellSelection(indexPath) {
+            //                        }
+            //                    }
+            //                },
+            //
+            //                { (cell:UITableViewCell, indexPath:IndexPath) in
+            //                    if let label = cell.textLabel {
+            //                        label.text          = "Error"
+            //                        cell.selectionStyle = .default
+            //                        cell.accessoryType  = .disclosureIndicator
+            //                        self.registerCellSelection(indexPath) {
+            //                        }
+            //                    }
+            //                },
+            //
+            //
+            //                ""
+            //            ],
             
-            [
-                "SELECTION",
-                
-                createCellForColor(Data.Manager.settingsGetColorForKey(.SettingsSelectionColor),title:"Selection",key:.SettingsSelectionColor) {
-                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        label.text          = "Opacity"
-                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsSelectionColorOpacity, defaultValue:0.2), update: { (myslider:UISlider) in
-                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsSelectionColorOpacity)
-                        })
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-                    }
-                },
-                
-                "Set selection properties for rows on all tabs"
-            ],
-            
-            [
-                "APP",
-                
-                createCellForColor(Data.Manager.settingsGetBackgroundColor(),name:"Background",title:"Background",key:.SettingsBackgroundColor) {
-                    AppDelegate.rootViewController.view.backgroundColor     = Data.Manager.settingsGetBackgroundColor()
-                    self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
-                },
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                    if let label = cell.textLabel {
-                        cell.selectionStyle = .Default
-                        label.text          = "Audio"
-                        cell.accessoryView  = self.registerSwitch(Data.Manager.settingsGetBoolForKey(.SettingsAudioOn,defaultValue:true), update: { (myswitch:UISwitch) in
-                            Data.Manager.settingsSetBool(myswitch.on, forKey:.SettingsAudioOn)
-                        })
-                    }
-                },
-                
-
-                "Set app properties"
-            ],
-            
-//            [
-//                "ITEM QUANTITY SOUNDS",
-//                
-//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    if let label = cell.textLabel {
-//                        label.text          = "Add"
-//                        cell.selectionStyle = .Default
-//                        cell.accessoryType  = .DisclosureIndicator
-//                        self.registerCellSelection(indexPath) {
-//                            // None,Default,Zap,Pop,Crackle
-//                        }
-//                    }
-//                },
-//                
-//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    if let label = cell.textLabel {
-//                        label.text          = "Subtract"
-//                        cell.selectionStyle = .Default
-//                        cell.accessoryType  = .DisclosureIndicator
-//                        self.registerCellSelection(indexPath) {
-//                        }
-//                    }
-//                },
-//                
-//                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    if let label = cell.textLabel {
-//                        label.text          = "Error"
-//                        cell.selectionStyle = .Default
-//                        cell.accessoryType  = .DisclosureIndicator
-//                        self.registerCellSelection(indexPath) {
-//                        }
-//                    }
-//                },
-//                
-//
-//                ""
-//            ],
-
             
         ]
     }
@@ -430,34 +327,36 @@ class SettingsController : GenericControllerOfSettings
     
     
     
-    override func tableView                     (tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    override func tableView                     (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath:indexPath)
+        let cell = super.tableView(tableView, cellForRowAt:indexPath)
         
-        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Data.Manager.settingsGetSelectionColor())
+        cell.selectedBackgroundView = UIView.create(withBackgroundColor:Store.Manager.settingsGetSelectionColor())
         
         return cell
     }
     
     
     
-    override func viewWillDisappear(animated: Bool)
+    override func viewWillDisappear(_ animated: Bool)
     {
-        Data.Manager.synchronize()
+        Store.Manager.synchronize()
         
         super.viewWillDisappear(animated)
     }
     
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
-        tableView.backgroundColor   = Data.Manager.settingsGetBackgroundColor()
+        tableView.backgroundColor   = preferences.settingBackgroundColor.value
         
-        colorForHeaderText          = Data.Manager.settingsGetColorForKey(.SettingsTabSettingsHeaderTextColor,defaultValue:UIColor.grayColor())
-        colorForFooterText          = Data.Manager.settingsGetColorForKey(.SettingsTabSettingsFooterTextColor,defaultValue:UIColor.grayColor())
+        colorForHeaderText          = preferences.settingTabSettingsHeaderTextColor.value
+        colorForFooterText          = preferences.settingTabSettingsFooterTextColor.value
+        
+        tableView.reloadData()
         
         super.viewWillAppear(animated)
     }
-
+    
     
     
 }

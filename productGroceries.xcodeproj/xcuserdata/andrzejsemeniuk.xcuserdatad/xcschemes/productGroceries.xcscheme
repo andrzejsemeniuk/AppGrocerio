@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "574880EE1C89EEF000A3806F"
-               BuildableName = "Groceries.app"
+               BuildableName = "Grocerio.app"
                BlueprintName = "productGroceries"
                ReferencedContainer = "container:productGroceries.xcodeproj">
             </BuildableReference>
@@ -53,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "574880EE1C89EEF000A3806F"
-            BuildableName = "Groceries.app"
+            BuildableName = "Grocerio.app"
             BlueprintName = "productGroceries"
             ReferencedContainer = "container:productGroceries.xcodeproj">
          </BuildableReference>
@@ -76,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "574880EE1C89EEF000A3806F"
-            BuildableName = "Groceries.app"
+            BuildableName = "Grocerio.app"
             BlueprintName = "productGroceries"
             ReferencedContainer = "container:productGroceries.xcodeproj">
          </BuildableReference>
@@ -95,7 +95,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "574880EE1C89EEF000A3806F"
-            BuildableName = "Groceries.app"
+            BuildableName = "Grocerio.app"
             BlueprintName = "productGroceries"
             ReferencedContainer = "container:productGroceries.xcodeproj">
          </BuildableReference>

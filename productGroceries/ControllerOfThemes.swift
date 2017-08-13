@@ -1,5 +1,5 @@
 //
-//  SettingsController.swift
+//  ControllerOfSettings.swift
 //  productGroceries
 //
 //  Created by Andrzej Semeniuk on 3/9/16.
@@ -8,24 +8,30 @@
 
 import Foundation
 import UIKit
+import ASToolkit
 
 class ControllerOfThemes : GenericControllerOfSettings
 {
     
+    
+    var preferences             : Preferences {
+        return AppDelegate.instance.preferences
+    }
+
+
     override func viewDidLoad()
     {
-        tableView               = UITableView(frame:tableView.frame,style:.Grouped)
+        super.viewDidLoad()
         
         tableView.dataSource    = self
         
         tableView.delegate      = self
         
-        tableView.separatorStyle = .None
+        tableView.separatorStyle = .none
         
         self.title              = "Theme"
-        
-        super.viewDidLoad()
     }
+    
     
     override func didReceiveMemoryWarning()
     {
@@ -44,124 +50,84 @@ class ControllerOfThemes : GenericControllerOfSettings
     
     
     
-    override func createRows() -> [[Any]]
+    override func createSections() -> [Section]
     {
-        var rows = [[Any]]()
+        var sections = [Section]()
         
-        var CATEGORIES = [Any]()
-        
-        if false
-        {
-            CATEGORIES.append(" ")
-            
-            let count = ControllerOfCategories.instance.categories.count
-            
-            for var row in 0..<count {
-                
-                let ROW = row
-                
-                CATEGORIES.append(
-                    { (cell:UITableViewCell, indexPath:NSIndexPath) in
-                        ControllerOfCategories.instance.styleCell(cell,indexPath:NSIndexPath(forRow:ROW,inSection:0))
-                        
-                        cell.selectionStyle = .None
-                })
-            }
-            
-            CATEGORIES.append(" ")
-        }
-        
-        
-        let definePredefinedThemeWithName = { (name:String) -> Any in
-            return { (cell:UITableViewCell, indexPath:NSIndexPath) in
+        let definePredefinedThemeWithName = { (name:String) -> FunctionOnCell in
+            return { [weak self] (cell:UITableViewCell, indexPath:IndexPath) in
                 if let label = cell.textLabel {
-                    cell.selectionStyle = .Default
+                    cell.selectionStyle = .default
                     label.text          = name
-                    self.addAction(indexPath) {
-                        Data.Manager.settingsSetThemeWithName(name)
-                        self.reload()
+                    self?.addAction(indexPath: indexPath) {
+                        self?.preferences.settingTabThemesName.value = name
+                        self?.reload()
                     }
                 }
-                if Data.Manager.settingsGetThemeName() == name {
-                    cell.accessoryType = .Checkmark
+                if self?.preferences.settingTabThemesName.value == name {
+                    cell.accessoryType = .checkmark
                 }
                 else {
-                    cell.accessoryType = .None
+                    cell.accessoryType = .none
                 }
             }
         }
         
-        rows    = []
+        sections    = []
         
-        if 0 < CATEGORIES.count {
-            rows.append(CATEGORIES)
-        }
-
-        rows.append(
-            [
-                "", //"PREDEFINED THEME SATURATION",
-                
-                { (cell:UITableViewCell, indexPath:NSIndexPath) in
-//                    let slider = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
-//                        Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
-//                    })
-//                    let W:CGFloat = AppDelegate.rootViewController.view.bounds.width
-//                    let w:CGFloat = W/2.0
-//                    cell.frame  = CGRectMake(W/2.0-w,0,w,cell.bounds.height)
-//                    cell.addSubview(slider)
-                    if let label = cell.textLabel {
-                        label.text          = "Saturation"
-                        cell.accessoryView  = self.registerSlider(Data.Manager.settingsGetFloatForKey(.SettingsTabThemesSaturation, defaultValue:0.4), update: { (myslider:UISlider) in
-                            Data.Manager.settingsSetFloat(myslider.value, forKey:.SettingsTabThemesSaturation)
-                        })
-                        cell.accessoryType  = .None
-                        cell.selectionStyle = .Default
-                    }
-                },
-                
-                
-                ""
-            ])
+        sections.append(Section(
+            header : "",
+            footer : "",
+            cells  : [
+                createCellForUISlider(AppDelegate.instance.preferences.settingTabThemesSaturation, title: "Saturation"),
+            ]))
         
-        rows.append(
-            [
-                "PREDEFINED THEMES",
-                
-                definePredefinedThemeWithName("Apple"),
-                definePredefinedThemeWithName("Charcoal"),
-                definePredefinedThemeWithName("Grape"),
-                definePredefinedThemeWithName("Gray"),
-                definePredefinedThemeWithName("Orange"),
-                definePredefinedThemeWithName("Plain"),
-                definePredefinedThemeWithName("Rainbow"),
-                definePredefinedThemeWithName("Strawberry"),
-                
-                ""
-            ])
         
-        rows.append(
-            [
-                "DYNAMIC THEMES",
+        sections.append(
+            Section(header : "DYNAMIC THEMES",
+                    footer : "",
+                    cells  : [
                 
                 definePredefinedThemeWithName("Solid"),
                 
-                createCellForColor(Data.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
-//                        self.reload()
-                },
+                //                createCellForUIColor(Store.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
+                //                },
                 
-                definePredefinedThemeWithName("Range"),
+                definePredefinedThemeWithName("Range")
                 
-                createCellForColor(Data.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
-//                        self.reload()
-                },
-                createCellForColor(Data.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
-//                        self.reload()
-                },
-                
-                ""
-            ])
+                //                createCellForUIColor(Store.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
+                //                },
+                //                createCellForUIColor(Store.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
+                //                },
+            ]))
+
+        let customThemeNames = preferences.themeArrayOfNamesCustom
         
-        return rows
+        if 0 < customThemeNames.count {
+            
+            var section = Section(header : "CUSTOM THEMES",
+                                  footer : "")
+            
+            for themeName in customThemeNames {
+                section.cells.append(definePredefinedThemeWithName(themeName))
+            }
+            
+            sections.append(section)
+        }
+        
+        if true {
+        
+            var section = Section(header : "PREDEFINED THEMES",
+                                  footer : "")
+            
+            for themeName in preferences.themeArrayOfNamesPredefined {
+                section.cells.append(definePredefinedThemeWithName(themeName))
+            }
+            
+            sections.append(section)
+        }
+        
+        return sections
     }
     
 }
