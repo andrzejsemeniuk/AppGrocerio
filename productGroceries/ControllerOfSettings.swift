@@ -88,7 +88,7 @@ class ControllerOfSettings : GenericControllerOfSettings
                     footer  : "Save current settings, or load previously saved settings",
                     cells   : [
                         
-                        createCellForTapOnInput(title    : "Save",
+                        createCellForTapOnInput(title    : "Save As ...",
                                                 message  : "Specify name for current settings.",
                                                 setup    : { cell,indexpath in
                                                     cell.selectionStyle = .default
@@ -187,15 +187,15 @@ class ControllerOfSettings : GenericControllerOfSettings
                             self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
                         },
                         
-                        createCellForUISwitch(preferences.settingAudioOn, title: "Audio"),
+                        createCellForUIColor(preferences.settingTabBarBackgroundColor, title: "Bar Background Color") { [weak self] in
+                            self?.preferences.synchronize()
+                        },
                         
                         createCellForUIColor(preferences.settingTabBarTintColor, title: "Bar Tint Color") { [weak self] in
                             self?.preferences.synchronize()
                         },
                         
-                        createCellForUIColor(preferences.settingTabBarBackgroundColor, title: "Bar Background Color") { [weak self] in
-                            self?.preferences.synchronize()
-                        },
+                        createCellForUISwitch(preferences.settingAudioOn, title: "Audio"),
                         
                         ]),
             

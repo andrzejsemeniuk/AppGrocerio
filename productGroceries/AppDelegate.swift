@@ -70,32 +70,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         let categories              = ControllerOfCategories()
+        let summary                 = ControllerOfSummary()
+        let settings                = ControllerOfSettings()
+        
+
+        categories.title            = "Aisles"
+        summary.title               = "Summary"
+        settings.title              = "Settings"
+        
+
         
         let CATEGORIES              = UINavigationController(rootViewController:categories)
-        
-        CATEGORIES.tabBarItem       = UITabBarItem(title:"Items", image:UIImage(named:"image-icon-tabbaritem-categories-default"), tag:1)
+        let SUMMARY                 = UINavigationController(rootViewController:summary)
+        let SETTINGS                = UINavigationController(rootViewController:settings)
+
         
         CATEGORIES.setNavigationBarHidden(false, animated:true)
         
         
+        CATEGORIES.tabBarItem       = UITabBarItem(title:nil, image:UIImage(named:"image-icon-tabbaritem-categories-default"), tag:1)
+        SUMMARY.tabBarItem          = UITabBarItem(title:"", image:UIImage(named:"image-icon-tabbaritem-summary-default"), tag: 2)
+        SETTINGS.tabBarItem         = UITabBarItem(title:"", image:UIImage(named:"image-icon-tabbaritem-settings-default"), tag:3)
 
-        let summary                 = ControllerOfSummary()
-        summary.title               = "Summary"
-
-        let SUMMARY                 = UINavigationController(rootViewController:summary)
         
-        SUMMARY.tabBarItem          = UITabBarItem(title : "Summary",
-                                                   image : UIImage(named:"image-icon-tabbaritem-summary-default"),
-                                                   tag   : 2)
-        
-        
-        
-        let settings                = ControllerOfSettings()
-        settings.title              = "Settings"
-        
-        let SETTINGS                = UINavigationController(rootViewController:settings)
-        
-        SETTINGS.tabBarItem         = UITabBarItem(title:"Settings", image:UIImage(named:"image-icon-tabbaritem-settings-default"), tag:3)
+        CATEGORIES.tabBarItem.imageInsets   = UIEdgeInsetsMake(5, 0, -5, 0)
+        SUMMARY.tabBarItem.imageInsets      = UIEdgeInsetsMake(5, 0, -5, 0)
+        SETTINGS.tabBarItem.imageInsets     = UIEdgeInsetsMake(5, 0, -5, 0)
         
         
         
@@ -104,6 +104,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TABS.setViewControllers([CATEGORIES,SUMMARY,SETTINGS], animated:true)
         
         TABS.selectedViewController = CATEGORIES
+        
+        
 
         
         

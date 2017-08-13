@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import ASToolkit
 
+// TODO
 func object<Type>(_ object:Any, dataMembersOfType type:Type) -> [Type] {
     var result = [Type]()
     for child in Mirror(reflecting: object).children {
@@ -21,13 +22,13 @@ func object<Type>(_ object:Any, dataMembersOfType type:Type) -> [Type] {
     
 }
 
-// TODO: MODIFY GENERIC CONTROLLER OF SETTINGS TO USE SECTION/ROW/CELL STRUCTS?
-// TODO: ADD SQUARE|CIRCLE|ROUNDED OPTION FOR QUANTITY BACKGROUND SHAPE
+// TODO: DISTRIBUTE BAR/TINT COLOR AMONGST STANDARD THEMES
+
 // TODO: CUSTOM-THEME NAMING-CONVENTION AT DISPLAY? [OLD-THEME-NAME]+[NEW-THEME-NAME]
 // TODO: ADD THEMES
 // TODO: ADD SOUNDS?
 // TODO: ADD PROPERTY ANIMATIONS
-// TODO: ADD BETTER COLOR PALETTE? A CHOICE OF PALETTES?
+// TODO: ADD BETTER COLOR PALETTE? A CHOICE OF PALETTES? MORE COLORS? MATRIX? MATRIX OF CIRCLES?
 
 
 class Preferences : GenericManagerOfSettings {

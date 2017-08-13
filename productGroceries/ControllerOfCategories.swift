@@ -29,7 +29,7 @@ class ControllerOfCategories : UITableViewController {
         
         super.viewDidLoad()
         
-        self.title                  = "Categories"
+        self.title                  = "" // "Categories" -- don't set, it will show up in tab bar item
         
         tableView.dataSource        = self
         
