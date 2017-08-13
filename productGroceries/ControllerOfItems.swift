@@ -16,13 +16,17 @@ import ASToolkit
 
 class ItemsController : UITableViewController, UIGestureRecognizerDelegate
 {
-    var items:[Store.Item]           = []
+    var items                           : [Store.Item]              = []
     
-    var category:String             = ""
+    var category                        : String                    = ""
     
-    var colorOfCategory:UIColor     = UIColor.white
+    var colorOfCategory                 : UIColor                   = UIColor.white
     
-    var lastTap:UITableViewTap!
+    var lastTap                         : UITableViewTap!
+    
+    var player                          : AVAudioPlayer?
+    
+    
     
 
     
@@ -85,7 +89,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
             return AppDelegate.instance.preferences
         }
         
-        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Store.Manager.settingsGetSelectionColor())
+        cell.selectedBackgroundView = UIView.create(withBackgroundColor:Store.Manager.settingsGetSelectionColor())
         
         do
         {
@@ -156,19 +160,18 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     {
         let item = items[indexPath.row]
         
-        let cell = UITableViewCell(style:.default,reuseIdentifier:nil)
+        let cell = UITableViewCell(style:.default, reuseIdentifier:nil)
         
-        ItemsController.styleCell(cell,item:item,indexPath:indexPath)
+        ItemsController.styleCell(cell, item:item, indexPath:indexPath)
         
         if 0 < item.quantity
         {
-            _ = ControllerOfCategories.instance.styleQuantity(cell:cell,indexPath:indexPath,quantity:item.quantity)
+            _ = ControllerOfCategories.instance.styleQuantity(cell:cell, indexPath:indexPath, quantity:item.quantity)
         }
         
         return cell
     }
-    
-    
+
     
     
     func reload()
@@ -232,11 +235,6 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
     }
     
     
-    
-    
-    
-    var player:AVAudioPlayer?
-
     
     
     

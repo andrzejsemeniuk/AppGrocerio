@@ -248,7 +248,10 @@ class ControllerOfSettings : GenericControllerOfSettings
                         
                         createCellForUIColor(preferences.settingTabItemsQuantityColorBackground , title: "Background"),
                         
-                        createCellForUISlider(preferences.settingTabItemsQuantityColorBackgroundOpacity, title: "Opacity")
+                        createCellForUISlider(preferences.settingTabItemsQuantityColorBackgroundOpacity, title: "  Opacity"),
+
+                        createCellForUISwitch(preferences.settingTabItemsQuantityCircle, title: "  Circle"),
+                        
                 ]),
             
             Section(header  : "SELECTION",
@@ -310,7 +313,7 @@ class ControllerOfSettings : GenericControllerOfSettings
     {
         let cell = super.tableView(tableView, cellForRowAt:indexPath)
         
-        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Store.Manager.settingsGetSelectionColor())
+        cell.selectedBackgroundView = UIView.create(withBackgroundColor:Store.Manager.settingsGetSelectionColor())
         
         return cell
     }

@@ -182,7 +182,7 @@ class ControllerOfCategories : UITableViewController {
     
     func styleCell(cell:UITableViewCell, indexPath:IndexPath)
     {
-        cell.selectedBackgroundView = UIView.createWithBackgroundColor(Store.Manager.settingsGetSelectionColor())
+        cell.selectedBackgroundView = UIView.create(withBackgroundColor:Store.Manager.settingsGetSelectionColor())
         
         cell.backgroundColor        = cellColorOfBackgroundForCategory(at: indexPath.row)
         
@@ -223,26 +223,15 @@ class ControllerOfCategories : UITableViewController {
         cell.accessoryType      = .none//.DisclosureIndicator
     }
     
-    func styleQuantity(cell:UITableViewCell,indexPath:IndexPath,quantity:Int) -> (fill:UIView,label:UILabel)
+    func styleQuantity(cell:UITableViewCell, indexPath:IndexPath, quantity:Int) -> (fill:UIView,label:UILabel)
     {
-        
-        let fill = UIView()
-        
-        fill.frame                  = CGRect(x:0,y:0,width:cell.bounds.height*1.2,height:cell.bounds.height)
-        fill.frame.origin.x         = AppDelegate.rootViewController.view.bounds.width-fill.frame.size.width
-        fill.backgroundColor        = preferences.settingTabItemsQuantityColorBackground.value.withAlphaComponent(preferences.settingTabItemsQuantityColorBackgroundOpacity.value)
-        
-        cell.addSubview(fill)
-        
-        
         let label = UILabel()
         
-        label.frame                 = CGRect(x:0,y:0,width:cell.bounds.height*2,height:cell.bounds.height)
         
         // TODO: REFACTOR
-        let defaultFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
-        label.font      = UIFont(name:preferences.settingTabItemsQuantityFont.value,
-                                 size:defaultFont.pointSize + preferences.settingTabItemsQuantityFontGrowth.value)
+        let defaultFont             = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
+        label.font                  = UIFont(name:preferences.settingTabItemsQuantityFont.value,
+                                             size:defaultFont.pointSize + preferences.settingTabItemsQuantityFontGrowth.value)
             ?? defaultFont
         
         // TODO: REFACTOR
@@ -253,11 +242,44 @@ class ControllerOfCategories : UITableViewController {
             label.textColor         = preferences.settingTabItemsQuantityColorText.value
         }
         label.text                  = String(quantity)
-        label.textAlignment         = .right
         
-        cell.accessoryView          = label
-        cell.editingAccessoryView   = label
+        label.sizeToFit()
+
         
+        
+        
+        let fill:UIView
+        
+        if preferences.settingTabItemsQuantityCircle.value {
+            var frame       = CGRect(x        : 0,
+                                     y        : 1,
+                                     width    : cell.bounds.height - 2,
+                                     height   : cell.bounds.height - 2)
+            
+            frame.origin.x          = AppDelegate.rootViewController.view.bounds.width - frame.size.width
+            
+            fill                    = UIViewCircle(frame:frame)
+        }
+        else {
+            var frame       = CGRect(x        : 0,
+                                     y        : 1,
+                                     width    : cell.bounds.height - 2,
+                                     height   : cell.bounds.height - 2)
+            
+            frame.origin.x          = AppDelegate.rootViewController.view.bounds.width - frame.size.width
+            
+            fill                    = UIView(frame:frame)
+        }
+        
+        fill.backgroundColor        = preferences.settingTabItemsQuantityColorBackground.value.withAlphaComponent(preferences.settingTabItemsQuantityColorBackgroundOpacity.value)
+        
+        cell.addSubview(fill)
+
+        // DON'T SET LABEL AS ACCESSORY-VIEW OF CELL IN ORDER TO ALIGN IT WITH THE FILL!
+        fill.addSubview(label)
+
+        label.constraintCenterToSuperview()
+
         return (fill,label)
     }
     
