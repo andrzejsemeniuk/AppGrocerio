@@ -34,6 +34,17 @@ class Preferences : GenericManagerOfSettings {
     
     func synchronize() {
         UserDefaults.standard.synchronize()
+        
+        AppDelegate.tabBarController.tabBar.tintColor                       = settingTabBarTintColor.value
+        AppDelegate.navigatorForCategories.navigationBar.tintColor          = settingTabBarTintColor.value
+        AppDelegate.navigatorForSummary.navigationBar.tintColor             = settingTabBarTintColor.value
+        AppDelegate.navigatorForSettings.navigationBar.tintColor            = settingTabBarTintColor.value
+        
+        AppDelegate.tabBarController.tabBar.barTintColor                    = settingTabBarBackgroundColor.value
+        AppDelegate.navigatorForCategories.navigationBar.barTintColor       = settingTabBarBackgroundColor.value
+        AppDelegate.navigatorForSummary.navigationBar.barTintColor          = settingTabBarBackgroundColor.value
+        AppDelegate.navigatorForSettings.navigationBar.barTintColor         = settingTabBarBackgroundColor.value
+
     }
     
 //    lazy var manager = GenericManagerStore {
@@ -58,7 +69,10 @@ class Preferences : GenericManagerOfSettings {
     var settingAudioOn                                  = GenericSetting<Bool>          (key:"settings-audio-on", first:true)
     var settingSelectionColor                           = GenericSetting<UIColor>       (key:"settings-selection-color", first:.red)
     var settingSelectionColorOpacity                    = GenericSetting<CGFloat>       (key:"settings-selection-color-opacity", first:0.5)
-    
+
+    var settingTabBarTintColor                          = GenericSetting<UIColor>       (key:"settings-selection-color-bar-tint", first:.red)
+    var settingTabBarBackgroundColor                    = GenericSetting<UIColor>       (key:"settings-selection-color-bar-background", first:.white)
+
     var settingTabSettingsHeaderTextColor               = GenericSetting<UIColor>       (key:"settings-header-text-color", first:.black)
     var settingTabSettingsFooterTextColor               = GenericSetting<UIColor>       (key:"settings-footer-text-color", first:.black)
     

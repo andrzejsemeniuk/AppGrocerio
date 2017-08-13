@@ -69,6 +69,15 @@ class ControllerOfSettings : GenericControllerOfSettings
     
     
     
+
+    
+    override func reload() {
+        preferences.synchronize()
+        
+        super.reload()
+    }
+    
+    
     
     
     
@@ -158,10 +167,12 @@ class ControllerOfSettings : GenericControllerOfSettings
                             
                         },
                         
-                        createCellForUIColor(preferences.settingTabSettingsHeaderTextColor, title: "Header/Footer") { [weak self] in
-                            if let `self` = self {
-                                self.preferences.settingTabSettingsFooterTextColor.value = self.preferences.settingTabSettingsHeaderTextColor.value
-                            }
+                        createCellForUIColor(preferences.settingTabSettingsHeaderTextColor, title: "Header Text Color") { [weak self] in
+                            self?.reload()
+                        },
+                        
+                        createCellForUIColor(preferences.settingTabSettingsFooterTextColor, title: "Footer Text Color") { [weak self] in
+                            self?.reload()
                         }
 
                 ]),
@@ -177,6 +188,14 @@ class ControllerOfSettings : GenericControllerOfSettings
                         },
                         
                         createCellForUISwitch(preferences.settingAudioOn, title: "Audio"),
+                        
+                        createCellForUIColor(preferences.settingTabBarTintColor, title: "Bar Tint Color") { [weak self] in
+                            self?.preferences.synchronize()
+                        },
+                        
+                        createCellForUIColor(preferences.settingTabBarBackgroundColor, title: "Bar Background Color") { [weak self] in
+                            self?.preferences.synchronize()
+                        },
                         
                         ]),
             

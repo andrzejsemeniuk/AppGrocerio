@@ -247,7 +247,6 @@ class ControllerOfCategories : UITableViewController {
 
         
         
-        
         let fill:UIView
         
         if preferences.settingTabItemsQuantityCircle.value {
@@ -282,6 +281,8 @@ class ControllerOfCategories : UITableViewController {
 
         return (fill,label)
     }
+    
+    
     
     
     override func numberOfSections              (in: UITableView) -> Int

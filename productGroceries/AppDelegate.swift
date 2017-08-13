@@ -17,40 +17,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private static var __tabBarController:UITabBarController?
-    private static var __navigatorForCategories:UINavigationController?
-    private static var __navigatorForSettings:UINavigationController?
-    private static var __instance:AppDelegate?
-    
-    class var instance:AppDelegate {
-        return __instance!
+    class var instance                      : AppDelegate {
+        return UIApplication.shared.delegate as! AppDelegate
     }
     
-    class var tabBarController:UITabBarController {
-        return __tabBarController!
+    class var tabBarController              : UITabBarController {
+        return UIApplication.rootViewController as! UITabBarController
     }
     
-    class var navigatorForCategories:UINavigationController {
-        return __navigatorForCategories!
+    class var navigatorForCategories        : UINavigationController {
+        return tabBarController.customizableViewControllers![0] as! UINavigationController
     }
     
-    class var navigatorForSettings:UINavigationController {
-        return __navigatorForSettings!
+    class var navigatorForSummary           : UINavigationController {
+        return tabBarController.customizableViewControllers![1] as! UINavigationController
     }
     
-    class var rootViewController:UIViewController {
-        return __tabBarController!
+    class var navigatorForSettings          : UINavigationController {
+        return tabBarController.customizableViewControllers![2] as! UINavigationController
     }
     
-    lazy var preferences            : Preferences               = {
+    class var rootViewController            : UIViewController {
+        return UIApplication.rootViewController
+    }
+    
+    lazy var preferences                    : Preferences = {
         let result = Preferences()
         return result
     }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         // Override point for customization after application launch.
-        
-        AppDelegate.__instance      = self
         
         Audio.initialize()
         
@@ -76,21 +73,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let CATEGORIES              = UINavigationController(rootViewController:categories)
         
-        AppDelegate.__navigatorForCategories     = CATEGORIES
-        
         CATEGORIES.tabBarItem       = UITabBarItem(title:"Items", image:UIImage(named:"image-icon-tabbaritem-categories-default"), tag:1)
         
         CATEGORIES.setNavigationBarHidden(false, animated:true)
         
         
-        
+
         let summary                 = ControllerOfSummary()
         summary.title               = "Summary"
 
         let SUMMARY                 = UINavigationController(rootViewController:summary)
         
-        SUMMARY.tabBarItem          = UITabBarItem(title:"Summary", image:UIImage(named:"image-icon-tabbaritem-summary-default"), tag:2)
-
+        SUMMARY.tabBarItem          = UITabBarItem(title : "Summary",
+                                                   image : UIImage(named:"image-icon-tabbaritem-summary-default"),
+                                                   tag   : 2)
+        
         
         
         let settings                = ControllerOfSettings()
@@ -100,7 +97,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         SETTINGS.tabBarItem         = UITabBarItem(title:"Settings", image:UIImage(named:"image-icon-tabbaritem-settings-default"), tag:3)
         
-        AppDelegate.__navigatorForSettings     = SETTINGS
         
         
         let TABS                    = UITabBarController()
@@ -108,13 +104,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TABS.setViewControllers([CATEGORIES,SUMMARY,SETTINGS], animated:true)
         
         TABS.selectedViewController = CATEGORIES
-        
-        AppDelegate.__tabBarController = TABS
+
         
         
         WINDOW.rootViewController   = TABS
         
         WINDOW.makeKeyAndVisible()
+        
+        
+        
+        preferences.synchronize()
+        
         
         
         return true
