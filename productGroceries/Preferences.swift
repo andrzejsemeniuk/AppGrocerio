@@ -54,6 +54,11 @@ class Preferences : GenericManagerOfSettings {
         AppDelegate.navigatorForCategories.navigationBar.titleTextAttributes    = attributes
         AppDelegate.navigatorForSummary.navigationBar.titleTextAttributes       = attributes
         AppDelegate.navigatorForSettings.navigationBar.titleTextAttributes      = attributes
+        
+        AppDelegate.tabBarController.tabBar.backgroundColor                 = settingBackgroundColor.value
+        AppDelegate.navigatorForCategories.view.backgroundColor             = settingBackgroundColor.value
+        AppDelegate.navigatorForSummary.view.backgroundColor                = settingBackgroundColor.value
+        AppDelegate.navigatorForSettings.view.backgroundColor               = settingBackgroundColor.value
     }
     
 //    lazy var manager = GenericManagerStore {

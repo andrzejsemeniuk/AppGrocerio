@@ -79,8 +79,6 @@ class ControllerOfSettings : GenericControllerOfSettings
     
     
     
-    
-    
     override open func createCellForUIColor              (_ setting      : GenericSetting<UIColor>,
                                                           title          : String,
                                                           setup          : ((UITableViewCell,IndexPath)->())? = nil,
@@ -103,6 +101,8 @@ class ControllerOfSettings : GenericControllerOfSettings
         return super.createCellForUIColor(setting, title:title, setup:setup, setupForPicker:setupForPicker1, action:action)
     }
 
+    
+    
     
     
     override func createSections() -> [Section]
@@ -206,9 +206,7 @@ class ControllerOfSettings : GenericControllerOfSettings
                     cells   : [
                         
                         createCellForUIColor(preferences.settingBackgroundColor, title: "Background") { [weak self] in
-                            guard let `self` = self else { return }
-                            AppDelegate.rootViewController.view.backgroundColor     = self.preferences.settingBackgroundColor.value
-                            self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
+                            self?.preferences.synchronize()
                         },
                         
                         createCellForUIColor(preferences.settingBarBackgroundColor, title: "Bar Background Color") { [weak self] in
