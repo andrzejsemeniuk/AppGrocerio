@@ -81,6 +81,30 @@ class ControllerOfSettings : GenericControllerOfSettings
     
     
     
+    override open func createCellForUIColor              (_ setting      : GenericSetting<UIColor>,
+                                                          title          : String,
+                                                          setup          : ((UITableViewCell,IndexPath)->())? = nil,
+                                                          setupForPicker : ((GenericControllerOfPickerOfColor)->())? = nil,
+                                                          action         : (()->())? = nil) -> FunctionOnCell
+    {
+        var setupForPicker1 = setupForPicker
+        
+        if setupForPicker1 == nil {
+            setupForPicker1 = { [weak setting] picker in
+                picker.flavor = .matrixOfSolidCircles(selected  : setting?.value ?? .white,
+                                                      colors    : UIColor.generateMatrixOfColors(columns    : 7,
+                                                                                                 rowsOfGray : 2,
+                                                                                                 rowsOfHues : 12),
+                                                      diameter  : 36,
+                                                      space     : 8)
+            }
+        }
+        
+        return super.createCellForUIColor(setting, title:title, setup:setup, setupForPicker:setupForPicker1, action:action)
+    }
+
+    
+    
     override func createSections() -> [Section]
     {
         return [
@@ -90,9 +114,12 @@ class ControllerOfSettings : GenericControllerOfSettings
                         
                         createCellForTapOnInput(title    : "Save As ...",
                                                 message  : "Specify name for current settings.",
-                                                setup    : { cell,indexpath in
+                                                setup    : { [weak self] cell,indexpath in
                                                     cell.selectionStyle = .default
                                                     cell.accessoryType  = .none
+                                                    if let detail = cell.detailTextLabel {
+                                                        detail.text = self?.preferences.themeCurrent.value
+                                                    }
                         }, value:{ [weak self] in
                             return (self?.preferences.themeCurrent.value ?? "") + "+"
                         }) { [weak self] text in
@@ -110,9 +137,6 @@ class ControllerOfSettings : GenericControllerOfSettings
                         createCellForTap(title: "Load", setup: { [weak self] cell,indexpath in
                             cell.selectionStyle = .default
                             cell.accessoryType  = .disclosureIndicator
-                            if let detail = cell.detailTextLabel {
-                                detail.text = self?.preferences.themeCurrent.value
-                            }
                         }) { [weak self] in
                             
                             guard let `self` = self else { return }
@@ -187,11 +211,15 @@ class ControllerOfSettings : GenericControllerOfSettings
                             self.view.backgroundColor                               = AppDelegate.rootViewController.view.backgroundColor
                         },
                         
-                        createCellForUIColor(preferences.settingTabBarBackgroundColor, title: "Bar Background Color") { [weak self] in
+                        createCellForUIColor(preferences.settingBarBackgroundColor, title: "Bar Background Color") { [weak self] in
                             self?.preferences.synchronize()
                         },
                         
-                        createCellForUIColor(preferences.settingTabBarTintColor, title: "Bar Tint Color") { [weak self] in
+                        createCellForUIColor(preferences.settingBarTintColor, title: "Bar Tint Color") { [weak self] in
+                            self?.preferences.synchronize()
+                        },
+                        
+                        createCellForUIColor(preferences.settingBarTitleColor, title: "Bar Title Color") { [weak self] in
                             self?.preferences.synchronize()
                         },
                         
@@ -355,16 +383,14 @@ class ControllerOfSettings : GenericControllerOfSettings
         return cell
     }
     
-    
-    
-    override func viewWillDisappear(_ animated: Bool)
+    override func viewWillDisappear             (_ animated: Bool)
     {
         Store.Manager.synchronize()
         
         super.viewWillDisappear(animated)
     }
     
-    override func viewWillAppear(_ animated: Bool)
+    override func viewWillAppear                (_ animated: Bool)
     {
         tableView.backgroundColor   = preferences.settingBackgroundColor.value
         

@@ -277,7 +277,7 @@ class ControllerOfCategories : UITableViewController {
         // DON'T SET LABEL AS ACCESSORY-VIEW OF CELL IN ORDER TO ALIGN IT WITH THE FILL!
         fill.addSubview(label)
 
-        label.constraintCenterToSuperview()
+        label.constrainCenterToSuperview()
 
         return (fill,label)
     }

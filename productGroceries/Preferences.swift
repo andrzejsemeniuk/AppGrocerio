@@ -36,16 +36,24 @@ class Preferences : GenericManagerOfSettings {
     func synchronize() {
         UserDefaults.standard.synchronize()
         
-        AppDelegate.tabBarController.tabBar.tintColor                       = settingTabBarTintColor.value
-        AppDelegate.navigatorForCategories.navigationBar.tintColor          = settingTabBarTintColor.value
-        AppDelegate.navigatorForSummary.navigationBar.tintColor             = settingTabBarTintColor.value
-        AppDelegate.navigatorForSettings.navigationBar.tintColor            = settingTabBarTintColor.value
+        AppDelegate.tabBarController.tabBar.tintColor                       = settingBarTintColor.value
+        AppDelegate.navigatorForCategories.navigationBar.tintColor          = settingBarTintColor.value
+        AppDelegate.navigatorForSummary.navigationBar.tintColor             = settingBarTintColor.value
+        AppDelegate.navigatorForSettings.navigationBar.tintColor            = settingBarTintColor.value
         
-        AppDelegate.tabBarController.tabBar.barTintColor                    = settingTabBarBackgroundColor.value
-        AppDelegate.navigatorForCategories.navigationBar.barTintColor       = settingTabBarBackgroundColor.value
-        AppDelegate.navigatorForSummary.navigationBar.barTintColor          = settingTabBarBackgroundColor.value
-        AppDelegate.navigatorForSettings.navigationBar.barTintColor         = settingTabBarBackgroundColor.value
+        AppDelegate.tabBarController.tabBar.barTintColor                    = settingBarBackgroundColor.value
+        AppDelegate.navigatorForCategories.navigationBar.barTintColor       = settingBarBackgroundColor.value
+        AppDelegate.navigatorForSummary.navigationBar.barTintColor          = settingBarBackgroundColor.value
+        AppDelegate.navigatorForSettings.navigationBar.barTintColor         = settingBarBackgroundColor.value
 
+        let attributes : [String:Any] = [
+            NSForegroundColorAttributeName          : settingBarTitleColor.value,
+            NSFontAttributeName                     : UIFont.init(name:settingBarTitleFont.value, size:UIFont.labelFontSize) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        ]
+        
+        AppDelegate.navigatorForCategories.navigationBar.titleTextAttributes    = attributes
+        AppDelegate.navigatorForSummary.navigationBar.titleTextAttributes       = attributes
+        AppDelegate.navigatorForSettings.navigationBar.titleTextAttributes      = attributes
     }
     
 //    lazy var manager = GenericManagerStore {
@@ -71,8 +79,10 @@ class Preferences : GenericManagerOfSettings {
     var settingSelectionColor                           = GenericSetting<UIColor>       (key:"settings-selection-color", first:.red)
     var settingSelectionColorOpacity                    = GenericSetting<CGFloat>       (key:"settings-selection-color-opacity", first:0.5)
 
-    var settingTabBarTintColor                          = GenericSetting<UIColor>       (key:"settings-selection-color-bar-tint", first:.red)
-    var settingTabBarBackgroundColor                    = GenericSetting<UIColor>       (key:"settings-selection-color-bar-background", first:.white)
+    var settingBarBackgroundColor                       = GenericSetting<UIColor>       (key:"settings-bar-color-background", first:.white)
+    var settingBarTintColor                             = GenericSetting<UIColor>       (key:"settings-bar-color-tint", first:.red)
+    var settingBarTitleColor                            = GenericSetting<UIColor>       (key:"settings-bar-color-title", first:.blue)
+    var settingBarTitleFont                             = GenericSetting<String>        (key:"settings-bar-font-name", first:"Arial")
 
     var settingTabSettingsHeaderTextColor               = GenericSetting<UIColor>       (key:"settings-header-text-color", first:.black)
     var settingTabSettingsFooterTextColor               = GenericSetting<UIColor>       (key:"settings-footer-text-color", first:.black)
