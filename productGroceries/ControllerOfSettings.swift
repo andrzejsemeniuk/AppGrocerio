@@ -191,14 +191,10 @@ class ControllerOfSettings : GenericControllerOfSettings
                             
                         },
                         
-                        createCellForUIColor(preferences.settingTabSettingsHeaderTextColor, title: "Header Text Color") { [weak self] in
+                        createCellForUIColor(preferences.settingTabSettingsTextColor, title: "Header/Footer Text Color") { [weak self] in
                             self?.reload()
                         },
                         
-                        createCellForUIColor(preferences.settingTabSettingsFooterTextColor, title: "Footer Text Color") { [weak self] in
-                            self?.reload()
-                        }
-
                 ]),
             
             Section(header  : "APP",
@@ -213,7 +209,11 @@ class ControllerOfSettings : GenericControllerOfSettings
                             self?.preferences.synchronize()
                         },
                         
-                        createCellForUIColor(preferences.settingBarTintColor, title: "Bar Tint Color") { [weak self] in
+                        createCellForUIColor(preferences.settingBarItemSelectedTintColor, title: "Bar Item Selected Color") { [weak self] in
+                            self?.preferences.synchronize()
+                        },
+                        
+                        createCellForUIColor(preferences.settingBarItemUnselectedTintColor, title: "Bar Item Unselected Color") { [weak self] in
                             self?.preferences.synchronize()
                         },
                         
@@ -392,8 +392,8 @@ class ControllerOfSettings : GenericControllerOfSettings
     {
         tableView.backgroundColor   = preferences.settingBackgroundColor.value
         
-        colorForHeaderText          = preferences.settingTabSettingsHeaderTextColor.value
-        colorForFooterText          = preferences.settingTabSettingsFooterTextColor.value
+        colorForHeaderText          = preferences.settingTabSettingsTextColor.value
+        colorForFooterText          = colorForHeaderText
         
         tableView.reloadData()
         
