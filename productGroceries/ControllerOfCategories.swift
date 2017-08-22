@@ -101,6 +101,8 @@ class ControllerOfCategories : UITableViewController {
     
     func cellColorOfBackgroundForCategory(at index:Int) -> UIColor
     {
+        var result      = UIColor.clear
+        
         let saturation  = preferences.settingTabThemesSaturation.value
         
         let mark        = CGFloat(Float(index)/Float(categories.count)).clampedTo01
@@ -112,34 +114,34 @@ class ControllerOfCategories : UITableViewController {
         }
         
         if startsWith("Apple") {
-            return UIColor(hue:mark.lerp01(from:0.15, to:0.35), saturation:saturation, brightness:1.0, alpha:1.0)
+            result = UIColor(hue:mark.lerp01(from:0.15, to:0.35), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Charcoal") {
-            return index.isEven ? UIColor(white:0.2,alpha:1.0) : UIColor(white:0.17,alpha:1.0)
+            result = index.isEven ? UIColor(white:0.2,alpha:1.0) : UIColor(white:0.17,alpha:1.0)
         } else if startsWith("Grape") {
-            return UIColor(hue:mark.lerp01(from:0.75, to:0.90), saturation:saturation, brightness:mark.lerp01(from:0.65, to:0.80), alpha:1.0)
+            result = UIColor(hue:mark.lerp01(from:0.75, to:0.90), saturation:saturation, brightness:mark.lerp01(from:0.65, to:0.80), alpha:1.0)
         } else if startsWith("Gray") {
-            return UIColor(white:0.4, alpha:1.0)
+            result = UIColor(white:0.4, alpha:1.0)
         } else if startsWith("Orange") {
-            return UIColor(hue:mark.lerp01(from:0.04, to:0.1), saturation:saturation, brightness:1.0, alpha:1.0)
+            result = UIColor(hue:mark.lerp01(from:0.04, to:0.1), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Plain") {
-            return UIColor.white
+            result = UIColor.white
         } else if startsWith("Rainbow") {
-            return UIColor(hue:mark.lerp01(from:0.0, to:0.9), saturation:saturation, brightness:1.0, alpha:1.0)
-        } else if startsWith("Range") {
+            result = UIColor(hue:mark.lerp01(from:0.0, to:0.9), saturation:saturation, brightness:1.0, alpha:1.0)
+        } else if startsWith("Strawberry") {
+            result = UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
+        } else if startsWith("Default") || preferences.settingTabThemesName.value == "Solid" {
+            let HSBA = preferences.settingTabThemesSolidColor.value.HSBA
+            result = UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
+        } else if preferences.settingTabThemesName.value == "Range" {
             let color0  = preferences.settingTabThemesRangeFromColor.value.HSBA
             let color1  = preferences.settingTabThemesRangeToColor.value.HSBA
-            return UIColor(hue:mark.lerp01(from:color0.hue, to:color1.hue),
-                           saturation:mark.lerp01(from:color0.saturation, to:color1.saturation)*saturation,
-                           brightness:mark.lerp01(from:color0.brightness, to:color1.brightness),
-                           alpha:1.0)
-        } else if startsWith("Strawberry") {
-            return UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
-        } else if startsWith("Solid") {
-            let HSBA = preferences.settingTabThemesSolidColor.value.HSBA
-            return UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
+            result = UIColor(hue:mark.lerp01(from:color0.hue, to:color1.hue),
+                             saturation:mark.lerp01(from:color0.saturation, to:color1.saturation)*saturation,
+                             brightness:mark.lerp01(from:color0.brightness, to:color1.brightness),
+                             alpha:1.0)
         }
         
-        return UIColor.clear
+        return result
     }
     
     

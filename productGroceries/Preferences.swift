@@ -53,12 +53,18 @@ class Preferences : GenericManagerOfSettings {
         let fontForBarTitle = UIFont.init(name:settingBarTitleFont.value, size:UIFont.labelFontSize - 3) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize - 3)
         
         var attributes : [String:Any] = [
-            NSForegroundColorAttributeName          : settingBarTitleColor.value.withAlphaComponent(0.9),
+            NSForegroundColorAttributeName          : settingBarItemSelectedTintColor.value,
             NSFontAttributeName                     : fontForBarTitle
         ]
         
         UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .normal)
+
+        // bar item selected
         
+        attributes[NSForegroundColorAttributeName] = settingBarItemSelectedTintColor.value
+        
+        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .selected)
+
         // tab bar item styling, normal mode, ie unselected -- ie. aisles, summary, settings
         
         attributes[NSForegroundColorAttributeName] = settingBarItemUnselectedTintColor.value
@@ -211,12 +217,12 @@ extension Preferences {
                 
                 themeCurrent                                    .value = name
                 
-                settingBackgroundColor                          .value = UIColor.white
+                settingBackgroundColor                          .value = .white
                 
-                settingBarBackgroundColor                       .value = UIColor(white:0.99)
+                settingBarBackgroundColor                       .value = .white
                 settingBarItemSelectedTintColor                 .value = .blue
-                settingBarItemUnselectedTintColor               .value = UIColor(hsba:[0.0,0.0,0.692307692307692,1.0])
-                settingBarTitleColor                            .value = .darkGray
+                settingBarItemUnselectedTintColor               .value = .lightGray
+                settingBarTitleColor                            .value = .red
                 settingBarTitleFont                             .value = "Helvetica"
                 
                 settingAudioOn                                  .value = true
@@ -224,34 +230,35 @@ extension Preferences {
                 settingSelectionColor                           .value = UIColor.red
                 settingSelectionColorOpacity                    .value = 1.00
                 
-                settingTabSettingsTextColor                     .value = UIColor(hue:0.55,saturation:0.70,brightness:0.75)
+                settingTabSettingsTextColor                     .value = .lightGray
                 
                 settingTabCategoriesUppercase                   .value = false
                 settingTabCategoriesEmphasize                   .value = false
                 settingTabCategoriesFont                        .value = "Helvetica-Bold"
                 settingTabCategoriesFontGrowth                  .value = 0
-                settingTabCategoriesTextColor                   .value = UIColor(hue:0,saturation:1,brightness:1)
+                settingTabCategoriesTextColor                   .value = .lightGray
 
                 settingTabItemsFont                             .value = "Helvetica"
                 settingTabItemsFontGrowth                       .value = 0.0
                 settingTabItemsUppercase                        .value = false
                 settingTabItemsEmphasize                        .value = false
                 settingTabItemsFontSameAsCategories             .value = true
-                settingTabItemsTextColor                        .value = UIColor(hue:0.0,saturation:1,brightness:1)
+                settingTabItemsTextColor                        .value = .lightGray
                 settingTabItemsTextColorSameAsCategories        .value = true
                 
-                settingTabItemsRowOddOpacity                    .value = 0.30
-                settingTabItemsRowEvenOpacity                   .value = 0.70
+                settingTabItemsRowOddOpacity                    .value = 0.03
+                settingTabItemsRowEvenOpacity                   .value = 0.00
                 
-                settingTabItemsQuantityColorBackground          .value = UIColor(hue:0,saturation:1,brightness:1)
+                settingTabItemsQuantityColorBackground          .value = .red
                 settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
-                settingTabItemsQuantityColorText                .value = UIColor(hue:0,saturation:0,brightness:1)
-                settingTabItemsQuantityColorTextSameAsItems     .value = true
+                settingTabItemsQuantityColorText                .value = .white
+                settingTabItemsQuantityColorTextSameAsItems     .value = false
                 settingTabItemsQuantityFont                     .value = "Helvetica-Bold"
                 settingTabItemsQuantityFontGrowth               .value = 0.00
                 settingTabItemsQuantityFontSameAsItems          .value = true
+                settingTabItemsQuantityCircle                   .value = true
                 
-                settingTabThemesSolidColor                      .value = UIColor(white:0.98) //UIColor(hue:0.14)
+                settingTabThemesSolidColor                      .value = UIColor(white:0.98)
 //                settingTabThemesRangeFromColor                  .value = 
 //                settingTabThemesRangeToColor                    .value =
 //                settingTabThemesCustomColors                    .value =
