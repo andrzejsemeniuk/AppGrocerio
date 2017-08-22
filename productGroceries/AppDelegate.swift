@@ -8,9 +8,10 @@
 
 import UIKit
 import CoreData
+import ASToolkit
 
 // TODO: ADD ANIMATED TRANSITIONS BETWEEN TAB SWITCHING
-// TODO: ADD SEARCH ON CATEGORIES AND SUMMARY PAGES
+// TODO: ADD SEARCH/FILTER ON CATEGORIES AND SUMMARY PAGES
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -43,6 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     lazy var preferences                    : Preferences = {
         let result = Preferences()
+        result.reset() // TODO: REMOVE, THIS IS FOR DEBUGGING PURPOSES ONLY
+        result.themeLoadCurrent()
         return result
     }()
     
@@ -69,59 +72,117 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         
-        let categories              = ControllerOfCategories()
-        let summary                 = ControllerOfSummary()
-        let settings                = ControllerOfSettings()
-        
-
-        categories.title            = "Aisles"
-        summary.title               = "Summary"
-        settings.title              = "Settings"
-        
-
-        
-        let CATEGORIES              = UINavigationController(rootViewController:categories)
-        let SUMMARY                 = UINavigationController(rootViewController:summary)
-        let SETTINGS                = UINavigationController(rootViewController:settings)
-
-        
-        CATEGORIES.setNavigationBarHidden(false, animated:true)
-        
-        
-        CATEGORIES.tabBarItem       = UITabBarItem(title:nil, image:UIImage(named:"image-icon-tabbaritem-categories-default"), tag:1)
-        SUMMARY.tabBarItem          = UITabBarItem(title:"", image:UIImage(named:"image-icon-tabbaritem-summary-default"), tag: 2)
-        SETTINGS.tabBarItem         = UITabBarItem(title:"", image:UIImage(named:"image-icon-tabbaritem-settings-default"), tag:3)
-
-        
-        CATEGORIES.tabBarItem.imageInsets   = UIEdgeInsetsMake(5, 0, -5, 0)
-        SUMMARY.tabBarItem.imageInsets      = UIEdgeInsetsMake(5, 0, -5, 0)
-        SETTINGS.tabBarItem.imageInsets     = UIEdgeInsetsMake(5, 0, -5, 0)
-        
-        
-        
-        let TABS                    = UITabBarController()
-        
-        TABS.setViewControllers([CATEGORIES,SUMMARY,SETTINGS], animated:true)
-        
-        TABS.selectedViewController = CATEGORIES
         
         
 
         
+        if false {
+            let picker = GenericControllerOfPickerOfColor()
+            picker.rowHeight = 80
+            let colors:[[UIColor]] = [
+                [.red,.orange,.yellow],
+                [.blue,.green,.aqua],
+                [.white],
+                [.red,.orange,.yellow],
+                [.blue,.green,.aqua],
+                [.white,.lightGray,.gray,.darkGray,.black],
+                [.red,.orange,.yellow],
+                [.blue,.green,.aqua],
+                [.white,.lightGray,.gray,.darkGray,.black],
+                [.red,.orange,.yellow],
+                [.blue,.green,.aqua],
+                [.white,.lightGray,.gray,.darkGray,.black],
+                [.red,.orange,.yellow],
+                [.blue,.green,.aqua],
+                [.white,.lightGray,.gray,.darkGray,.black],
+                [.red,.orange,.yellow],
+                [.blue,.green,.aqua],
+                [.white,.lightGray,.gray,.darkGray,.black],
+                [.red,.orange,.yellow],
+                [.blue,.green,.aqua],
+                [.gray],
+            ]
+            picker.flavor = .matrixOfSolidCircles(selected: .white, colors: colors, diameter: 60, space: 16)
+            WINDOW.rootViewController = picker
+            WINDOW.makeKeyAndVisible()
+        }
+        else if false {
+            
+            let picker = PickerOfColorWithSliders.create(withComponents: [
+                .colorDisplay           (height:64,kind:.dot),
+//                .sliderRed              (height:16),
+//                .sliderGreen            (height:16),
+//                .sliderBlue             (height:16),
+                .sliderAlpha            (height:32),
+                .sliderHue              (height:16),
+                .sliderSaturation       (height:16),
+                .sliderBrightness       (height:16),
+//                .sliderCyan             (height:32),
+//                .sliderMagenta          (height:32),
+//                .sliderYellow           (height:32),
+//                .sliderKey              (height:32),
+                .storageDots            (radius:16, columns:6, rows:3, colors:[.white,.gray,.black,.orange,.red,.blue,.green,.yellow])
+                ])
+            let vc = UIViewController()
+            picker.frame = UIScreen.main.bounds
+            vc.view = picker
+            picker.backgroundColor = UIColor(white:0.95)
+            picker.handler = { color in
+                print("new color\(color)")
+            }
+            picker.set(color:UIColor(rgb:[0.64,0.13,0.78]), animated:true)
+            WINDOW.rootViewController = vc
+            WINDOW.makeKeyAndVisible()
+        }
+        else {
+            WINDOW.rootViewController   = buildRootViewController()
+            WINDOW.makeKeyAndVisible()
+            preferences.synchronize()
+        }
         
-        WINDOW.rootViewController   = TABS
-        
-        WINDOW.makeKeyAndVisible()
         
         
         
-        preferences.synchronize()
         
         
         
         return true
     }
 
+    func buildRootViewController() -> UIViewController {
+    
+        let categories              = ControllerOfCategories()
+        let summary                 = ControllerOfSummary()
+        let settings                = ControllerOfSettings()
+        
+        
+        categories.title            = "Aisles"
+        summary.title               = "Summary"
+        settings.title              = "Settings"
+        
+        
+        
+        let CATEGORIES              = UINavigationController(rootViewController:categories)
+        let SUMMARY                 = UINavigationController(rootViewController:summary)
+        let SETTINGS                = UINavigationController(rootViewController:settings)
+        
+        
+        CATEGORIES.setNavigationBarHidden(false, animated:true)
+
+        CATEGORIES.tabBarItem       = UITabBarItem(title:categories.title,  image:nil, tag:1)
+        SUMMARY.tabBarItem          = UITabBarItem(title:summary.title,     image:nil, tag:2)
+        SETTINGS.tabBarItem         = UITabBarItem(title:settings.title,    image:nil, tag:3)
+
+        
+        let TABS                    = UITabBarController()
+        
+        TABS.setViewControllers([CATEGORIES,SUMMARY,SETTINGS], animated:true)
+        
+        TABS.selectedViewController = CATEGORIES
+
+        return TABS
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.

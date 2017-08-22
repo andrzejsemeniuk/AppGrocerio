@@ -29,8 +29,6 @@ class ControllerOfCategories : UITableViewController {
         
         super.viewDidLoad()
         
-        self.title                  = "" // "Categories" -- don't set, it will show up in tab bar item
-        
         tableView.dataSource        = self
         
         tableView.delegate          = self
@@ -58,7 +56,7 @@ class ControllerOfCategories : UITableViewController {
             }
             
             items! += [
-                UIBarButtonItem(barButtonSystemItem:.add, target:self, action: #selector(ControllerOfCategories.add)),
+                UIBarButtonItem(title:"Add", style:.plain, target:self, action: #selector(ControllerOfCategories.add))
             ]
             
             navigationItem.rightBarButtonItems = items
@@ -250,10 +248,11 @@ class ControllerOfCategories : UITableViewController {
         let fill:UIView
         
         if preferences.settingTabItemsQuantityCircle.value {
+            let margin      = CGFloat(4)
             var frame       = CGRect(x        : 0,
-                                     y        : 1,
-                                     width    : cell.bounds.height - 2,
-                                     height   : cell.bounds.height - 2)
+                                     y        : margin/2,
+                                     width    : cell.bounds.height - margin,
+                                     height   : cell.bounds.height - margin)
             
             frame.origin.x          = AppDelegate.rootViewController.view.bounds.width - frame.size.width
             

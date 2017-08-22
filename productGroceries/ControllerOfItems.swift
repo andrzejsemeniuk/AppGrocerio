@@ -50,7 +50,7 @@ class ItemsController : UITableViewController, UIGestureRecognizerDelegate
         }
         
         items! += [
-            UIBarButtonItem(barButtonSystemItem:.add, target:self, action: #selector(ItemsController.add))
+            UIBarButtonItem(title:"Add", style:.plain, target:self, action: #selector(ItemsController.add))
 //            editButtonItem(),
         ]
         

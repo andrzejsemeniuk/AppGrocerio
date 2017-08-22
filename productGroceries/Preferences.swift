@@ -41,11 +41,15 @@ class Preferences : GenericManagerOfSettings {
         AppDelegate.navigatorForSummary.navigationBar.tintColor             = settingBarItemSelectedTintColor.value
         AppDelegate.navigatorForSettings.navigationBar.tintColor            = settingBarItemSelectedTintColor.value
         
+        // bar color
+        
         AppDelegate.tabBarController.tabBar.barTintColor                    = settingBarBackgroundColor.value
         AppDelegate.navigatorForCategories.navigationBar.barTintColor       = settingBarBackgroundColor.value
         AppDelegate.navigatorForSummary.navigationBar.barTintColor          = settingBarBackgroundColor.value
         AppDelegate.navigatorForSettings.navigationBar.barTintColor         = settingBarBackgroundColor.value
-
+        
+        // bar button item styling -- ie Add, Save, etc at the top of the screen on the navigation bar
+        
         let fontForBarTitle = UIFont.init(name:settingBarTitleFont.value, size:UIFont.labelFontSize - 3) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize - 3)
         
         var attributes : [String:Any] = [
@@ -55,20 +59,58 @@ class Preferences : GenericManagerOfSettings {
         
         UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .normal)
         
+        // tab bar item styling, normal mode, ie unselected -- ie. aisles, summary, settings
+        
+        attributes[NSForegroundColorAttributeName] = settingBarItemUnselectedTintColor.value
+        attributes[NSFontAttributeName] = fontForBarTitle.withSize(UIFont.labelFontSize - 2)
+        
+        AppDelegate.navigatorForCategories.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
+        AppDelegate.navigatorForSummary.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
+        AppDelegate.navigatorForSettings.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
+        
+        // tab bar item styling, selected mode -- ie. aisles, summary, settings
+        
+        attributes[NSForegroundColorAttributeName] = settingBarItemSelectedTintColor.value
+        
+        AppDelegate.navigatorForCategories.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
+        AppDelegate.navigatorForSummary.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
+        AppDelegate.navigatorForSettings.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
+        
+        // tab bar item vertical position adjustment for text (ie when images not present)
+        
+        let adjustment : CGFloat = AppDelegate.tabBarController.tabBar.bounds.height / 4
+        
+        AppDelegate.navigatorForCategories.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
+        AppDelegate.navigatorForSummary.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
+        AppDelegate.navigatorForSettings.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
+        
+        // navigation bar title styling
+        
         attributes[NSForegroundColorAttributeName] = settingBarTitleColor.value
         attributes[NSFontAttributeName] = fontForBarTitle.withSize(UIFont.labelFontSize)
         
         AppDelegate.navigatorForCategories.navigationBar.titleTextAttributes    = attributes
         AppDelegate.navigatorForSummary.navigationBar.titleTextAttributes       = attributes
         AppDelegate.navigatorForSettings.navigationBar.titleTextAttributes      = attributes
-
+        
+        // view controller view background color
         
         AppDelegate.tabBarController.tabBar.backgroundColor                 = settingBackgroundColor.value
         AppDelegate.navigatorForCategories.view.backgroundColor             = settingBackgroundColor.value
         AppDelegate.navigatorForSummary.view.backgroundColor                = settingBackgroundColor.value
         AppDelegate.navigatorForSettings.view.backgroundColor               = settingBackgroundColor.value
 
-        collect(withPrefix:"setting-").forEach { print(" \($0)") }
+//        collect(withPrefix:"setting-").forEach { print(" \($0)") }
+        
+        collect(withPrefix:"setting").forEach {
+            guard
+                let setting = $0.object as? GenericSetting<UIColor>,
+                let color = setting.value as? UIColor
+                else {
+                    return
+            }
+            print("\($0.label)=\(color.descriptionAsHSBA)")
+        }
     }
     
 //    lazy var manager = GenericManagerStore {
@@ -149,6 +191,10 @@ class Preferences : GenericManagerOfSettings {
 
 extension Preferences {
     
+    func themeLoadCurrent() {
+        self.theme(loadWithName: themeCurrent.value)
+    }
+    
     func theme(loadWithName name:String) {
         
         let clear = {
@@ -165,17 +211,17 @@ extension Preferences {
                 
                 themeCurrent                                    .value = name
                 
-                settingBackgroundColor                          .value = UIColor(white:0.95)
+                settingBackgroundColor                          .value = UIColor.white
                 
-                settingBarBackgroundColor                       .value = .white
-                settingBarItemSelectedTintColor                 .value = .red
-                settingBarItemUnselectedTintColor               .value = .gray
-                settingBarTitleColor                            .value = .blue
+                settingBarBackgroundColor                       .value = UIColor(white:0.99)
+                settingBarItemSelectedTintColor                 .value = .blue
+                settingBarItemUnselectedTintColor               .value = UIColor(hsba:[0.0,0.0,0.692307692307692,1.0])
+                settingBarTitleColor                            .value = .darkGray
                 settingBarTitleFont                             .value = "Helvetica"
                 
                 settingAudioOn                                  .value = true
                 
-                settingSelectionColor                           .value = UIColor(hue:0.30,saturation:1.00,brightness:1.00)
+                settingSelectionColor                           .value = UIColor.red
                 settingSelectionColorOpacity                    .value = 1.00
                 
                 settingTabSettingsTextColor                     .value = UIColor(hue:0.55,saturation:0.70,brightness:0.75)
@@ -205,7 +251,7 @@ extension Preferences {
                 settingTabItemsQuantityFontGrowth               .value = 0.00
                 settingTabItemsQuantityFontSameAsItems          .value = true
                 
-                settingTabThemesSolidColor                      .value = UIColor(hue:0.14)
+                settingTabThemesSolidColor                      .value = UIColor(white:0.98) //UIColor(hue:0.14)
 //                settingTabThemesRangeFromColor                  .value = 
 //                settingTabThemesRangeToColor                    .value =
 //                settingTabThemesCustomColors                    .value =
