@@ -134,7 +134,7 @@ class ControllerOfSettings : GenericControllerOfSettings
                             }
                         },
                         
-                        createCellForTap(title: "Load", setup: { [weak self] cell,indexpath in
+                        createCellForTap(title: "Load", setup: { cell,indexpath in
                             cell.selectionStyle = .default
                             cell.accessoryType  = .disclosureIndicator
                         }) { [weak self] in
@@ -145,12 +145,16 @@ class ControllerOfSettings : GenericControllerOfSettings
                             
                             controller.style = .grouped
                             
-                            controller.sections = [
-                                GenericControllerOfList.Section(
-                                    header  : "Custom Themes",
-                                    footer  : "A list of themes created by you",
-                                    items   : self.preferences.themeArrayOfNamesCustom
-                                ),
+                            if 0 < self.preferences.themeArrayOfNamesCustom.count {
+                                controller.sections += [
+                                    GenericControllerOfList.Section(
+                                        header  : "Custom Themes",
+                                        footer  : "A list of themes created by you",
+                                        items   : self.preferences.themeArrayOfNamesCustom
+                                )]
+                            }
+                            
+                            controller.sections += [
                                 GenericControllerOfList.Section(
                                     header  : "Predefined Themes",
                                     footer  : "A list of standard themes",

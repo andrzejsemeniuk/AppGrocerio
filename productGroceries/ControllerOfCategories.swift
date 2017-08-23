@@ -99,22 +99,51 @@ class ControllerOfCategories : UITableViewController {
         return defaultColor
     }
     
-    func cellColorOfBackgroundForCategory(at index:Int) -> UIColor
+    /// Returns the background color of a category cell based on the
+    /// preferences settingTabThemesName
+    ///
+    /// - Parameter index: index in table
+    ///   - withDefault: default color to return in case no match to themes name
+    /// - Returns: color
+    func cellColorOfBackgroundForCategory(at index:Int, withDefault:UIColor? = nil) -> UIColor
     {
-        var result      = UIColor.clear
+        var result      = withDefault ?? preferences.settingBarBackgroundColor.value
         
         let saturation  = preferences.settingTabThemesSaturation.value
         
         let mark        = CGFloat(Float(index)/Float(categories.count)).clampedTo01
         
-        let current     = preferences.themeCurrent.value
+        // logic:
+        //  if solid or range is defined, use that
+        //  if theme starts with predefined theme name use that
+        //  otherwise return background color
+        
+        let name        = preferences.settingTabThemesName.value
         
         let startsWith : (String)->Bool = { string in
-            return current.hasPrefix(string)
+            return name.hasPrefix(string)
         }
         
-        if startsWith("Apple") {
+        if name == "Solid" {
+            let HSBA = preferences.settingTabThemesSolidColor.value.HSBA
+            result = UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
+            if index.isOdd {
+                result = result.withAlphaComponent(preferences.settingTabThemesSolidOddOpacity.value)
+            }
+            else {
+                result = result.withAlphaComponent(preferences.settingTabThemesSolidEvenOpacity.value)
+            }
+        } else if name == "Range" {
+            let color0  = preferences.settingTabThemesRangeFromColor.value.HSBA
+            let color1  = preferences.settingTabThemesRangeToColor.value.HSBA
+            result = UIColor(hue:mark.lerp01(from:color0.hue, to:color1.hue),
+                             saturation:mark.lerp01(from:color0.saturation, to:color1.saturation)*saturation,
+                             brightness:mark.lerp01(from:color0.brightness, to:color1.brightness),
+                             alpha:1.0)
+        } else if startsWith("Apple") {
             result = UIColor(hue:mark.lerp01(from:0.15, to:0.35), saturation:saturation, brightness:1.0, alpha:1.0)
+        } else if startsWith("Chalkboard") {
+            result =  index.isEven ? UIColor(hsb:[0.4,1,0.55]) : UIColor(hsb:[0.4,1,0.57])
         } else if startsWith("Charcoal") {
             result = index.isEven ? UIColor(white:0.2,alpha:1.0) : UIColor(white:0.17,alpha:1.0)
         } else if startsWith("Grape") {
@@ -129,16 +158,9 @@ class ControllerOfCategories : UITableViewController {
             result = UIColor(hue:mark.lerp01(from:0.0, to:0.9), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Strawberry") {
             result = UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
-        } else if startsWith("Default") || preferences.settingTabThemesName.value == "Solid" {
+        } else if startsWith("Default") {
             let HSBA = preferences.settingTabThemesSolidColor.value.HSBA
             result = UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
-        } else if preferences.settingTabThemesName.value == "Range" {
-            let color0  = preferences.settingTabThemesRangeFromColor.value.HSBA
-            let color1  = preferences.settingTabThemesRangeToColor.value.HSBA
-            result = UIColor(hue:mark.lerp01(from:color0.hue, to:color1.hue),
-                             saturation:mark.lerp01(from:color0.saturation, to:color1.saturation)*saturation,
-                             brightness:mark.lerp01(from:color0.brightness, to:color1.brightness),
-                             alpha:1.0)
         }
         
         return result
@@ -244,7 +266,7 @@ class ControllerOfCategories : UITableViewController {
         label.text                  = String(quantity)
         
         label.sizeToFit()
-
+        
         
         
         let fill:UIView
@@ -274,12 +296,12 @@ class ControllerOfCategories : UITableViewController {
         fill.backgroundColor        = preferences.settingTabItemsQuantityColorBackground.value.withAlphaComponent(preferences.settingTabItemsQuantityColorBackgroundOpacity.value)
         
         cell.addSubview(fill)
-
+        
         // DON'T SET LABEL AS ACCESSORY-VIEW OF CELL IN ORDER TO ALIGN IT WITH THE FILL!
         fill.addSubview(label)
-
+        
         label.constrainCenterToSuperview()
-
+        
         return (fill,label)
     }
     

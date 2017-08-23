@@ -32,110 +32,6 @@ func object<Type>(_ object:Any, dataMembersOfType type:Type) -> [Type] {
 
 class Preferences : GenericManagerOfSettings {
     
-    func synchronize() {
-        UserDefaults.standard.synchronize()
-
-        AppDelegate.tabBarController.tabBar.tintColor                       = settingBarItemSelectedTintColor.value
-        AppDelegate.tabBarController.tabBar.unselectedItemTintColor         = settingBarItemUnselectedTintColor.value
-        AppDelegate.navigatorForCategories.navigationBar.tintColor          = settingBarItemSelectedTintColor.value
-        AppDelegate.navigatorForSummary.navigationBar.tintColor             = settingBarItemSelectedTintColor.value
-        AppDelegate.navigatorForSettings.navigationBar.tintColor            = settingBarItemSelectedTintColor.value
-        
-        // bar color
-        
-        AppDelegate.tabBarController.tabBar.barTintColor                    = settingBarBackgroundColor.value
-        AppDelegate.navigatorForCategories.navigationBar.barTintColor       = settingBarBackgroundColor.value
-        AppDelegate.navigatorForSummary.navigationBar.barTintColor          = settingBarBackgroundColor.value
-        AppDelegate.navigatorForSettings.navigationBar.barTintColor         = settingBarBackgroundColor.value
-        
-        // bar button item styling -- ie Add, Save, etc at the top of the screen on the navigation bar
-        
-        let fontForBarTitle = UIFont.init(name:settingBarTitleFont.value, size:UIFont.labelFontSize - 3) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize - 3)
-        
-        var attributes : [String:Any] = [
-            NSForegroundColorAttributeName          : settingBarItemSelectedTintColor.value,
-            NSFontAttributeName                     : fontForBarTitle
-        ]
-        
-        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .normal)
-
-        // bar item selected
-        
-        attributes[NSForegroundColorAttributeName] = settingBarItemSelectedTintColor.value
-        
-        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .selected)
-
-        // tab bar item styling, normal mode, ie unselected -- ie. aisles, summary, settings
-        
-        attributes[NSForegroundColorAttributeName] = settingBarItemUnselectedTintColor.value
-        attributes[NSFontAttributeName] = fontForBarTitle.withSize(UIFont.labelFontSize - 2)
-        
-        AppDelegate.navigatorForCategories.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
-        AppDelegate.navigatorForSummary.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
-        AppDelegate.navigatorForSettings.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
-        
-        // tab bar item styling, selected mode -- ie. aisles, summary, settings
-        
-        attributes[NSForegroundColorAttributeName] = settingBarItemSelectedTintColor.value
-        
-        AppDelegate.navigatorForCategories.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
-        AppDelegate.navigatorForSummary.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
-        AppDelegate.navigatorForSettings.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
-        
-        // tab bar item vertical position adjustment for text (ie when images not present)
-        
-        let adjustment : CGFloat = AppDelegate.tabBarController.tabBar.bounds.height / 4
-        
-        AppDelegate.navigatorForCategories.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
-        AppDelegate.navigatorForSummary.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
-        AppDelegate.navigatorForSettings.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
-        
-        // navigation bar title styling
-        
-        attributes[NSForegroundColorAttributeName] = settingBarTitleColor.value
-        attributes[NSFontAttributeName] = fontForBarTitle.withSize(UIFont.labelFontSize)
-        
-        AppDelegate.navigatorForCategories.navigationBar.titleTextAttributes    = attributes
-        AppDelegate.navigatorForSummary.navigationBar.titleTextAttributes       = attributes
-        AppDelegate.navigatorForSettings.navigationBar.titleTextAttributes      = attributes
-        
-        // view controller view background color
-        
-        AppDelegate.tabBarController.tabBar.backgroundColor                 = settingBackgroundColor.value
-        AppDelegate.navigatorForCategories.view.backgroundColor             = settingBackgroundColor.value
-        AppDelegate.navigatorForSummary.view.backgroundColor                = settingBackgroundColor.value
-        AppDelegate.navigatorForSettings.view.backgroundColor               = settingBackgroundColor.value
-
-//        collect(withPrefix:"setting-").forEach { print(" \($0)") }
-        
-        collect(withPrefix:"setting").forEach {
-            guard
-                let setting = $0.object as? GenericSetting<UIColor>,
-                let color = setting.value as? UIColor
-                else {
-                    return
-            }
-            print("\($0.label)=\(color.descriptionAsHSBA)")
-        }
-    }
-    
-//    lazy var manager = GenericManagerStore {
-//        let result = GenericManagerStoreFromNSUserDefaults()
-//        return result
-//    }()
-    
-    init() {
-        
-//        for setting in object(self,dataMembersOfType:GenericSetting.self) {
-//            setting.manager = manager
-//        }
-        for o in object(self, dataMembersOfType: Int(0)) {
-            print("o=(\(o))")
-        }
-//        themeListPredefined.reset()
-    }
-    
-    
     var settingBackgroundColor                          = GenericSetting<UIColor>       (key:"settings-background", first:.blue)
     
     var settingAudioOn                                  = GenericSetting<Bool>          (key:"settings-audio-on", first:true)
@@ -178,8 +74,10 @@ class Preferences : GenericManagerOfSettings {
     var settingTabThemesRangeFromColor                  = GenericSetting<UIColor>       (key:"settings-themes-range-color-from", first:.red)
     var settingTabThemesRangeToColor                    = GenericSetting<UIColor>       (key:"settings-themes-range-color-to", first:.yellow)
     var settingTabThemesCustomColors                    = GenericSetting<Bool>          (key:"settings-themes-custom-colors", first:false)
-    var settingTabThemesName                            = GenericSetting<String>        (key:"settings-themes-name", first:"Default")
+    var settingTabThemesName                            = GenericSetting<String>        (key:"settings-themes-name", first:"")
     var settingTabThemesSaturation                      = GenericSetting<CGFloat>       (key:"settings-themes-saturation", first:1.0)
+    var settingTabThemesSolidOddOpacity               = GenericSetting<CGFloat>       (key:"settings-themes-striped-opacity-odd", first:1.0)
+    var settingTabThemesSolidEvenOpacity              = GenericSetting<CGFloat>       (key:"settings-themes-striped-opacity-even", first:0.95)
     
     var themeCurrent                                    = GenericSetting<String>        (key:"settings:current", first:"Default")
     var themeListPredefined                             = GenericSetting<String>        (key:"settings-list", first:"Default,Apple,Charcoal,Grape,Gray,Honey,Orange,Plain,Pink,Rainbow,Sky,Strawberry,Chalkboard")
@@ -192,6 +90,112 @@ class Preferences : GenericManagerOfSettings {
     var themeArrayOfNamesCustom                         : [String] {
         return themeCustomStorage.value.keys.sorted()
     }
+
+    
+    
+    func synchronize() {
+        UserDefaults.standard.synchronize()
+        
+        AppDelegate.tabBarController.tabBar.tintColor                       = settingBarItemSelectedTintColor.value
+        AppDelegate.tabBarController.tabBar.unselectedItemTintColor         = settingBarItemUnselectedTintColor.value
+        AppDelegate.navigatorForCategories.navigationBar.tintColor          = settingBarItemSelectedTintColor.value
+        AppDelegate.navigatorForSummary.navigationBar.tintColor             = settingBarItemSelectedTintColor.value
+        AppDelegate.navigatorForSettings.navigationBar.tintColor            = settingBarItemSelectedTintColor.value
+        
+        // bar color
+        
+        AppDelegate.tabBarController.tabBar.barTintColor                    = settingBarBackgroundColor.value
+        AppDelegate.navigatorForCategories.navigationBar.barTintColor       = settingBarBackgroundColor.value
+        AppDelegate.navigatorForSummary.navigationBar.barTintColor          = settingBarBackgroundColor.value
+        AppDelegate.navigatorForSettings.navigationBar.barTintColor         = settingBarBackgroundColor.value
+        
+        // bar button item styling -- ie Add, Save, etc at the top of the screen on the navigation bar
+        
+        let fontForBarTitle = UIFont.init(name:settingBarTitleFont.value, size:UIFont.labelFontSize - 3) ?? UIFont.systemFont(ofSize: UIFont.labelFontSize - 3)
+        
+        var attributes : [String:Any] = [
+            NSForegroundColorAttributeName          : settingBarItemSelectedTintColor.value,
+            NSFontAttributeName                     : fontForBarTitle
+        ]
+        
+        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .normal)
+        
+        // bar item selected
+        
+        attributes[NSForegroundColorAttributeName] = settingBarItemSelectedTintColor.value
+        
+        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .selected)
+        
+        // tab bar item styling, normal mode, ie unselected -- ie. aisles, summary, settings
+        
+        attributes[NSForegroundColorAttributeName] = settingBarItemUnselectedTintColor.value
+        attributes[NSFontAttributeName] = fontForBarTitle.withSize(UIFont.labelFontSize - 2)
+        
+        AppDelegate.navigatorForCategories.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
+        AppDelegate.navigatorForSummary.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
+        AppDelegate.navigatorForSettings.tabBarItem?.setTitleTextAttributes(attributes, for: .normal)
+        
+        // tab bar item styling, selected mode -- ie. aisles, summary, settings
+        
+        attributes[NSForegroundColorAttributeName] = settingBarItemSelectedTintColor.value
+        
+        AppDelegate.navigatorForCategories.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
+        AppDelegate.navigatorForSummary.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
+        AppDelegate.navigatorForSettings.tabBarItem?.setTitleTextAttributes(attributes, for: .selected)
+        
+        // tab bar item vertical position adjustment for text (ie when images not present)
+        
+        let adjustment : CGFloat = AppDelegate.tabBarController.tabBar.bounds.height / 4
+        
+        AppDelegate.navigatorForCategories.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
+        AppDelegate.navigatorForSummary.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
+        AppDelegate.navigatorForSettings.tabBarItem?.titlePositionAdjustment.vertical = -adjustment
+        
+        // navigation bar title styling
+        
+        attributes[NSForegroundColorAttributeName] = settingBarTitleColor.value
+        attributes[NSFontAttributeName] = fontForBarTitle.withSize(UIFont.labelFontSize)
+        
+        AppDelegate.navigatorForCategories.navigationBar.titleTextAttributes    = attributes
+        AppDelegate.navigatorForSummary.navigationBar.titleTextAttributes       = attributes
+        AppDelegate.navigatorForSettings.navigationBar.titleTextAttributes      = attributes
+        
+        // view controller view background color
+        
+        AppDelegate.tabBarController.tabBar.backgroundColor                 = settingBackgroundColor.value
+        AppDelegate.navigatorForCategories.view.backgroundColor             = settingBackgroundColor.value
+        AppDelegate.navigatorForSummary.view.backgroundColor                = settingBackgroundColor.value
+        AppDelegate.navigatorForSettings.view.backgroundColor               = settingBackgroundColor.value
+        
+        //        collect(withPrefix:"setting-").forEach { print(" \($0)") }
+        
+        collect(withPrefix:"setting").forEach {
+            guard
+                let setting = $0.object as? GenericSetting<UIColor>,
+                let color = setting.value as? UIColor
+                else {
+                    return
+            }
+            print("\($0.label)=\(color.descriptionAsHSBA)")
+        }
+    }
+    
+    //    lazy var manager = GenericManagerStore {
+    //        let result = GenericManagerStoreFromNSUserDefaults()
+    //        return result
+    //    }()
+    
+    init() {
+        
+        //        for setting in object(self,dataMembersOfType:GenericSetting.self) {
+        //            setting.manager = manager
+        //        }
+        for o in object(self, dataMembersOfType: Int(0)) {
+            print("o=(\(o))")
+        }
+        //        themeListPredefined.reset()
+    }
+    
 
 }
 
@@ -217,7 +221,7 @@ extension Preferences {
                 
                 themeCurrent                                    .value = name
                 
-                settingBackgroundColor                          .value = .white
+                settingBackgroundColor                          .value = UIColor(white:0.98)
                 
                 settingBarBackgroundColor                       .value = .white
                 settingBarItemSelectedTintColor                 .value = .blue
@@ -259,14 +263,15 @@ extension Preferences {
                 settingTabItemsQuantityCircle                   .value = true
                 
                 settingTabThemesSolidColor                      .value = UIColor(white:0.98)
-//                settingTabThemesRangeFromColor                  .value = 
-//                settingTabThemesRangeToColor                    .value =
-//                settingTabThemesCustomColors                    .value =
+                settingTabThemesSolidOddOpacity                 .reset()
+                settingTabThemesSolidEvenOpacity                .reset()
+                settingTabThemesRangeFromColor                  .reset()
+                settingTabThemesRangeToColor                    .reset()
+                settingTabThemesCustomColors                    .reset()
                 settingTabThemesName                            .value = "Solid"
                 settingTabThemesSaturation                      .value = 1.00
 
                 synchronize()
-
             
         case "Chalkboard":
 
@@ -314,14 +319,72 @@ extension Preferences {
             settingTabItemsQuantityFontGrowth               .value = 0.00
             settingTabItemsQuantityFontSameAsItems          .value = true
             
-            settingTabThemesSolidColor                      .reset()
+            settingTabThemesName                            .value = "Solid"
+            settingTabThemesSolidColor                      .value = .black
+            settingTabThemesSolidOddOpacity                 .value = 0.05
+            settingTabThemesSolidEvenOpacity                .value = 0.10
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.40,alpha:0.73)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.40,alpha:0.75)
-            settingTabThemesName                            .value = "Range"
             settingTabThemesSaturation                      .value = 0.90
-            
+
             synchronize()
 
+        case "Charcoal":
+            
+            clear()
+            
+            themeCurrent                                    .value = name
+            
+            settingBackgroundColor                          .value = UIColor(white:0.30)
+            
+            settingBarBackgroundColor                       .value = UIColor(white:0.15)
+            settingBarItemSelectedTintColor                 .value = UIColor(hsb:[0.13,0.40,0.90])
+            settingBarItemUnselectedTintColor               .value = UIColor(white:0.45)
+            settingBarTitleColor                            .value = UIColor(hsb:[0.13,0.40,0.90])
+            settingBarTitleFont                             .value = "GillSans"
+            
+            settingAudioOn                                  .value = true
+            
+            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:1.00,brightness:1.00)
+            settingSelectionColorOpacity                    .value = 1.00
+            
+            settingTabSettingsTextColor                     .value = UIColor(white:0.60)
+            
+            settingTabCategoriesUppercase                   .value = false
+            settingTabCategoriesEmphasize                   .value = false
+            settingTabCategoriesFont                        .value = "GillSans"
+            settingTabCategoriesFontGrowth                  .value = 1
+            settingTabCategoriesTextColor                   .value = UIColor(hue:0.00,saturation:0.00,brightness:0.80)
+            
+            settingTabItemsFont                             .value = "GillSans-Italic"
+            settingTabItemsFontGrowth                       .value = 1
+            settingTabItemsUppercase                        .value = false
+            settingTabItemsEmphasize                        .value = false
+            settingTabItemsFontSameAsCategories             .value = true
+            settingTabItemsTextColor                        .value = UIColor(hue:0.00,saturation:0.00,brightness:0.90)
+            settingTabItemsTextColorSameAsCategories        .value = true
+            
+            settingTabItemsRowOddOpacity                    .value = 0.00
+            settingTabItemsRowEvenOpacity                   .value = 0.40
+            
+            settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.10,saturation:1.00,brightness:1.00)
+            settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
+            settingTabItemsQuantityColorText                .value = UIColor(hue:0.00,saturation:0.00,brightness:0.00)
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
+            settingTabItemsQuantityFont                     .value = "GillSans"
+            settingTabItemsQuantityFontGrowth               .value = 2
+            settingTabItemsQuantityFontSameAsItems          .value = true
+            
+            settingTabThemesSolidColor                      .reset()
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
+            settingTabThemesRangeFromColor                  .value = UIColor(white:0.57,alpha:1.00)
+            settingTabThemesRangeToColor                    .value = UIColor(white:0.60,alpha:1.00)
+            settingTabThemesName                            .value = ""
+            settingTabThemesSaturation                      .value = 0.0
+            
+            synchronize()
+            
         case "Honey":
             
             clear()
@@ -369,11 +432,13 @@ extension Preferences {
             settingTabItemsQuantityFontSameAsItems          .value = true
             
             settingTabThemesSolidColor                      .reset()
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.10,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.13,alpha:1.00)
             settingTabThemesName                            .value = "Range"
             settingTabThemesSaturation                      .reset()
-            
+
             synchronize()
             
         case "Pink":
@@ -423,11 +488,13 @@ extension Preferences {
             settingTabItemsQuantityFontSameAsItems          .value = true
             
             settingTabThemesSolidColor                      .reset()
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.90,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.93,alpha:1.00)
             settingTabThemesName                            .value = "Range"
             settingTabThemesSaturation                      .reset()
-            
+
             synchronize()
             
         case "Sky":
@@ -477,65 +544,13 @@ extension Preferences {
             settingTabItemsQuantityFontSameAsItems          .value = true
             
             settingTabThemesSolidColor                      .reset()
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.57,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.60,alpha:1.00)
             settingTabThemesName                            .value = "Range"
             settingTabThemesSaturation                      .reset()
-            
-            synchronize()
-            
-        case "Charcoal":
-            
-            clear()
-            
-            themeCurrent                                    .value = name
-            
-            settingBackgroundColor                          .value = UIColor(white:0.30)
-            
-            settingBarBackgroundColor                       .value = UIColor(white:0.15)
-            settingBarItemSelectedTintColor                 .value = UIColor(hsb:[0.13,0.40,0.90])
-            settingBarItemUnselectedTintColor               .value = UIColor(white:0.45)
-            settingBarTitleColor                            .value = UIColor(hsb:[0.13,0.40,0.90])
-            settingBarTitleFont                             .value = "GillSans"
-            
-            settingAudioOn                                  .value = true
 
-            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:1.00,brightness:1.00)
-            settingSelectionColorOpacity                    .value = 1.00
-            
-            settingTabSettingsTextColor                     .value = UIColor(white:0.60)
-            
-            settingTabCategoriesUppercase                   .value = false
-            settingTabCategoriesEmphasize                   .value = false
-            settingTabCategoriesFont                        .value = "GillSans"
-            settingTabCategoriesFontGrowth                  .value = 1
-            settingTabCategoriesTextColor                   .value = UIColor(hue:0.00,saturation:0.00,brightness:0.80)
-            
-            settingTabItemsFont                             .value = "GillSans-Italic"
-            settingTabItemsFontGrowth                       .value = 1
-            settingTabItemsUppercase                        .value = false
-            settingTabItemsEmphasize                        .value = false
-            settingTabItemsFontSameAsCategories             .value = true
-            settingTabItemsTextColor                        .value = UIColor(hue:0.00,saturation:0.00,brightness:0.90)
-            settingTabItemsTextColorSameAsCategories        .value = true
-            
-            settingTabItemsRowOddOpacity                    .value = 0.00
-            settingTabItemsRowEvenOpacity                   .value = 0.40
-            
-            settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.10,saturation:1.00,brightness:1.00)
-            settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
-            settingTabItemsQuantityColorText                .value = UIColor(hue:0.00,saturation:0.00,brightness:0.00)
-            settingTabItemsQuantityColorTextSameAsItems     .value = false
-            settingTabItemsQuantityFont                     .value = "GillSans"
-            settingTabItemsQuantityFontGrowth               .value = 2
-            settingTabItemsQuantityFontSameAsItems          .value = true
-            
-            settingTabThemesSolidColor                      .reset()
-            settingTabThemesRangeFromColor                  .value = UIColor(white:0.57,alpha:1.00)
-            settingTabThemesRangeToColor                    .value = UIColor(white:0.60,alpha:1.00)
-            settingTabThemesName                            .value = "Range"
-            settingTabThemesSaturation                      .value = 0.0
-            
             synchronize()
             
         default:

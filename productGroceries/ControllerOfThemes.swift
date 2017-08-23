@@ -79,7 +79,7 @@ class ControllerOfThemes : GenericControllerOfSettings
             header : "",
             footer : "",
             cells  : [
-                createCellForUISlider(AppDelegate.instance.preferences.settingTabThemesSaturation, title: "Saturation"),
+                createCellForUISlider(preferences.settingTabThemesSaturation, title: "Saturation"),
             ]))
         
         
@@ -90,16 +90,19 @@ class ControllerOfThemes : GenericControllerOfSettings
                 
                 definePredefinedThemeWithName("Solid"),
                 
-                //                createCellForUIColor(Store.Manager.settingsGetThemesSolidColor(),name:"  Color",title:"Solid",key:.SettingsTabThemesSolidColor) {
-                //                },
+                createCellForUIColor(preferences.settingTabThemesSolidColor, title:"  Color"),
                 
-                definePredefinedThemeWithName("Range")
+                createCellForUISlider(preferences.settingTabThemesSolidOddOpacity, title: "  Odd Opacity"),
                 
-                //                createCellForUIColor(Store.Manager.settingsGetThemesRangeFromColor(),name:"  Color From",title:"Range From",key:.SettingsTabThemesRangeFromColor) {
-                //                },
-                //                createCellForUIColor(Store.Manager.settingsGetThemesRangeToColor(),name:"  Color To",title:"Range To",key:.SettingsTabThemesRangeToColor) {
-                //                },
-            ]))
+                createCellForUISlider(preferences.settingTabThemesSolidEvenOpacity, title: "  Even Opacity"),
+                        
+                definePredefinedThemeWithName("Range"),
+                
+                createCellForUIColor(preferences.settingTabThemesRangeFromColor, title:"  Color From"),
+                
+                createCellForUIColor(preferences.settingTabThemesRangeToColor, title:"  Color To"),
+
+                ]))
 
         let customThemeNames = preferences.themeArrayOfNamesCustom
         
