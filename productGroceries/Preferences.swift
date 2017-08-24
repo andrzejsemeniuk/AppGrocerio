@@ -10,18 +10,6 @@ import Foundation
 import UIKit
 import ASToolkit
 
-// TODO
-func object<Type>(_ object:Any, dataMembersOfType type:Type) -> [Type] {
-    var result = [Type]()
-    for child in Mirror(reflecting: object).children {
-        if let setting = child.value as? Type {
-            result.append(setting)
-        }
-    }
-    return result
-    
-}
-
 // TODO: DISTRIBUTE BAR/TINT COLOR AMONGST STANDARD THEMES
 
 // TODO: CUSTOM-THEME NAMING-CONVENTION AT DISPLAY? [OLD-THEME-NAME]+[NEW-THEME-NAME]
@@ -76,8 +64,8 @@ class Preferences : GenericManagerOfSettings {
     var settingTabThemesCustomColors                    = GenericSetting<Bool>          (key:"settings-themes-custom-colors", first:false)
     var settingTabThemesName                            = GenericSetting<String>        (key:"settings-themes-name", first:"")
     var settingTabThemesSaturation                      = GenericSetting<CGFloat>       (key:"settings-themes-saturation", first:1.0)
-    var settingTabThemesSolidOddOpacity               = GenericSetting<CGFloat>       (key:"settings-themes-striped-opacity-odd", first:1.0)
-    var settingTabThemesSolidEvenOpacity              = GenericSetting<CGFloat>       (key:"settings-themes-striped-opacity-even", first:0.95)
+    var settingTabThemesSolidOddOpacity                 = GenericSetting<CGFloat>       (key:"settings-themes-striped-opacity-odd", first:1.0)
+    var settingTabThemesSolidEvenOpacity                = GenericSetting<CGFloat>       (key:"settings-themes-striped-opacity-even", first:0.95)
     
     var themeCurrent                                    = GenericSetting<String>        (key:"settings:current", first:"Default")
     var themeListPredefined                             = GenericSetting<String>        (key:"settings-list", first:"Default,Apple,Charcoal,Grape,Gray,Honey,Orange,Plain,Pink,Rainbow,Sky,Strawberry,Chalkboard")
@@ -186,14 +174,6 @@ class Preferences : GenericManagerOfSettings {
     //    }()
     
     init() {
-        
-        //        for setting in object(self,dataMembersOfType:GenericSetting.self) {
-        //            setting.manager = manager
-        //        }
-        for o in object(self, dataMembersOfType: Int(0)) {
-            print("o=(\(o))")
-        }
-        //        themeListPredefined.reset()
     }
     
 
@@ -272,6 +252,64 @@ extension Preferences {
                 settingTabThemesSaturation                      .value = 1.00
 
                 synchronize()
+            
+        case "Apple":
+            
+            clear()
+            
+            themeCurrent                                    .value = name
+            
+            settingBackgroundColor                          .value = .green
+            
+            settingBarBackgroundColor                       .value = .green
+            settingBarItemSelectedTintColor                 .value = .orange
+            settingBarItemUnselectedTintColor               .value = .brown
+            settingBarTitleColor                            .value = .brown
+            settingBarTitleFont                             .value = "Futura-Medium"
+            
+            settingAudioOn                                  .value = true
+            
+            settingSelectionColor                           .value = UIColor.red
+            settingSelectionColorOpacity                    .value = 1.00
+            
+            settingTabSettingsTextColor                     .value = .darkGray
+            
+            settingTabCategoriesUppercase                   .value = true
+            settingTabCategoriesEmphasize                   .value = true
+            settingTabCategoriesFont                        .value = "Futura-Medium"
+            settingTabCategoriesFontGrowth                  .value = 0
+            settingTabCategoriesTextColor                   .value = .orange
+            
+            settingTabItemsFont                             .value = "Futura-Medium"
+            settingTabItemsFontGrowth                       .value = 0.0
+            settingTabItemsUppercase                        .value = true
+            settingTabItemsEmphasize                        .value = false
+            settingTabItemsFontSameAsCategories             .value = true
+            settingTabItemsTextColor                        .value = .white
+            settingTabItemsTextColorSameAsCategories        .value = true
+            
+            settingTabItemsRowOddOpacity                    .value = 0.03
+            settingTabItemsRowEvenOpacity                   .value = 0.00
+            
+            settingTabItemsQuantityColorBackground          .value = .orange
+            settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
+            settingTabItemsQuantityColorText                .value = .white
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
+            settingTabItemsQuantityFont                     .value = "Futura-Medium"
+            settingTabItemsQuantityFontGrowth               .value = 0.00
+            settingTabItemsQuantityFontSameAsItems          .value = true
+            settingTabItemsQuantityCircle                   .value = true
+            
+            settingTabThemesSolidColor                      .value = UIColor(white:0.98)
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
+            settingTabThemesRangeFromColor                  .reset()
+            settingTabThemesRangeToColor                    .reset()
+            settingTabThemesCustomColors                    .reset()
+            settingTabThemesName                            .value = "n/a"
+            settingTabThemesSaturation                      .value = 1.00
+            
+            synchronize()
             
         case "Chalkboard":
 

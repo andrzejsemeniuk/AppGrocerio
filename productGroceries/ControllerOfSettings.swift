@@ -321,15 +321,15 @@ class ControllerOfSettings : GenericControllerOfSettings
                         }
                 ]),
             
-            Section(header  : "SELECTION",
-                    footer  : "Set selection properties for rows on all tabs",
-                    cells   : [
-                        
-                        createCellForUIColor(preferences.settingSelectionColor, title: "Background"),
-                        
-                        createCellForUISlider(preferences.settingSelectionColorOpacity, title: "Opacity"),
-                        
-                        ]),
+//            Section(header  : "SELECTION",
+//                    footer  : "Set selection properties for rows on all tabs",
+//                    cells   : [
+//                        
+//                        createCellForUIColor(preferences.settingSelectionColor, title: "Background"),
+//                        
+//                        createCellForUISlider(preferences.settingSelectionColorOpacity, title: "Opacity"),
+//                        
+//                        ]),
             
             //            [
             //                "ITEM QUANTITY SOUNDS",

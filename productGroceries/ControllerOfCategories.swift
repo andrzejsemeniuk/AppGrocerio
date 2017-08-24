@@ -119,9 +119,10 @@ class ControllerOfCategories : UITableViewController {
         //  otherwise return background color
         
         let name        = preferences.settingTabThemesName.value
+        let theme       = preferences.themeCurrent.value
         
         let startsWith : (String)->Bool = { string in
-            return name.hasPrefix(string)
+            return theme.hasPrefix(string)
         }
         
         if name == "Solid" {
