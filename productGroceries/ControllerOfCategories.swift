@@ -119,10 +119,9 @@ class ControllerOfCategories : UITableViewController {
         //  otherwise return background color
         
         let name        = preferences.settingTabThemesName.value
-        let theme       = preferences.themeCurrent.value
         
         let startsWith : (String)->Bool = { string in
-            return theme.hasPrefix(string)
+            return name.hasPrefix(string)
         }
         
         if name == "Solid" {
@@ -151,6 +150,8 @@ class ControllerOfCategories : UITableViewController {
             result = UIColor(hue:mark.lerp01(from:0.75, to:0.90), saturation:saturation, brightness:mark.lerp01(from:0.65, to:0.80), alpha:1.0)
         } else if startsWith("Gray") {
             result = UIColor(white:0.4, alpha:1.0)
+        } else if startsWith("Honey") {
+            result = UIColor(hue:mark.lerp01(from:0.09, to:0.11), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Orange") {
             result = UIColor(hue:mark.lerp01(from:0.04, to:0.1), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Plain") {
