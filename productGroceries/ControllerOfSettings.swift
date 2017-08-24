@@ -225,6 +225,10 @@ class ControllerOfSettings : GenericControllerOfSettings
                             self?.preferences.synchronize()
                         },
                         
+                        createCellForUIFontName(preferences.settingBarTitleFont, title: "Bar Title Font") { [weak self] in
+                            self?.preferences.synchronize()
+                        },
+                        
                         createCellForUISwitch(preferences.settingAudioOn, title: "Audio"),
                         
                         ]),

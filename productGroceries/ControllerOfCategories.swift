@@ -153,7 +153,7 @@ class ControllerOfCategories : UITableViewController {
         } else if startsWith("Honey") {
             result = UIColor(hue:mark.lerp01(from:0.09, to:0.11), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Orange") {
-            result = UIColor(hue:mark.lerp01(from:0.04, to:0.1), saturation:saturation, brightness:1.0, alpha:1.0)
+            result = UIColor(hue:mark.lerp01(from:0.06, to:0.09), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Plain") {
             result = UIColor.white
         } else if startsWith("Rainbow") {

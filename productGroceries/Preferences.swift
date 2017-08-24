@@ -526,7 +526,8 @@ extension Preferences {
             settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
             settingTabItemsQuantityFontGrowth               .value = 0.00
             settingTabItemsQuantityFontSameAsItems          .value = true
-            
+            settingTabItemsQuantityCircle                   .value = false
+
             settingTabThemesSolidColor                      .reset()
             settingTabThemesSolidOddOpacity                 .reset()
             settingTabThemesSolidEvenOpacity                .reset()
@@ -535,6 +536,63 @@ extension Preferences {
             settingTabThemesName                            .value = "Honey"
             settingTabThemesSaturation                      .reset()
 
+            synchronize()
+            
+        case "Orange":
+            
+            clear()
+            
+            themeCurrent                                    .value = name
+            
+            settingBackgroundColor                          .value = .red
+            
+            settingBarBackgroundColor                       .value = .orange
+            settingBarItemSelectedTintColor                 .value = .yellow
+            settingBarItemUnselectedTintColor               .value = .red
+            settingBarTitleColor                            .value = .red
+            settingBarTitleFont                             .value = "Optima-Bold"
+            
+            settingAudioOn                                  .value = true
+            
+            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:0.80,brightness:1.00)
+            settingSelectionColorOpacity                    .value = 0.50
+            
+            settingTabSettingsTextColor                     .value = .white
+            
+            settingTabCategoriesUppercase                   .value = false
+            settingTabCategoriesEmphasize                   .value = true
+            settingTabCategoriesFont                        .value = "Optima-Regular"
+            settingTabCategoriesFontGrowth                  .value = 0
+            settingTabCategoriesTextColor                   .value = .yellow
+            
+            settingTabItemsFont                             .value = settingTabCategoriesFont.value
+            settingTabItemsFontGrowth                       .value = 0.0
+            settingTabItemsUppercase                        .value = false
+            settingTabItemsEmphasize                        .value = false
+            settingTabItemsFontSameAsCategories             .value = true
+            settingTabItemsTextColor                        .value = .yellow
+            settingTabItemsTextColorSameAsCategories        .value = true
+            
+            settingTabItemsRowOddOpacity                    .value = 0.00
+            settingTabItemsRowEvenOpacity                   .value = 0.33
+            
+            settingTabItemsQuantityColorBackground          .value = .yellow
+            settingTabItemsQuantityColorBackgroundOpacity   .value = 0.85
+            settingTabItemsQuantityColorText                .value = .orange
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
+            settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
+            settingTabItemsQuantityFontGrowth               .value = 0.00
+            settingTabItemsQuantityFontSameAsItems          .value = true
+            settingTabItemsQuantityCircle                   .value = true
+
+            settingTabThemesSolidColor                      .reset()
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
+            settingTabThemesRangeFromColor                  .value = UIColor(white:0.10,alpha:1.00)
+            settingTabThemesRangeToColor                    .value = UIColor(white:0.13,alpha:1.00)
+            settingTabThemesName                            .value = "Orange"
+            settingTabThemesSaturation                      .reset()
+            
             synchronize()
             
         case "Pink":
