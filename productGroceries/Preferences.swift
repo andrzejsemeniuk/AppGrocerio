@@ -392,22 +392,22 @@ extension Preferences {
             settingTabCategoriesEmphasize                   .value = false
             settingTabCategoriesFont                        .value = "GillSans"
             settingTabCategoriesFontGrowth                  .value = 1
-            settingTabCategoriesTextColor                   .value = UIColor(hue:0.00,saturation:0.00,brightness:0.80)
+            settingTabCategoriesTextColor                   .value = UIColor(white:0.80)
             
             settingTabItemsFont                             .value = "GillSans-Italic"
             settingTabItemsFontGrowth                       .value = 1
             settingTabItemsUppercase                        .value = false
             settingTabItemsEmphasize                        .value = false
             settingTabItemsFontSameAsCategories             .value = true
-            settingTabItemsTextColor                        .value = UIColor(hue:0.00,saturation:0.00,brightness:0.90)
+            settingTabItemsTextColor                        .value = UIColor(white:0.90)
             settingTabItemsTextColorSameAsCategories        .value = true
             
             settingTabItemsRowOddOpacity                    .value = 0.00
             settingTabItemsRowEvenOpacity                   .value = 0.40
             
-            settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.10,saturation:1.00,brightness:1.00)
+            settingTabItemsQuantityColorBackground          .value = UIColor(hsb:[0.13,0.40,0.90])
             settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
-            settingTabItemsQuantityColorText                .value = UIColor(hue:0.00,saturation:0.00,brightness:0.00)
+            settingTabItemsQuantityColorText                .value = .black
             settingTabItemsQuantityColorTextSameAsItems     .value = false
             settingTabItemsQuantityFont                     .value = "GillSans"
             settingTabItemsQuantityFontGrowth               .value = 2
