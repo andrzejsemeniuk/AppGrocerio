@@ -773,13 +773,13 @@ extension Preferences {
             
             themeCurrent                                    .value = name
             
-            settingBackgroundColor                          .value = UIColor(hue:0.60,saturation:0.80,brightness:1.00)
+            settingBackgroundColor                          .value = UIColor(hue:0.70,saturation:0.85,brightness:0.60)
             
-            settingBarBackgroundColor                       .value = UIColor(hsb:[0.6,1,0.7])
-            settingBarItemSelectedTintColor                 .value = .white
-            settingBarItemUnselectedTintColor               .value = settingBarBackgroundColor.value.higher(byRatio: 0.2)
-            settingBarTitleColor                            .value = .white
-            settingBarTitleFont                             .value = "GillSans"
+            settingBarBackgroundColor                       .value = UIColor(hsb:[0.65,1,0.7])
+            settingBarItemSelectedTintColor                 .value = UIColor(white:1.0,alpha:0.9)
+            settingBarItemUnselectedTintColor               .value = UIColor(white:1.0,alpha:0.6)
+            settingBarTitleColor                            .value = UIColor(white:1.0,alpha:0.8)
+            settingBarTitleFont                             .value = "AvenirNext-BoldItalic"
 
             settingAudioOn                                  .value = true
             
@@ -790,29 +790,30 @@ extension Preferences {
             
             settingTabCategoriesUppercase                   .value = false
             settingTabCategoriesEmphasize                   .value = false
-            settingTabCategoriesFont                        .value = "GillSans-LightItalic"
+            settingTabCategoriesFont                        .value = "AvenirNext-MediumItalic"
             settingTabCategoriesFontGrowth                  .value = 5
-            settingTabCategoriesTextColor                   .value = UIColor(hue:0.65,saturation:0.30,brightness:1.00)
+            settingTabCategoriesTextColor                   .value = UIColor(hue:0.70,saturation:0.30,brightness:1.00)
             
-            settingTabItemsFont                             .value = "GillSans-Italic"
-            settingTabItemsFontGrowth                       .value = 4
+            settingTabItemsFont                             .value = "AvenirNext-Italic"
+            settingTabItemsFontGrowth                       .value = 2
             settingTabItemsUppercase                        .value = false
-            settingTabItemsEmphasize                        .value = false
-            settingTabItemsFontSameAsCategories             .value = true
-            settingTabItemsTextColor                        .value = UIColor(hue:0.60,saturation:0.30,brightness:1.00)
+            settingTabItemsEmphasize                        .value = true
+            settingTabItemsFontSameAsCategories             .value = false
+            settingTabItemsTextColor                        .value = UIColor(hue:0.70,saturation:0.30,brightness:1.00)
             settingTabItemsTextColorSameAsCategories        .value = true
             
             settingTabItemsRowOddOpacity                    .value = 0.00
-            settingTabItemsRowEvenOpacity                   .value = 0.20
+            settingTabItemsRowEvenOpacity                   .value = 0.04
             
             settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.58,saturation:1.00,brightness:0.80)
             settingTabItemsQuantityColorBackgroundOpacity   .value = 0.70
             settingTabItemsQuantityColorText                .value = UIColor(hue:0.60,saturation:0.20,brightness:1.00)
             settingTabItemsQuantityColorTextSameAsItems     .value = true
-            settingTabItemsQuantityFont                     .value = "GillSans-BoldItalic"
+            settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
             settingTabItemsQuantityFontGrowth               .value = 4
             settingTabItemsQuantityFontSameAsItems          .value = true
-            
+            settingTabItemsQuantityCircle                   .value = false
+
             settingTabThemesSolidColor                      .reset()
             settingTabThemesSolidOddOpacity                 .reset()
             settingTabThemesSolidEvenOpacity                .reset()
