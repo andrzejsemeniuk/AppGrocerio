@@ -159,7 +159,7 @@ class ControllerOfCategories : UITableViewController {
         } else if startsWith("Rainbow") {
             result = UIColor(hue:mark.lerp01(from:0.0, to:0.9), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Sky") {
-            result = UIColor(hue:mark.lerp01(from:0.65, to:0.70), saturation:saturation, brightness:0.6, alpha:1.0)
+            result = UIColor(hue:mark.lerp01(from:0.65, to:0.70), saturation:saturation, brightness:mark.lerp01(from:0.80,to:1.05), alpha:1.0)
         } else if startsWith("Strawberry") {
             result = UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Default") {
@@ -209,7 +209,6 @@ class ControllerOfCategories : UITableViewController {
             let brightness1 = HSBA.brightness < 1.0 ? (HSBA.brightness+0.05).clampedTo01 : (HSBA.brightness-0.05).clampedTo01
             return UIColor(hue:HSBA.hue,saturation:0.0,brightness:brightness1,alpha:1.0)
         }
-        
     }
     
     func styleCell(cell:UITableViewCell, indexPath:IndexPath)

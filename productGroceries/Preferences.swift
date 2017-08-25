@@ -317,17 +317,17 @@ extension Preferences {
             
             themeCurrent                                    .value = name
             
-            settingBackgroundColor                          .value = UIColor(hue:0.40,saturation:1.00,brightness:0.55)
+            settingBackgroundColor                          .value = UIColor(hsb:[0.40,1.00,0.55])
             
-            settingBarBackgroundColor                       .value = UIColor(hue:0.40,saturation:1.00,brightness:0.65)
-            settingBarItemSelectedTintColor                 .value = UIColor(hue:0.40,saturation:0.40,brightness:1.00)
-            settingBarItemUnselectedTintColor               .value = UIColor(hue:0.40,saturation:0.80,brightness:0.40)
-            settingBarTitleColor                            .value = UIColor(hue:0.40,saturation:0.10,brightness:1.00)
+            settingBarBackgroundColor                       .value = UIColor(hsb:[0.40,1.00,0.65])
+            settingBarItemSelectedTintColor                 .value = UIColor(hsb:[0.40,0.40,1.00])
+            settingBarItemUnselectedTintColor               .value = UIColor(hsb:[0.40,0.80,0.40])
+            settingBarTitleColor                            .value = UIColor(hsb:[0.40,0.10,1.00])
             settingBarTitleFont                             .value = "Chalkduster"
             
             settingAudioOn                                  .value = true
 
-            settingSelectionColor                           .value = UIColor(hue:0.30,saturation:0.80,brightness:1.00)
+            settingSelectionColor                           .value = UIColor(hsb:[0.30,0.80,1.00])
             settingSelectionColorOpacity                    .value = 0.50
             
             settingTabSettingsTextColor                     .value = UIColor.white
@@ -336,22 +336,22 @@ extension Preferences {
             settingTabCategoriesEmphasize                   .value = true
             settingTabCategoriesFont                        .value = "Chalkduster"
             settingTabCategoriesFontGrowth                  .value = 0
-            settingTabCategoriesTextColor                   .value = UIColor(hue:0.40,saturation:0.10,brightness:1.00)
+            settingTabCategoriesTextColor                   .value = UIColor(hsb:[0.40,0.10,1.00])
             
             settingTabItemsFont                             .value = settingTabCategoriesFont.value
             settingTabItemsFontGrowth                       .value = 0.0
             settingTabItemsUppercase                        .value = false
             settingTabItemsEmphasize                        .value = false
             settingTabItemsFontSameAsCategories             .value = true
-            settingTabItemsTextColor                        .value = UIColor(hue:0.00,saturation:0.00,brightness:0.90)
+            settingTabItemsTextColor                        .value = UIColor(hsb:[0.00,0.00,0.90])
             settingTabItemsTextColorSameAsCategories        .value = true
 
             settingTabItemsRowOddOpacity                    .value = 0.00
             settingTabItemsRowEvenOpacity                   .value = 0.10
 
-            settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.4,saturation:1,brightness:0.1)
+            settingTabItemsQuantityColorBackground          .value = UIColor(hsb:[0.4,1,0.1])
             settingTabItemsQuantityColorBackgroundOpacity   .value = 0.20
-            settingTabItemsQuantityColorText                .value = UIColor(hue:0.00,saturation:0.00,brightness:1.00)
+            settingTabItemsQuantityColorText                .value = UIColor(hsb:[0.00,0.00,1.00])
             settingTabItemsQuantityColorTextSameAsItems     .value = true
             settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
             settingTabItemsQuantityFontGrowth               .value = 0.00
@@ -383,7 +383,7 @@ extension Preferences {
             
             settingAudioOn                                  .value = true
             
-            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:1.00,brightness:1.00)
+            settingSelectionColor                           .value = UIColor(hsb:[0.00,1.00,1.00])
             settingSelectionColorOpacity                    .value = 1.00
             
             settingTabSettingsTextColor                     .value = UIColor(white:0.60)
@@ -497,7 +497,7 @@ extension Preferences {
 
             settingAudioOn                                  .value = true
 
-            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:0.80,brightness:1.00)
+            settingSelectionColor                           .value = UIColor(hsb:[0.00,0.80,1.00])
             settingSelectionColorOpacity                    .value = 0.50
             
             settingTabSettingsTextColor                     .value = .white
@@ -554,7 +554,7 @@ extension Preferences {
             
             settingAudioOn                                  .value = true
             
-            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:0.80,brightness:1.00)
+            settingSelectionColor                           .value = UIColor(hsb:[0.00,0.80,1.00])
             settingSelectionColorOpacity                    .value = 0.50
             
             settingTabSettingsTextColor                     .value = .white
@@ -601,17 +601,17 @@ extension Preferences {
             
             themeCurrent                                    .value = name
             
-            settingBackgroundColor                          .value = UIColor(hue:0.90,saturation:1.00,brightness:1.00)
+            settingBackgroundColor                          .value = UIColor(hsb:[0.90,1.00,1.00])
             
             settingBarBackgroundColor                       .value = UIColor(hsb:[0.9,1,1])
             settingBarItemSelectedTintColor                 .value = .blue
-            settingBarItemUnselectedTintColor               .value = UIColor(hue:0.80,saturation:0.20,brightness:1.00)
-            settingBarTitleColor                            .value = UIColor(hue:0.80,saturation:0.20,brightness:1.00)
+            settingBarItemUnselectedTintColor               .value = UIColor(hsb:[0.80,0.20,1.00])
+            settingBarTitleColor                            .value = UIColor(hsb:[0.80,0.20,1.00])
             settingBarTitleFont                             .value = "SnellRoundhand-Black"
 
             settingAudioOn                                  .value = true
 
-            settingSelectionColor                           .value = UIColor(hue:0.51,saturation:0.20,brightness:1.00)
+            settingSelectionColor                           .value = UIColor(hsb:[0.51,0.20,1.00])
             settingSelectionColorOpacity                    .value = 0.30
             
             settingTabSettingsTextColor                     .value = .white
@@ -620,22 +620,22 @@ extension Preferences {
             settingTabCategoriesEmphasize                   .value = true
             settingTabCategoriesFont                        .value = "SnellRoundhand-Black"
             settingTabCategoriesFontGrowth                  .value = 4
-            settingTabCategoriesTextColor                   .value = UIColor(hue:0.85,saturation:0.20,brightness:1.00)
+            settingTabCategoriesTextColor                   .value = UIColor(hsb:[0.85,0.20,1.00])
             
             settingTabItemsFont                             .value = settingTabCategoriesFont.value
             settingTabItemsFontGrowth                       .value = 4
             settingTabItemsUppercase                        .value = false
             settingTabItemsEmphasize                        .value = false
             settingTabItemsFontSameAsCategories             .value = true
-            settingTabItemsTextColor                        .value = UIColor(hue:0.10,saturation:0.30,brightness:1.00)
+            settingTabItemsTextColor                        .value = UIColor(hsb:[0.10,0.30,1.00])
             settingTabItemsTextColorSameAsCategories        .value = true
             
             settingTabItemsRowOddOpacity                    .value = 0.00
             settingTabItemsRowEvenOpacity                   .value = 0.20
             
-            settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.75,saturation:1.00,brightness:1.00)
+            settingTabItemsQuantityColorBackground          .value = UIColor(hsb:[0.75,1.00,1.00])
             settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
-            settingTabItemsQuantityColorText                .value = UIColor(hue:0.80,saturation:0.20,brightness:1.00)
+            settingTabItemsQuantityColorText                .value = UIColor(hsb:[0.80,0.20,1.00])
             settingTabItemsQuantityColorTextSameAsItems     .value = false
             settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
             settingTabItemsQuantityFontGrowth               .value = 5
@@ -726,7 +726,7 @@ extension Preferences {
             
             settingAudioOn                                  .value = true
             
-            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:0.80,brightness:1.00)
+            settingSelectionColor                           .value = UIColor(hsb:[0.00,0.80,1.00])
             settingSelectionColorOpacity                    .value = 0.50
             
             settingTabSettingsTextColor                     .value = .white
@@ -773,46 +773,46 @@ extension Preferences {
             
             themeCurrent                                    .value = name
             
-            settingBackgroundColor                          .value = UIColor(hue:0.70,saturation:0.85,brightness:0.60)
+            settingBackgroundColor                          .value = UIColor(hsb:[0.65,0.85,0.90])
             
-            settingBarBackgroundColor                       .value = UIColor(hsb:[0.65,1,0.7])
+            settingBarBackgroundColor                       .value = UIColor(hsb:[0.65,1,0.9])
             settingBarItemSelectedTintColor                 .value = UIColor(white:1.0,alpha:0.9)
             settingBarItemUnselectedTintColor               .value = UIColor(white:1.0,alpha:0.6)
             settingBarTitleColor                            .value = UIColor(white:1.0,alpha:0.8)
-            settingBarTitleFont                             .value = "AvenirNext-BoldItalic"
+            settingBarTitleFont                             .value = "Cochin-BoldItalic"
 
             settingAudioOn                                  .value = true
             
-            settingSelectionColor                           .value = UIColor(hue:0.06,saturation:1.00,brightness:1.00)
+            settingSelectionColor                           .value = UIColor(hsb:[0.06,1.00,1.00])
             settingSelectionColorOpacity                    .value = 1.00
             
-            settingTabSettingsTextColor                     .value = UIColor.white
+            settingTabSettingsTextColor                     .value = .white
             
             settingTabCategoriesUppercase                   .value = false
             settingTabCategoriesEmphasize                   .value = false
-            settingTabCategoriesFont                        .value = "AvenirNext-MediumItalic"
+            settingTabCategoriesFont                        .value = "Cochin-BoldItalic"
             settingTabCategoriesFontGrowth                  .value = 5
-            settingTabCategoriesTextColor                   .value = UIColor(hue:0.70,saturation:0.30,brightness:1.00)
+            settingTabCategoriesTextColor                   .value = UIColor(hsb:[0.67,0.30,1.00])
             
-            settingTabItemsFont                             .value = "AvenirNext-Italic"
+            settingTabItemsFont                             .value = "Cochin-Italic"
             settingTabItemsFontGrowth                       .value = 2
             settingTabItemsUppercase                        .value = false
             settingTabItemsEmphasize                        .value = true
             settingTabItemsFontSameAsCategories             .value = false
-            settingTabItemsTextColor                        .value = UIColor(hue:0.70,saturation:0.30,brightness:1.00)
+            settingTabItemsTextColor                        .value = UIColor(hsb:[0.70,0.30,1.00])
             settingTabItemsTextColorSameAsCategories        .value = true
             
             settingTabItemsRowOddOpacity                    .value = 0.00
-            settingTabItemsRowEvenOpacity                   .value = 0.04
+            settingTabItemsRowEvenOpacity                   .value = 0.05
             
-            settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.58,saturation:1.00,brightness:0.80)
+            settingTabItemsQuantityColorBackground          .value = UIColor(hsba:[0.65,1.00,1.00,0.70])
             settingTabItemsQuantityColorBackgroundOpacity   .value = 0.70
-            settingTabItemsQuantityColorText                .value = UIColor(hue:0.60,saturation:0.20,brightness:1.00)
-            settingTabItemsQuantityColorTextSameAsItems     .value = true
+            settingTabItemsQuantityColorText                .value = UIColor(hsb:[0.60,0.20,1.00])
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
             settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
             settingTabItemsQuantityFontGrowth               .value = 4
             settingTabItemsQuantityFontSameAsItems          .value = true
-            settingTabItemsQuantityCircle                   .value = false
+            settingTabItemsQuantityCircle                   .value = true
 
             settingTabThemesSolidColor                      .reset()
             settingTabThemesSolidOddOpacity                 .reset()
