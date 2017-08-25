@@ -189,6 +189,8 @@ class ControllerOfCategories : UITableViewController {
         
         let HSBA = categoryColor.HSBA
         
+        print("item.category=\(item.category), hsb=\(HSBA)")
+        
         if 0 < HSBA.saturation {
             if onRow.isOdd {
                 return UIColor(hue:HSBA.hue,saturation:0.10,brightness:1.0,alpha:1.0)

@@ -716,13 +716,13 @@ extension Preferences {
             
             themeCurrent                                    .value = name
             
-            settingBackgroundColor                          .value = .red
+            settingBackgroundColor                          .value = UIColor(hsb:[0.80,0.70,1.00])
             
-            settingBarBackgroundColor                       .value = .orange
+            settingBarBackgroundColor                       .value = UIColor(hsb:[0.80,0.50,1.00])
             settingBarItemSelectedTintColor                 .value = .yellow
             settingBarItemUnselectedTintColor               .value = .red
             settingBarTitleColor                            .value = .red
-            settingBarTitleFont                             .value = "Optima-Bold"
+            settingBarTitleFont                             .value = "AvenirNext-HeavyItalic"
             
             settingAudioOn                                  .value = true
             
@@ -733,29 +733,29 @@ extension Preferences {
             
             settingTabCategoriesUppercase                   .value = false
             settingTabCategoriesEmphasize                   .value = true
-            settingTabCategoriesFont                        .value = "Optima-Regular"
+            settingTabCategoriesFont                        .value = "AvenirNext-BoldItalic"
             settingTabCategoriesFontGrowth                  .value = 0
-            settingTabCategoriesTextColor                   .value = .yellow
+            settingTabCategoriesTextColor                   .value = UIColor(hsb:[0.80,0.80,1.00])
             
-            settingTabItemsFont                             .value = settingTabCategoriesFont.value
+            settingTabItemsFont                             .value = "AvenirNext-DemiBoldItalic"
             settingTabItemsFontGrowth                       .value = 0.0
             settingTabItemsUppercase                        .value = false
-            settingTabItemsEmphasize                        .value = false
-            settingTabItemsFontSameAsCategories             .value = true
-            settingTabItemsTextColor                        .value = .yellow
+            settingTabItemsEmphasize                        .value = true
+            settingTabItemsFontSameAsCategories             .value = false
+            settingTabItemsTextColor                        .value = .red
             settingTabItemsTextColorSameAsCategories        .value = true
             
-            settingTabItemsRowOddOpacity                    .value = 0.00
-            settingTabItemsRowEvenOpacity                   .value = 0.33
+            settingTabItemsRowOddOpacity                    .value = 1.00
+            settingTabItemsRowEvenOpacity                   .value = 1.00
             
-            settingTabItemsQuantityColorBackground          .value = .yellow
+            settingTabItemsQuantityColorBackground          .value = .aqua
             settingTabItemsQuantityColorBackgroundOpacity   .value = 0.85
             settingTabItemsQuantityColorText                .value = .orange
             settingTabItemsQuantityColorTextSameAsItems     .value = false
             settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
             settingTabItemsQuantityFontGrowth               .value = 0.00
             settingTabItemsQuantityFontSameAsItems          .value = true
-            settingTabItemsQuantityCircle                   .value = true
+            settingTabItemsQuantityCircle                   .value = false
             
             settingTabThemesSolidColor                      .reset()
             settingTabThemesSolidOddOpacity                 .reset()
