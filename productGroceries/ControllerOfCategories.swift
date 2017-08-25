@@ -155,14 +155,18 @@ class ControllerOfCategories : UITableViewController {
         } else if startsWith("Orange") {
             result = UIColor(hue:mark.lerp01(from:0.06, to:0.09), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Plain") {
-            result = UIColor.white
+            result = .white
         } else if startsWith("Rainbow") {
             result = UIColor(hue:mark.lerp01(from:0.0, to:0.9), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Strawberry") {
             result = UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
         } else if startsWith("Default") {
-            let HSBA = preferences.settingTabThemesSolidColor.value.HSBA
-            result = UIColor(hue:CGFloat(HSBA.hue), saturation:HSBA.saturation*saturation, brightness:CGFloat(HSBA.brightness), alpha:1.0)
+            if index.isOdd {
+                result = .white
+            }
+            else {
+                result = UIColor(white:0.99)
+            }
         }
         
         return result

@@ -204,25 +204,25 @@ extension Preferences {
                 settingBackgroundColor                          .value = UIColor(white:0.98)
                 
                 settingBarBackgroundColor                       .value = .white
-                settingBarItemSelectedTintColor                 .value = .blue
+                settingBarItemSelectedTintColor                 .value = .gray
                 settingBarItemUnselectedTintColor               .value = .lightGray
-                settingBarTitleColor                            .value = .red
-                settingBarTitleFont                             .value = "Helvetica"
+                settingBarTitleColor                            .value = .gray
+                settingBarTitleFont                             .value = "HelveticaNeue-Light"
                 
                 settingAudioOn                                  .value = true
                 
-                settingSelectionColor                           .value = UIColor.red
+                settingSelectionColor                           .value = .red
                 settingSelectionColorOpacity                    .value = 1.00
                 
                 settingTabSettingsTextColor                     .value = .lightGray
                 
                 settingTabCategoriesUppercase                   .value = false
-                settingTabCategoriesEmphasize                   .value = false
-                settingTabCategoriesFont                        .value = "Helvetica-Bold"
+                settingTabCategoriesEmphasize                   .value = true
+                settingTabCategoriesFont                        .value = "HelveticaNeue-Light"
                 settingTabCategoriesFontGrowth                  .value = 0
                 settingTabCategoriesTextColor                   .value = .lightGray
 
-                settingTabItemsFont                             .value = "Helvetica"
+                settingTabItemsFont                             .value = "HelveticaNeue-Light"
                 settingTabItemsFontGrowth                       .value = 0.0
                 settingTabItemsUppercase                        .value = false
                 settingTabItemsEmphasize                        .value = false
@@ -230,17 +230,17 @@ extension Preferences {
                 settingTabItemsTextColor                        .value = .lightGray
                 settingTabItemsTextColorSameAsCategories        .value = true
                 
-                settingTabItemsRowOddOpacity                    .value = 0.03
+                settingTabItemsRowOddOpacity                    .value = 1.00
                 settingTabItemsRowEvenOpacity                   .value = 0.00
                 
-                settingTabItemsQuantityColorBackground          .value = .red
-                settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
-                settingTabItemsQuantityColorText                .value = .white
+                settingTabItemsQuantityColorBackground          .value = UIColor(hsb:[0.12,1,1])
+                settingTabItemsQuantityColorBackgroundOpacity   .value = 0.09
+                settingTabItemsQuantityColorText                .value = .black
                 settingTabItemsQuantityColorTextSameAsItems     .value = false
-                settingTabItemsQuantityFont                     .value = "Helvetica-Bold"
+                settingTabItemsQuantityFont                     .value = "HelveticaNeue-LightItalic"
                 settingTabItemsQuantityFontGrowth               .value = 0.00
                 settingTabItemsQuantityFontSameAsItems          .value = true
-                settingTabItemsQuantityCircle                   .value = true
+                settingTabItemsQuantityCircle                   .value = false
                 
                 settingTabThemesSolidColor                      .value = UIColor(white:0.98)
                 settingTabThemesSolidOddOpacity                 .reset()
@@ -248,7 +248,7 @@ extension Preferences {
                 settingTabThemesRangeFromColor                  .reset()
                 settingTabThemesRangeToColor                    .reset()
                 settingTabThemesCustomColors                    .reset()
-                settingTabThemesName                            .value = "Default"
+                settingTabThemesName                            .value = name
                 settingTabThemesSaturation                      .value = 1.00
 
                 synchronize()
@@ -306,7 +306,7 @@ extension Preferences {
             settingTabThemesRangeFromColor                  .reset()
             settingTabThemesRangeToColor                    .reset()
             settingTabThemesCustomColors                    .reset()
-            settingTabThemesName                            .value = "Apple"
+            settingTabThemesName                            .value = name
             settingTabThemesSaturation                      .value = 1.00
             
             synchronize()
@@ -357,7 +357,7 @@ extension Preferences {
             settingTabItemsQuantityFontGrowth               .value = 0.00
             settingTabItemsQuantityFontSameAsItems          .value = true
             
-            settingTabThemesName                            .value = "Chalkboard"
+            settingTabThemesName                            .value = name
             settingTabThemesSolidColor                      .value = .black
             settingTabThemesSolidOddOpacity                 .value = 0.05
             settingTabThemesSolidEvenOpacity                .value = 0.10
@@ -418,7 +418,7 @@ extension Preferences {
             settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.57,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.60,alpha:1.00)
-            settingTabThemesName                            .value = "Charcoal"
+            settingTabThemesName                            .value = name
             settingTabThemesSaturation                      .value = 0.0
             
             synchronize()
@@ -476,7 +476,7 @@ extension Preferences {
             settingTabThemesRangeFromColor                  .reset()
             settingTabThemesRangeToColor                    .reset()
             settingTabThemesCustomColors                    .reset()
-            settingTabThemesName                            .value = "Grape"
+            settingTabThemesName                            .value = name
             settingTabThemesSaturation                      .value = 1.00
             
             synchronize()
@@ -533,7 +533,7 @@ extension Preferences {
             settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.10,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.13,alpha:1.00)
-            settingTabThemesName                            .value = "Honey"
+            settingTabThemesName                            .value = name
             settingTabThemesSaturation                      .reset()
 
             synchronize()
@@ -590,7 +590,7 @@ extension Preferences {
             settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.10,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.13,alpha:1.00)
-            settingTabThemesName                            .value = "Orange"
+            settingTabThemesName                            .value = name
             settingTabThemesSaturation                      .reset()
             
             synchronize()
@@ -634,7 +634,7 @@ extension Preferences {
             settingTabItemsRowEvenOpacity                   .value = 0.20
             
             settingTabItemsQuantityColorBackground          .value = UIColor(hue:0.75,saturation:1.00,brightness:1.00)
-            settingTabItemsQuantityColorBackgroundOpacity   .value = 1 //0.60
+            settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
             settingTabItemsQuantityColorText                .value = UIColor(hue:0.80,saturation:0.20,brightness:1.00)
             settingTabItemsQuantityColorTextSameAsItems     .value = false
             settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
@@ -647,9 +647,124 @@ extension Preferences {
             settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.90,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.93,alpha:1.00)
-            settingTabThemesName                            .value = "Pink"
+            settingTabThemesName                            .value = name
             settingTabThemesSaturation                      .reset()
 
+            synchronize()
+            
+        case "Plain":
+            
+            clear()
+            
+            themeCurrent                                    .value = name
+            
+            settingBackgroundColor                          .value = UIColor(white:0.98)
+            
+            settingBarBackgroundColor                       .value = .white
+            settingBarItemSelectedTintColor                 .value = .gray
+            settingBarItemUnselectedTintColor               .value = .lightGray
+            settingBarTitleColor                            .value = .gray
+            settingBarTitleFont                             .value = "HelveticaNeue-Light"
+            
+            settingAudioOn                                  .value = true
+            
+            settingSelectionColor                           .value = .red
+            settingSelectionColorOpacity                    .value = 1.00
+            
+            settingTabSettingsTextColor                     .value = .lightGray
+            
+            settingTabCategoriesUppercase                   .value = false
+            settingTabCategoriesEmphasize                   .value = false
+            settingTabCategoriesFont                        .value = "HelveticaNeue-Light"
+            settingTabCategoriesFontGrowth                  .value = 0
+            settingTabCategoriesTextColor                   .value = .lightGray
+            
+            settingTabItemsFont                             .value = "HelveticaNeue-Light"
+            settingTabItemsFontGrowth                       .value = 0.0
+            settingTabItemsUppercase                        .value = false
+            settingTabItemsEmphasize                        .value = false
+            settingTabItemsFontSameAsCategories             .value = true
+            settingTabItemsTextColor                        .value = .lightGray
+            settingTabItemsTextColorSameAsCategories        .value = true
+            
+            settingTabItemsRowOddOpacity                    .value = 1.00
+            settingTabItemsRowEvenOpacity                   .value = 0.00
+            
+            settingTabItemsQuantityColorBackground          .value = .lightGray
+            settingTabItemsQuantityColorBackgroundOpacity   .value = 0.10
+            settingTabItemsQuantityColorText                .value = .gray
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
+            settingTabItemsQuantityFont                     .value = "HelveticaNeue-LightItalic"
+            settingTabItemsQuantityFontGrowth               .value = 0.00
+            settingTabItemsQuantityFontSameAsItems          .value = true
+            settingTabItemsQuantityCircle                   .value = false
+            
+            settingTabThemesSolidColor                      .value = UIColor(white:0.98)
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
+            settingTabThemesRangeFromColor                  .reset()
+            settingTabThemesRangeToColor                    .reset()
+            settingTabThemesCustomColors                    .reset()
+            settingTabThemesName                            .value = name
+            settingTabThemesSaturation                      .value = 1.00
+            
+            synchronize()
+            
+        case "Rainbow":
+            
+            clear()
+            
+            themeCurrent                                    .value = name
+            
+            settingBackgroundColor                          .value = .red
+            
+            settingBarBackgroundColor                       .value = .orange
+            settingBarItemSelectedTintColor                 .value = .yellow
+            settingBarItemUnselectedTintColor               .value = .red
+            settingBarTitleColor                            .value = .red
+            settingBarTitleFont                             .value = "Optima-Bold"
+            
+            settingAudioOn                                  .value = true
+            
+            settingSelectionColor                           .value = UIColor(hue:0.00,saturation:0.80,brightness:1.00)
+            settingSelectionColorOpacity                    .value = 0.50
+            
+            settingTabSettingsTextColor                     .value = .white
+            
+            settingTabCategoriesUppercase                   .value = false
+            settingTabCategoriesEmphasize                   .value = true
+            settingTabCategoriesFont                        .value = "Optima-Regular"
+            settingTabCategoriesFontGrowth                  .value = 0
+            settingTabCategoriesTextColor                   .value = .yellow
+            
+            settingTabItemsFont                             .value = settingTabCategoriesFont.value
+            settingTabItemsFontGrowth                       .value = 0.0
+            settingTabItemsUppercase                        .value = false
+            settingTabItemsEmphasize                        .value = false
+            settingTabItemsFontSameAsCategories             .value = true
+            settingTabItemsTextColor                        .value = .yellow
+            settingTabItemsTextColorSameAsCategories        .value = true
+            
+            settingTabItemsRowOddOpacity                    .value = 0.00
+            settingTabItemsRowEvenOpacity                   .value = 0.33
+            
+            settingTabItemsQuantityColorBackground          .value = .yellow
+            settingTabItemsQuantityColorBackgroundOpacity   .value = 0.85
+            settingTabItemsQuantityColorText                .value = .orange
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
+            settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
+            settingTabItemsQuantityFontGrowth               .value = 0.00
+            settingTabItemsQuantityFontSameAsItems          .value = true
+            settingTabItemsQuantityCircle                   .value = true
+            
+            settingTabThemesSolidColor                      .reset()
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
+            settingTabThemesRangeFromColor                  .value = UIColor(white:0.10,alpha:1.00)
+            settingTabThemesRangeToColor                    .value = UIColor(white:0.13,alpha:1.00)
+            settingTabThemesName                            .value = name
+            settingTabThemesSaturation                      .reset()
+            
             synchronize()
             
         case "Sky":
@@ -703,7 +818,7 @@ extension Preferences {
             settingTabThemesSolidEvenOpacity                .reset()
             settingTabThemesRangeFromColor                  .value = UIColor(white:0.57,alpha:1.00)
             settingTabThemesRangeToColor                    .value = UIColor(white:0.60,alpha:1.00)
-            settingTabThemesName                            .value = "Range"
+            settingTabThemesName                            .value = name
             settingTabThemesSaturation                      .reset()
 
             synchronize()

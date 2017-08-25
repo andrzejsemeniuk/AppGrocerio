@@ -225,7 +225,7 @@ class ControllerOfSettings : GenericControllerOfSettings
                             self?.preferences.synchronize()
                         },
                         
-                        createCellForUIFontName(preferences.settingBarTitleFont, title: "Bar Title Font") { [weak self] in
+                        createCellForUIFontName(preferences.settingBarTitleFont, name: "Bar Title Font", title: "Bar Title Font") { [weak self] in
                             self?.preferences.synchronize()
                         },
                         
