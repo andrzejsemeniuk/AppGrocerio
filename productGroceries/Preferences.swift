@@ -823,7 +823,64 @@ extension Preferences {
             settingTabThemesSaturation                      .reset()
 
             synchronize()
+
+        case "Strawberry":
             
+            clear()
+            
+            themeCurrent                                    .value = name
+            
+            settingBackgroundColor                          .value = UIColor(hsb:[0.45,0.85,0.90])
+            
+            settingBarBackgroundColor                       .value = UIColor(hsb:[0.45,1,0.9])
+            settingBarItemSelectedTintColor                 .value = .red
+            settingBarItemUnselectedTintColor               .value = UIColor(hsb:[0.45,1.0,0.5])
+            settingBarTitleColor                            .value = settingBarItemUnselectedTintColor.value
+            settingBarTitleFont                             .value = "Cochin-BoldItalic"
+            
+            settingAudioOn                                  .value = true
+            
+            settingSelectionColor                           .value = UIColor(hsb:[0.06,1.00,1.00])
+            settingSelectionColorOpacity                    .value = 1.00
+            
+            settingTabSettingsTextColor                     .value = .white
+            
+            settingTabCategoriesUppercase                   .value = false
+            settingTabCategoriesEmphasize                   .value = false
+            settingTabCategoriesFont                        .value = "Cochin-BoldItalic"
+            settingTabCategoriesFontGrowth                  .value = 5
+            settingTabCategoriesTextColor                   .value = UIColor(hsb:[0.11,0.30,1.00])
+            
+            settingTabItemsFont                             .value = "Cochin-Italic"
+            settingTabItemsFontGrowth                       .value = 2
+            settingTabItemsUppercase                        .value = false
+            settingTabItemsEmphasize                        .value = true
+            settingTabItemsFontSameAsCategories             .value = false
+            settingTabItemsTextColor                        .value = .red
+            settingTabItemsTextColorSameAsCategories        .value = false
+            
+            settingTabItemsRowOddOpacity                    .value = 0.00
+            settingTabItemsRowEvenOpacity                   .value = 0.15
+            
+            settingTabItemsQuantityColorBackground          .value = UIColor(hsb:[0.20,0.5,1])
+            settingTabItemsQuantityColorBackgroundOpacity   .value = 1.00
+            settingTabItemsQuantityColorText                .value = .red
+            settingTabItemsQuantityColorTextSameAsItems     .value = false
+            settingTabItemsQuantityFont                     .value = settingTabItemsFont.value
+            settingTabItemsQuantityFontGrowth               .value = 4
+            settingTabItemsQuantityFontSameAsItems          .value = true
+            settingTabItemsQuantityCircle                   .value = true
+            
+            settingTabThemesSolidColor                      .reset()
+            settingTabThemesSolidOddOpacity                 .reset()
+            settingTabThemesSolidEvenOpacity                .reset()
+            settingTabThemesRangeFromColor                  .value = UIColor(white:0.57,alpha:1.00)
+            settingTabThemesRangeToColor                    .value = UIColor(white:0.60,alpha:1.00)
+            settingTabThemesName                            .value = name
+            settingTabThemesSaturation                      .reset()
+            
+            synchronize()
+
         default:
             
             if let dictionary = themeCustomStorage.value[name] {

@@ -161,7 +161,14 @@ class ControllerOfCategories : UITableViewController {
         } else if startsWith("Sky") {
             result = UIColor(hue:mark.lerp01(from:0.65, to:0.70), saturation:saturation, brightness:mark.lerp01(from:0.80,to:1.05), alpha:1.0)
         } else if startsWith("Strawberry") {
-            result = UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:1.0)
+            let alpha:CGFloat
+            if index.isOdd {
+                alpha = 0.95
+            }
+            else {
+                alpha = 1.00
+            }
+            result = UIColor(hue:mark.lerp01(from:0.89, to:0.99), saturation:saturation, brightness:1.0, alpha:alpha)
         } else if startsWith("Default") {
             if index.isOdd {
                 result = .white
